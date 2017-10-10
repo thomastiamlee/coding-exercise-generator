@@ -1,6 +1,13 @@
 const Component = require("./component.js");
 const Restriction = require("./restriction.js");
 
+OPERATION_OPERATOR_LIST = ["+", "-", "*", "/", "%"];
+
+/* Get a random operation operator */
+function getRandomOperationOperator() {
+	return OPERATION_OPERATOR_LIST[Math.floor(Math.random() * OPERATION_OPERATOR_LIST.length)];
+}
+
 /* Instantiate a basic operation node with the given parameters.
    operator is either "+", "-", "*", "/", or "%". */
 function getBasicNumberOperation(operator) {
@@ -12,4 +19,4 @@ function getBasicNumberOperation(operator) {
 	return res;
 }
 
-module.exports = {getBasicNumberOperation};
+module.exports = {getRandomOperationOperator, getBasicNumberOperation};

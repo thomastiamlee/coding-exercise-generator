@@ -14,7 +14,7 @@ function generateBasicExercise(options) {
 		complexity = parseInt(options.complexity);
 	}
 	
-	console.log(Basic.getBasicNumberOperation("+"));
+	console.log(Basic.getBasicNumberOperation(Basic.getRandomOperationOperator()));
 }
 
 generateBasicExercise();
