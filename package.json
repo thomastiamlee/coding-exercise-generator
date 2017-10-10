@@ -1,0 +1,19 @@
+{
+  "name": "coding-exercise-generator",
+  "version": "1.0.0",
+  "description": "Automatic generation of programming exercises",
+  "main": "generator.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thomastiamlee/coding-exercise-generator.git"
+  },
+  "author": "Thomas Tiam-Lee",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thomastiamlee/coding-exercise-generator/issues"
+  },
+  "homepage": "https://github.com/thomastiamlee/coding-exercise-generator#readme"
+}
