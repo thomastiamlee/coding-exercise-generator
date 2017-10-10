@@ -1,3 +1,5 @@
+const Basic = require("./basic.js");
+
 /* Generate an exercise using basic operations only.
    For options, you may use the following
 	 complexity (defaults to 1): an integer value representing the number of basic operations in the generated problem */
@@ -11,6 +13,8 @@ function generateBasicExercise(options) {
 	if (options.complexity) {
 		complexity = parseInt(options.complexity);
 	}
+	
+	console.log(Basic.getBasicNumberOperation("+"));
 }
 
 generateBasicExercise();

@@ -8,4 +8,11 @@ function node(type) {
 	this.inputOperandRestrictions = []; // the restrictions to the input operands
 	this.variableOutput = null; // the variable where the output is stored (null if there is no output)
 	this.successors = []; // the succeeding nodes after the current node
+	
+	if (type == NODE_TYPE_OPERATION) {
+		this.operator = null;
+	}
 }
+
+module.exports = {node};
+
