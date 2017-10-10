@@ -12,3 +12,5 @@ function generateBasicExercise(options) {
 		complexity = parseInt(options.complexity);
 	}
 }
+
+generateBasicExercise();
