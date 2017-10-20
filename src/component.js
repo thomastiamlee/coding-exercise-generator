@@ -21,6 +21,9 @@ function node(type) {
 		this.operator = operator;
 	}
 	
+	/* This function evaluates this node given a set of operands.
+	If the node is an [block] operation node, it returns an operand representing the result of the operation.
+	If the node is a [block] condition node, it returns true or false, representing the result of the condition. */
 	this.evaluateThis = function(testOperands) {
 		if (this.type == NODE_TYPE_OPERATION) {
 			var op1 = testOperands[0].value;
@@ -33,7 +36,7 @@ function node(type) {
 				case "+": resVal = op1 + op2; break;
 				case "-": resVal = op1 - op2; break;
 				case "*": resVal = op1 * op2; break;
-				case "/": if (op2 == 0) throw new Error(); resVal = op1 / op2; break;
+				case "/": if (op2 == 0) throw new Error("division by zero"); resVal = op1 / op2; break;
 			}
 			if (op1Type == "string" || op2Type == "string") {
 				resType = "string";
@@ -46,6 +49,18 @@ function node(type) {
 			}
 			var res = new operand(resType, resVal);
 			return res;
+		}
+		else if (this.type == NODE_TYPE_CONDITION) {
+			var op1 = testOperands[0].value;
+			var op2 = testOperands[1].value;
+			switch(this.operator) {
+				case ">": return op1 > op2;
+				case "<": return op1 < op2;
+				case ">=": return op1 >= op2;
+				case "<=": return op1 <= op2;
+				case "==": return op1 == op2;
+				case "!=": return op1 != op2;
+			}
 		}
 	}
 }
@@ -75,5 +90,5 @@ function operand(type, value) {
 	}
 }
 
-module.exports = {NODE_TYPE_OPERATION, NODE_TYPE_BLOCK_CONDITION, NODE_TYPE_RETURN, NODE_TYPE_BLOCK_OPERATION, NODE_TYPE_BLOCK_CONDITION, node, operand};
+module.exports = {NODE_TYPE_OPERATION, NODE_TYPE_CONDITION, NODE_TYPE_RETURN, NODE_TYPE_BLOCK_OPERATION, NODE_TYPE_BLOCK_CONDITION, node, operand};
 
