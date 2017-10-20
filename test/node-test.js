@@ -125,5 +125,45 @@ describe("node", function() {
 			it("Return node on \"neil\" should return \"neil\".", function() {	Assert(n1.evaluateThis([o2]) == o2);	});
 		});
   });
+	
+	describe("#evaluateStructure()", function() {
+		var o1 = new Component.operand("number", 5);
+		var o2 = new Component.operand("number", 6);
+		var o3 = new Component.operand("number", 8);
+		var o4 = new Component.operand("string", "neil");
+		var v1 = new Component.variable("number");
+		var n1 = new Component.node(Component.NODE_TYPE_RETURN);
+		n1.attachInputOperand(v1, 0);
+		var n2 = new Component.node(Component.NODE_TYPE_RETURN);
+		n2.attachInputOperand(o4, 0);
+		var n3 = new Component.node(Component.NODE_TYPE_OPERATION);
+		n3.attachInputOperand(o1, 0);
+		n3.attachInputOperand(o2, 1);
+		n3.setOperator("*");
+		n3.attachNode(n1, 0);
+		n3.setVariableOutput(v1);
+		var n4 = new Component.node(Component.NODE_TYPE_CONDITION);
+		n4.attachInputOperand(o2, 0);
+		n4.attachInputOperand(o3, 1);
+		n4.setOperator("<");
+		n4.attachNode(n3, 0);
+		n4.attachNode(n2, 1);
+		
+		it("Evaluating structure at n2 should result to \"neil\".", function() {
+			var res = n2.evaluateStructure();
+			Assert(res.value == "neil");
+			Assert(res.type == "string");
+		});
+		it("Evaluating structure at n3 should result to 30.", function() {
+			var res = n3.evaluateStructure();
+			Assert(res.value == 30);
+			Assert(res.type == "number");
+		});
+		it("Evaluating structure at n4 should result to 30.", function() {
+			var res = n4.evaluateStructure();
+			Assert(res.value == 30);
+			Assert(res.type == "number");
+		});
+	});
 });
 				

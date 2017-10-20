@@ -12,13 +12,28 @@ function node(type) {
 	
 	if (type == NODE_TYPE_OPERATION) {
 		this.variableOutput = null;
+		this.setVariableOutput = function(variable) {
+			this.variableOutput = variable;
+		}
 	}
 	if (type == NODE_TYPE_OPERATION || type == NODE_TYPE_CONDITION) {
 		this.operator = null;
 	}
+	if (type == NODE_TYPE_BLOCK_OPERATION || type == NODE_TYPE_BLOCK_CONDITION) {
+		this.internalHead = null;
+	}
 	
 	this.setOperator = function(operator) {
 		this.operator = operator;
+	}
+	this.setInternalHead = function(internalHead) {
+		this.internalHead = internalHead;
+	}
+	this.attachNode = function(successor, index) {
+		this.successors[index] = successor;
+	}
+	this.attachInputOperand = function(operand, index) {
+		this.inputOperands[index] = operand;
 	}
 	
 	/* This function evaluates this node given a set of operands.
@@ -67,6 +82,40 @@ function node(type) {
 			return testOperands[0];
 		}
 	}
+	
+	/* This function determines the return value when the structure is evaluated from this node.
+	Memory is an object representing the mapping of known variables to their respective values. */
+	this.evaluateStructure = function(memory) {
+		if (!memory) {
+			memory = [];
+		}
+		var tempOperands = []
+		for (var i = 0; i < this.inputOperands.length; i++) {
+			if (this.inputOperands[i] instanceof operand) {
+				tempOperands.push(this.inputOperands[i]);
+			}
+			else if (this.inputOperands[i] instanceof variable) {
+				tempOperands.push(getValueFromMemory(memory, this.inputOperands[i]));
+			}
+		}		
+		if (this.type == NODE_TYPE_RETURN) {
+			return this.evaluateThis(tempOperands);
+		}
+		else if (this.type == NODE_TYPE_OPERATION) {
+			var output = this.evaluateThis(tempOperands);
+			memory.push({variable: this.variableOutput, value: output});
+			return this.successors[0].evaluateStructure(memory);
+		}
+		else if (this.type == NODE_TYPE_CONDITION) {
+			var output = this.evaluateThis(tempOperands);
+			if (output == true) {
+				return this.successors[0].evaluateStructure(memory);
+			}
+			else {
+				return this.successors[1].evaluateStructure(memory);
+			}
+		}
+	}
 }
 
 function operand(type, value) {
@@ -94,5 +143,18 @@ function operand(type, value) {
 	}
 }
 
-module.exports = {NODE_TYPE_OPERATION, NODE_TYPE_CONDITION, NODE_TYPE_RETURN, NODE_TYPE_BLOCK_OPERATION, NODE_TYPE_BLOCK_CONDITION, node, operand};
+function variable(type) {
+	this.type = type;
+}
+
+function getValueFromMemory(memory, variable) {
+	for (var i = 0; i < memory.length; i++) {
+		if (memory[i].variable === variable) {
+			return memory[i].value;
+		}
+	}
+	return null;
+}
+
+module.exports = {NODE_TYPE_OPERATION, NODE_TYPE_CONDITION, NODE_TYPE_RETURN, NODE_TYPE_BLOCK_OPERATION, NODE_TYPE_BLOCK_CONDITION, node, operand, variable};
 
