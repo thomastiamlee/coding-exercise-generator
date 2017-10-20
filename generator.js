@@ -13,8 +13,12 @@ function generateBasicExercise(options) {
 	if (options.complexity) {
 		complexity = parseInt(options.complexity);
 	}
-	
-	var node = Basic.getBasicNumberOperation(Basic.getRandomOperationOperator());
+	function generateStructure() {
+		// Generate nodes until the desired complexity is achieved
+		while (complexity > 0) {
+			complexity--;
+		}
+	}
 }
 
 generateBasicExercise();

@@ -14,5 +14,24 @@ function node(type) {
 	}
 }
 
-module.exports = {node};
+function operand(type, value) {
+	this.type = type;
+	this.value = value;
+	
+	this.validate = function(restriction) {
+		if (restriction.datatype != this.type) return false;
+		if (this.type == "number") {
+			if (restriction.min_value && this.value < restriction.min_value) return false;
+			if (restriction.max_value && this.value > restriction.max_value) return false;
+			if (restriction.restricted_values) {
+				for (var i = 0; i < restriction.restricted_values.length; i++) {
+					if (restriction.restricted_values[i] == this.value) return false;
+				}
+			}
+		}
+		return true;
+	}
+}
+
+module.exports = {node, operand};
 
