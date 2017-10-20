@@ -23,7 +23,8 @@ function node(type) {
 	
 	/* This function evaluates this node given a set of operands.
 	If the node is an [block] operation node, it returns an operand representing the result of the operation.
-	If the node is a [block] condition node, it returns true or false, representing the result of the condition. */
+	If the node is a [block] condition node, it returns true or false, representing the result of the condition.
+	If the node is a return node, it returns the operand to be returned. */
 	this.evaluateThis = function(testOperands) {
 		if (this.type == NODE_TYPE_OPERATION) {
 			var op1 = testOperands[0].value;
@@ -61,6 +62,9 @@ function node(type) {
 				case "==": return op1 == op2;
 				case "!=": return op1 != op2;
 			}
+		}
+		else if (this.type == NODE_TYPE_RETURN) {
+			return testOperands[0];
 		}
 	}
 }

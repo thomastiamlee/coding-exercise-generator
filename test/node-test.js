@@ -117,6 +117,13 @@ describe("node", function() {
 				Assert(n3.evaluateThis([o3, o1]) == false);
 			});
 		});
+		describe("Return node", function() {
+			var o1 = new Component.operand("number", 9);
+			var o2 = new Component.operand("string", "neil");
+			var n1 = new Component.node(Component.NODE_TYPE_RETURN);
+			it("Return node on 10 should return 10.", function() {	Assert(n1.evaluateThis([o1]) == o1);	});
+			it("Return node on \"neil\" should return \"neil\".", function() {	Assert(n1.evaluateThis([o2]) == o2);	});
+		});
   });
 });
 				
