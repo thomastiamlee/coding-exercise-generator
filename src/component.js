@@ -9,11 +9,15 @@ function node(type) {
 	this.inputOperands = []; // the input operands to the node
 	this.inputOperandRestrictions = []; // the restrictions to the input operands
 	this.successors = []; // the succeeding nodes after the current node
+	this.solutionSuccessors = []; // the succeeding nodes after the current node, used in the solution
 	
-	if (type == NODE_TYPE_OPERATION) {
+	if (type == NODE_TYPE_OPERATION || type == NODE_TYPE_BLOCK_OPERATION) {
 		this.variableOutput = null;
-		this.setVariableOutput = function(variable) {
-			this.variableOutput = variable;
+		this.setVariableOutput = function(variableOutput) {
+			this.variableOutput = variableOutput;
+			if (this.type == NODE_TYPE_BLOCK_OPERATION || this.type == NODE_TYPE_BLOCK_CONDITION) {
+				this.internalHead.replaceAllPlaceholders(variableOutput, -1);
+			}
 		}
 	}
 	if (type == NODE_TYPE_OPERATION || type == NODE_TYPE_CONDITION) {
@@ -21,21 +25,64 @@ function node(type) {
 	}
 	if (type == NODE_TYPE_BLOCK_OPERATION || type == NODE_TYPE_BLOCK_CONDITION) {
 		this.internalHead = null;
+		this.setInternalHead = function(internalHead) {
+			this.internalHead = internalHead;
+		}
+		this.internalTerminalNodes = [];
+		this.setInternalTerminalNodes = function(internalTerminalNodes) {
+			this.internalTerminalNodes = internalTerminalNodes;
+		}
 	}
 	
 	this.setOperator = function(operator) {
 		this.operator = operator;
 	}
-	this.setInternalHead = function(internalHead) {
-		this.internalHead = internalHead;
-	}
 	this.attachNode = function(successor, index) {
+		// If the node being attached is a block, make sure to redirect the flow of the solution to the internal head
+		var solutionTarget = successor;
+		if (successor.type == NODE_TYPE_BLOCK_OPERATION || successor.type == NODE_TYPE_BLOCK_CONDITION) {
+			solutionTarget = successor.internalHead;
+		}
 		this.successors[index] = successor;
+		this.solutionSuccessors[index] = solutionTarget;
+		// If this node is a block, make sure to redirect all the internal terminal nodes to the successor node as well
+		if (this.type == NODE_TYPE_BLOCK_OPERATION || this.type == NODE_TYPE_BLOCK_CONDITION) {
+			for (var i = 0; i < this.internalTerminalNodes.length; i++) {
+				this.internalTerminalNodes[i].attachNode(successor, index);
+			}
+		}
 	}
 	this.attachInputOperand = function(operand, index) {
 		this.inputOperands[index] = operand;
+		if (operand instanceof placeholder == false && this.type == NODE_TYPE_BLOCK_OPERATION || this.type == NODE_TYPE_BLOCK_CONDITION) {
+			this.internalHead.replaceAllPlaceholders(operand, index);
+		}
 	}
 	
+	this.replaceAllPlaceholders = function(operand, index, visited) {
+		if (!visited) { // Prevent checked nodes from being checked again
+			visited = [];
+		}
+		if (visited.indexOf(this) == -1) {
+			visited.push(this);
+			for (var i = 0; i < this.inputOperands.length; i++) {
+				var current = this.inputOperands[i];
+				if (current instanceof placeholder && current.index == index) {
+					this.inputOperands[i] = operand;
+					if (this.type == NODE_TYPE_BLOCK_OPERATION || this.type == NODE_TYPE_BLOCK_OPERATION) {
+						this.internalHead.replaceAllPlaceholders(operand, i, visited);
+					}
+				}
+			}
+			if (this.variableOutput && this.variableOutput instanceof placeholder && this.variableOutput.index == index) {
+				this.variableOutput = operand;
+			}
+			for (var i = 0; i < this.successors.length; i++) {
+				this.successors[i].replaceAllPlaceholders(operand, index, visited);
+			}
+		}
+	}
+		
 	/* This function evaluates this node given a set of operands.
 	If the node is an [block] operation node, it returns an operand representing the result of the operation.
 	If the node is a [block] condition node, it returns true or false, representing the result of the condition.
@@ -89,7 +136,7 @@ function node(type) {
 		if (!memory) {
 			memory = [];
 		}
-		var tempOperands = []
+		var tempOperands = [];
 		for (var i = 0; i < this.inputOperands.length; i++) {
 			if (this.inputOperands[i] instanceof operand) {
 				tempOperands.push(this.inputOperands[i]);
@@ -97,22 +144,25 @@ function node(type) {
 			else if (this.inputOperands[i] instanceof variable) {
 				tempOperands.push(getValueFromMemory(memory, this.inputOperands[i]));
 			}
-		}		
+		}
+		if (this.type == NODE_TYPE_BLOCK_OPERATION || this.type == NODE_TYPE_BLOCK_CONDITION) {
+			return this.internalHead.evaluateStructure(memory);
+		}
 		if (this.type == NODE_TYPE_RETURN) {
 			return this.evaluateThis(tempOperands);
 		}
 		else if (this.type == NODE_TYPE_OPERATION) {
 			var output = this.evaluateThis(tempOperands);
-			memory.push({variable: this.variableOutput, value: output});
-			return this.successors[0].evaluateStructure(memory);
+			registerToMemory(memory, this.variableOutput, output.value);
+			return this.solutionSuccessors[0].evaluateStructure(memory);
 		}
 		else if (this.type == NODE_TYPE_CONDITION) {
 			var output = this.evaluateThis(tempOperands);
 			if (output == true) {
-				return this.successors[0].evaluateStructure(memory);
+				return this.solutionSuccessors[0].evaluateStructure(memory);
 			}
 			else {
-				return this.successors[1].evaluateStructure(memory);
+				return this.solutionSuccessors[1].evaluateStructure(memory);
 			}
 		}
 	}
@@ -147,14 +197,37 @@ function variable(type) {
 	this.type = type;
 }
 
+/* This operand is only to be used only in internal nodes as placeholders for the input variables and output.
+If the index is >= 0, it is treated as a placeholder for an input variable to the block.
+If the index is -1, it is treated as a placeholder for the output of the block (operation node only). */
+function placeholder(index) {
+	this.index = index;
+}
+
+/* Returns an operand object representing the value of a given variable */
 function getValueFromMemory(memory, variable) {
 	for (var i = 0; i < memory.length; i++) {
 		if (memory[i].variable === variable) {
-			return memory[i].value;
+			return new operand(variable.type, memory[i].value);
 		}
 	}
 	return null;
 }
 
-module.exports = {NODE_TYPE_OPERATION, NODE_TYPE_CONDITION, NODE_TYPE_RETURN, NODE_TYPE_BLOCK_OPERATION, NODE_TYPE_BLOCK_CONDITION, node, operand, variable};
+function registerToMemory(memory, variable, value) {
+	var index = -1;
+	for (var i = 0; i < memory.length; i++) {
+		if (memory[i].variable === variable) {
+			index = i;
+		}
+	}
+	if (index == -1) {
+		memory.push({variable: variable, value: value});
+	}
+	else {
+		memory[index].value = value;
+	}
+}
+
+module.exports = {NODE_TYPE_OPERATION, NODE_TYPE_CONDITION, NODE_TYPE_RETURN, NODE_TYPE_BLOCK_OPERATION, NODE_TYPE_BLOCK_CONDITION, node, operand, variable, placeholder};
 
