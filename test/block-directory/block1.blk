@@ -1,0 +1,14 @@
+-average2
+#get the average of 2 numbers
+o,2,2
+n,n
+o,v-n-total,i-0,i-1,+,1
+o,output,v-total,c-n-2,/,terminal
+
+-absolute
+#get the absolute value of a number
+o,1,3
+n
+c,i-0,0,<,1,2
+o,output,i-0,c-n--1,*,terminal
+o,output,i-0,c-n-0,+,terminal
