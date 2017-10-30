@@ -1,15 +1,8 @@
 const File = require("fs");
 const Component = require("./component");
 
-blockList = [];
-
-/* Clear all the blocks loaded to memory */
-function clearAllBlocks() {
-	blockList = [];
-}
-
-/* Load all blocks from a given directory */
-function loadBlocks(directory) {
+/* Load all blocks from a given directory. The blocks are loaded into the given array. */
+function loadBlocks(directory, array) {
 	File.readdirSync(directory).forEach(file => {
 		var contents = File.readFileSync(directory + "/" + file, "utf-8");
 		var contentData = contents.split("\r\n");
@@ -48,14 +41,10 @@ function loadBlocks(directory) {
 				inputDataTypes: inputDataTypes,
 				internalNodesData: internalNodesData
 			}
-			blockList.push(blockObject);
+			array.push(blockObject);
 			current++;
 		}
 	});
 }
 
-function getBlockList() {
-	return blockList;
-}
-
-module.exports = {clearAllBlocks, loadBlocks, getBlockList};
+module.exports = {loadBlocks};
