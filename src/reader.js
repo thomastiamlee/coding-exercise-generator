@@ -1,6 +1,60 @@
 const File = require("fs");
 const Component = require("./component");
 
+/* Loads block information from a file.
+The loaded blocks will be stored in the storage array provided). */
+function loadBlocks(file, storage) {
+	var content = File.readFileSync(file, "utf-8").split("\r\n");
+	var current = 0;
+	while (current < content.length) {
+		// Read the header and description
+		var headerInfo = content[current].split(" ");
+		var name = headerInfo[0].substring(1);
+		var type = headerInfo[1];
+		current++;
+		var description = content[current];
+		current++;
+		current++;
+		// Read the block input information
+		var blockInputInformation = [];
+		var line = content[current];
+		while (line != "%VARIABLES") {
+			blockInputInformation.push(line);
+			current++;
+			line = content[current];
+		}
+		current++;
+		// Read the variable information
+		var variableInformation = [];
+		line = content[current];
+		while (line != "%NODES") {
+			variableInformation.push(line);
+			current++;
+			line = content[current];
+		}
+		current++;
+		// Read the node information
+		var nodeInformation = [];
+		line = content[current];
+		while (line != "" && current < content.length) {
+			nodeInformation.push(line);			
+			current++;
+			line = content[current];
+		}
+		current++;
+		// Build the object
+		var result = {
+			name: name,
+			type: type,
+			description: description,
+			blockInputInformation: blockInputInformation,
+			variableInformation: variableInformation,
+			nodeInformation: nodeInformation
+		}
+		storage.push(result);
+	}
+}
+
 /* Loads an exercise defined in a file */
 function loadExercise(file) {
   var content = File.readFileSync(file, "utf-8").split("\r\n");
@@ -141,4 +195,4 @@ function convertOperandStringToObject(operandString, symbolMappings) {
 	}
 }
 
-module.exports = {loadExercise};
+module.exports = {loadExercise, loadBlocks};
