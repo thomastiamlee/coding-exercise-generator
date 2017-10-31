@@ -1,0 +1,15 @@
+%INPUTS
+x-number
+y-number
+z-number
+%VARIABLES
+temp-number
+total-number
+average-number
+%NODES
+o,[x],[y],[temp],+,1
+o,[temp],[z],[total],+,2
+o,[total],(number-3),[average],/,3
+c,[average],(number-70),>=,4,5
+r,(number-1)
+r,(number-0)

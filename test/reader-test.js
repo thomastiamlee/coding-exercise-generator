@@ -1,29 +1,89 @@
 const Assert = require("assert");
 const Reader = require("../src/reader");
+const Component = require("../src/component");
 		
 describe("reader", function() {
-	describe("#loadBlocks", function() {
-		var result = [];
-		Reader.loadBlocks("test/block-directory", result);
-		it("block list should have a length of 2.", function() { Assert(result.length == 2); });
-		it("first block should be the average block", function() {
-			var target = result[0];
-			Assert(target.name == "average2");
-			Assert(target.description == "get the average of 2 numbers");
-			Assert(target.blockType == "o");
-			Assert(target.inputDataTypes.length == 2 && target.inputDataTypes[0] == "n" && target.inputDataTypes[1] == "n");
-			Assert(target.internalNodesData[0] == "o,v-n-total,i-0,i-1,+,1");
-			Assert(target.internalNodesData[1] == "o,output,v-total,c-n-2,/,terminal");
+	describe("#loadExercise()", function() {
+		describe("Basic test case 1", function() {
+			var result = Reader.loadExercise("./test/sample/sample1.exc");
+			it("Evaluating the structure with an input of 2 and 6 should result in 0.", function() {
+				var var1 = result.input[0];
+				var var2 = result.input[1];
+				var res = result.head.evaluateStructure([{variable: var1, value: 2}, {variable: var2, value: 6}]);
+				Assert(res instanceof Component.operand && res.type == "number" && res.value == 0.0);
+			});
+			it("Evaluating the structure with an input of 2 and 10 should result in 10.", function() {
+				var var1 = result.input[0];
+				var var2 = result.input[1];
+				var res = result.head.evaluateStructure([{variable: var1, value: 2}, {variable: var2, value: 10}]);
+				Assert(res instanceof Component.operand && res.type == "number" && res.value == 10.0);
+			});
+			it("Evaluating the structure with an input of 3 and 15 should result in 12.", function() {
+				var var1 = result.input[0];
+				var var2 = result.input[1];
+				var res = result.head.evaluateStructure([{variable: var1, value: 3}, {variable: var2, value: 15}]);
+				Assert(res instanceof Component.operand && res.type == "number" && res.value == 12.0);
+			});
+			it("Evaluating the structure with an input of 3 and 10 should result in 0.", function() {
+				var var1 = result.input[0];
+				var var2 = result.input[1];
+				var res = result.head.evaluateStructure([{variable: var1, value: 3}, {variable: var2, value: 10}]);
+				Assert(res instanceof Component.operand && res.type == "number" && res.value == 0.0);
+			});
 		});
-		it("second block should be the absolute value block", function() {
-			var target = result[1];
-			Assert(target.name == "absolute");
-			Assert(target.description == "get the absolute value of a number");
-			Assert(target.blockType == "o");
-			Assert(target.inputDataTypes.length == 1 && target.inputDataTypes[0] == "n");
-			Assert(target.internalNodesData[0] == "c,i-0,0,<,1,2");
-			Assert(target.internalNodesData[1] == "o,output,i-0,c-n--1,*,terminal");
-			Assert(target.internalNodesData[2] == "o,output,i-0,c-n-0,+,terminal");
+		describe("Basic test case 2", function() {
+			var result = Reader.loadExercise("./test/sample/sample2.exc");
+			it("Evaluating the structure with an input of 70, 80, 90 should result in 1.", function() {
+				var var1 = result.input[0];
+				var var2 = result.input[1];
+				var var3 = result.input[2];
+				var res = result.head.evaluateStructure([{variable: var1, value: 70}, {variable: var2, value: 80}, {variable: var3, value: 90}]);
+				Assert(res instanceof Component.operand && res.type == "number" && res.value == 1.0);
+			});
+			it("Evaluating the structure with an input of 60, 70, 80 should result in 1.", function() {
+				var var1 = result.input[0];
+				var var2 = result.input[1];
+				var var3 = result.input[2];
+				var res = result.head.evaluateStructure([{variable: var1, value: 60}, {variable: var2, value: 70}, {variable: var3, value: 80}]);
+				Assert(res instanceof Component.operand && res.type == "number" && res.value == 1.0);
+			});
+			it("Evaluating the structure with an input of 60, 60, 80 should result in 0.", function() {
+				var var1 = result.input[0];
+				var var2 = result.input[1];
+				var var3 = result.input[2];
+				var res = result.head.evaluateStructure([{variable: var1, value: 60}, {variable: var2, value: 60}, {variable: var3, value: 80}]);
+				Assert(res instanceof Component.operand && res.type == "number" && res.value == 0.0);
+			});
+			it("Evaluating the structure with an input of 0, 0, 100 should result in 0.", function() {
+				var var1 = result.input[0];
+				var var2 = result.input[1];
+				var var3 = result.input[2];
+				var res = result.head.evaluateStructure([{variable: var1, value: 0}, {variable: var2, value: 0}, {variable: var3, value: 100}]);
+				Assert(res instanceof Component.operand && res.type == "number" && res.value == 0.0);
+			});
+		});
+		describe("Loop test case", function() {
+			var result = Reader.loadExercise("./test/sample/sample3.exc");
+			it("Evaluating the structure with an input of 1 should result in 1.", function() {
+				var var1 = result.input[0];
+				var res = result.head.evaluateStructure([{variable: var1, value: 1}]);
+				Assert(res instanceof Component.operand && res.type == "number" && res.value == 1.0);
+			});
+			it("Evaluating the structure with an input of 3 should result in 6.", function() {
+				var var1 = result.input[0];
+				var res = result.head.evaluateStructure([{variable: var1, value: 3}]);
+				Assert(res instanceof Component.operand && res.type == "number" && res.value == 6.0);
+			});
+			it("Evaluating the structure with an input of 5 should result in 120.", function() {
+				var var1 = result.input[0];
+				var res = result.head.evaluateStructure([{variable: var1, value: 5}]);
+				Assert(res instanceof Component.operand && res.type == "number" && res.value == 120.0);
+			});
+			it("Evaluating the structure with an input of 0 should result in 1.", function() {
+				var var1 = result.input[0];
+				var res = result.head.evaluateStructure([{variable: var1, value: 0}]);
+				Assert(res instanceof Component.operand && res.type == "number" && res.value == 1.0);
+			});
 		});
 	});
 });

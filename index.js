@@ -1,6 +1,10 @@
 const Component = require("./src/component");
 const Restriction = require("./src/restriction");
+const Reader = require("./src/reader");
 
-var operand = new Component.operand("number", 101);
+var result = Reader.loadExercise("./test/sample/sample1.exc");
 
-console.log(operand.validate(restriction));
+var var1 = result.input[0];
+var var2 = result.input[1];
+var res = result.head.evaluateStructure([{variable: var1, value: 2}, {variable: var2, value: 6}]);
+console.log(res);
