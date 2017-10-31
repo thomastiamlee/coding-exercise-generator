@@ -55,6 +55,115 @@ function loadBlocks(file, storage) {
 	}
 }
 
+/* Builds the block object from the information read from a file.
+This method assumes that you have called the loadBlock() method and you are passing the array where the loaded block is stored.
+This method returns null if the desired block is not found in the array. */
+function buildBlockFromInformation(name, storage) {
+	var target = null;
+	for (var i = 0; i < storage.length; i++) {
+		if (storage[i].name == name) {
+			target = storage[i];
+		}
+	}
+	if (target == null) {
+		return null;
+	}
+	// Build the internal structure
+	// Read the variables
+	var variableInformation = target.variableInformation;
+	symbolMappings = [];
+	for (var i = 0; i < variableInformation.length; i++) {
+		var current = variableInformation[i].split("-");
+		var variableName = current[0];
+		var dataType = current[1];
+		if (getOperandFromSymbol(variableName, symbolMappings) == null) {
+			var newObj = {name: variableName, obj: new Component.variable(dataType)};
+			symbolMappings.push(newObj);
+		}
+	}
+	// Read the nodes
+	var nodeInformation = target.nodeInformation;
+	var nodes = [];
+	var internalTerminalNodes = [];
+	for (var i = 0; i < nodeInformation.length; i++) {
+		var current = nodeInformation[i];
+		var isTerminal = false;
+		if (current.charAt(0) == '@') {
+			isTerminal = true;
+			current = current.substring(1);
+		}
+		currentData = current.split(",");
+		var type = currentData[0];
+		if (type == 'o') {
+			var operand1 = convertOperandStringToObject(currentData[1], symbolMappings);
+			var operand2 = convertOperandStringToObject(currentData[2], symbolMappings);
+			var variableOutput = convertOperandStringToObject(currentData[3], symbolMappings);
+			var operator = currentData[4];
+			if (isTerminal == false) {
+				successor = [currentData[5]];
+			}
+			else {
+				successor = [];
+			}
+			var newNode = new Component.node(Component.NODE_TYPE_OPERATION);
+			newNode.attachInputOperand(operand1, 0);
+			newNode.attachInputOperand(operand2, 1);
+			newNode.setVariableOutput(variableOutput);
+			newNode.setOperator(operator);
+			
+			var newObj = {node: newNode, successor: successor};
+			nodes.push(newObj);
+			if (isTerminal) {
+				internalTerminalNodes.push(newNode);
+			}
+		}
+		else if (type == 'c') {
+			var operand1 = convertOperandStringToObject(currentData[1], symbolMappings);
+			var operand2 = convertOperandStringToObject(currentData[2], symbolMappings);
+			var operator = currentData[3];
+			if (isTerminal == false) {
+				successor = [currentData[4], currentData[5]];
+			}
+			else {
+				successor = [];
+			}
+			var newNode = new Component.node(Component.NODE_TYPE_CONDITION);
+			newNode.attachInputOperand(operand1, 0);
+			newNode.attachInputOperand(operand2, 1);
+			newNode.setOperator(operator);
+			
+			var newObj = {node: newNode, successor: successor};
+			nodes.push(newObj);
+			if (isTerminal) {
+				internalTerminalNodes.push(newNode);
+			}
+		}
+	}
+	// Connect the nodes
+	for (var i = 0; i < nodes.length; i++) {
+		var currentNode = nodes[i].node;
+		var successors = nodes[i].successor;
+		for (var j = 0; j < successors.length; j++) {
+			if (successors[j] != null) {
+				currentNode.attachNode(nodes[successors[j]].node, j);
+			}
+		}
+	}	
+	// Build the block
+	if (target.type == "o") {
+		var res = new Component.node(Component.NODE_TYPE_BLOCK_OPERATION);
+		res.setInternalHead(nodes[0].node);
+		res.setInternalTerminalNodes(internalTerminalNodes);
+		return res;
+	}
+	else if (target.type == "c") {
+		var res = new Component.node(Component.NODE_TYPE_BLOCK_CONDITION);
+		res.setInternalHead(nodes[0].node);
+		res.setInternalTerminalNodes(internalTerminalNodes);
+		res;
+	}
+}
+
 /* Loads an exercise defined in a file */
 function loadExercise(file) {
   var content = File.readFileSync(file, "utf-8").split("\r\n");
@@ -180,9 +289,9 @@ function convertOperandStringToObject(operandString, symbolMappings) {
 	}
 	// Constant case
 	else if (operandString.charAt(0) == '(') {
-		var constantData = operandString.substring(1, operandString.length - 1).split("-");
-		var dataType = constantData[0];
-		var val = constantData[1];
+		var constantData = operandString.substring(1, operandString.length - 1);
+		var dataType = constantData.substring(0, constantData.indexOf('-'));
+		var val = constantData.substring(constantData.indexOf('-') + 1);
 		if (dataType == "number") {
 			return new Component.operand(dataType, parseFloat(val));
 		}
@@ -193,6 +302,15 @@ function convertOperandStringToObject(operandString, symbolMappings) {
 			return new Component.operand(dataType, val);
 		}
 	}
+	else if (operandString.charAt(0) == '/') {
+		var index = operandString.substring(1, operandString.length - 1);
+		if (index == "blockoutput") {
+			return new Component.placeholder(-1);
+		}
+		else {
+			return new Component.placeholder(parseInt(index));
+		}
+	}
 }
 
-module.exports = {loadExercise, loadBlocks};
+module.exports = {loadExercise, loadBlocks, buildBlockFromInformation};

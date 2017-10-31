@@ -7,7 +7,7 @@ number
 total-number
 %NODES
 o,/0/,/1/,[total],+,1
-@o,[total],(number-2),[blockoutput],/
+@o,[total],(number-2),/blockoutput/,/
 
 -absolute o
 #get the absolute value of a number
@@ -16,5 +16,5 @@ number
 %VARIABLES
 %NODES
 c,/0/,(number-0),<,1,2
-@o,/0/,(number--1),[blockoutput],*
-@o,/0/,(number-0),[blockoutput],+
+@o,/0/,(number--1),/blockoutput/,*
+@o,/0/,(number-0),/blockoutput/,+
