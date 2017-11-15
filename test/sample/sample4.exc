@@ -1,0 +1,10 @@
+%INPUTS
+n1-number
+n2-number
+%VARIABLES
+result-number
+%NODES
+bo,absolute,[n1],[n1],1
+bo,absolute,[n2],[n2],2
+bo,average2,[n1],[n2],[result],3
+r,[result]

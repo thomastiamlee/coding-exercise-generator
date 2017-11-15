@@ -165,13 +165,17 @@ function buildBlockFromInformation(name, storage) {
 }
 
 /* Loads an exercise defined in a file */
-function loadExercise(file) {
+function loadExercise(file, blocks) {
   var content = File.readFileSync(file, "utf-8").split("\r\n");
 	var current = 1;
 	
 	var symbolMappings = [];
 	var inputVariables = [];
 	var nodes = [];
+	
+	if (!blocks) {
+		blocks = [];
+	}
 	
 	// Read the inputs
 	var line = content[current];
@@ -239,6 +243,11 @@ function loadExercise(file) {
 			
 			var newObj = {node: newNode, successor: [successor1, successor2]};
 			nodes.push(newObj);
+		}
+		else if (type == "ob") {
+			var blockNname = nodeData[1];
+			var block = buildBlockFromInformation(blockName, blocks);
+			
 		}
 		else if (type == "r") {
 			var operand1 = convertOperandStringToObject(nodeData[1], symbolMappings);
