@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/thomastiamlee/coding-exercise-generator/issues"
   },
-  "homepage": "https://github.com/thomastiamlee/coding-exercise-generator#readme"
+  "homepage": "https://github.com/thomastiamlee/coding-exercise-generator#readme",
+  "dependencies": {
+    "pegjs": "^0.10.0"
+  }
 }
