@@ -1,0 +1,15 @@
+start
+	= action_list
+
+action_list
+	= "(" _ action_name _ ")" _ action_list
+	/ _
+
+action_name
+	= name:[a-zA-Z_]+ { console.log("Found name: " + name.join("")); }
+	
+_
+	= [ \t\r\n]*
+
+__
+	= [ \t\r\n]+
