@@ -1,13 +1,46 @@
+{
+	function log(message) {
+		console.log(message);
+	}
+}
+
 start
 	= action_list
 
 action_list
-	= "(" _ action_name _ ")" _ action_list
+	= "-" _ action_name _ "(" _ parameter_list _ ")" _ action_list
 	/ _
 
 action_name
-	= name:[a-zA-Z_]+ { console.log("Found name: " + name.join("")); }
+	= name:[a-zA-Z_]+
+	{ 
+		log("Found action name: " + name.join(""));
+	}
 	
+parameter_list
+	= non_empty_parameter_list
+	/ _
+
+non_empty_parameter_list
+	= parameter _ "," _ non_empty_parameter_list	
+	/ parameter
+	
+parameter
+	= variable _ "-" _ type
+	/ variable
+			
+variable
+	= variable:("?"[a-zA-Z_]+)
+	{
+		log("Variable found: " + variable.join(""));
+	}
+			
+type
+	= type:([a-zA-Z_]+)
+	{
+		log("Type found: " + type.join(""));
+	}
+
 _
 	= [ \t\r\n]*
 
