@@ -7,7 +7,7 @@ function parseKnowledgeBase() {
 	var kb = fs.readFileSync("./src/kb/kb.txt", "utf-8");
 	var parser = Peg.generate(grammar, {trace: false});
 	
-	parser.parse(kb);
+	console.log(parser.parse(kb));
 }
 
 module.exports = {parseKnowledgeBase};

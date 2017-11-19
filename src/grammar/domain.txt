@@ -5,56 +5,78 @@
 }
 
 start
-	= _ "#types;" _ type_list "#relationships;" _ relationship_list _
+	= _ "#types;" _ x:type_list "#relationships;" _ y:relationship_list _
 	{
-	
+		return {
+			type_list: x,
+			relationship_list: y
+		}
 	}
 	
 type_list
-	= type_def type_list _
+	= x:type_def y:type_list _
+	{
+		return [x].concat(y);
+	}
 	/ _
 	{
-	
+		return [];
 	}
 	
 type_def
-	= type_token _ ";" _
-	/ type_token _ "->" _ type_token ";" _
+	= x:type_token _ ";" _
 	{
-	
+		return [x, null];
+	}
+	/ x:type_token _ "->" _ y:type_token ";" _
+	{
+		return [x, y];
 	}
 	
 type_token
-	= [a-zA-Z ]+[*]?
+	= x:([a-zA-Z ]+)y:([*]?)
 	{
-	
+		if (y == null) {
+			return x.join("");
+		}
+		else {
+			return x.join("") + "*";
+		}
 	}
 	
 relationship_list
-	= relationship_def relationship_list _
+	= x:relationship_def y:relationship_list _
+	{
+		return [x].concat(y);
+	}
 	/ _
 	{
-	
+		return [];
 	}
-	
+		
 relationship_def
-	= predicate_token _ "(" _ relationship_parameter_list ")" _ ";" _
+	= x:predicate_token _ "(" _ y:relationship_parameter_list ")" _ ";" _
 	{
-	
+		var res = {
+			predicate: x,
+			parameters: y
+		}
+		return res;
 	}
 	
 predicate_token
-	= [a-zA-Z-]+
+	= x:[a-zA-Z-]+
 	{
-
+		return x.join("");
 	}
 	
 relationship_parameter_list
-	= type_token _ "," relationship_parameter_list _
-	/ type_token	
+	= x:type_token _ "," y:relationship_parameter_list _
 	{
-	
+		var text = x + "," + y;
+		return text.split(",");
 	}
+	/ type_token	
 	
 _
 	= [ \t\r\n]*
