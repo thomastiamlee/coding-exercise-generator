@@ -5,42 +5,57 @@
 }
 
 start
-	= action_list
-
-action_list
-	= "-" _ action_name _ "(" _ parameter_list _ ")" _ action_list
-	/ _
-
-action_name
-	= name:[a-zA-Z_]+
-	{ 
-		log("Found action name: " + name.join(""));
+	= _ "#types;" _ type_list "#relationships;" _ relationship_list _
+	{
+	
 	}
 	
-parameter_list
-	= non_empty_parameter_list
+type_list
+	= type_def type_list _
 	/ _
-
-non_empty_parameter_list
-	= parameter _ "," _ non_empty_parameter_list	
-	/ parameter
+	{
 	
-parameter
-	= variable _ "-" _ type
-	/ variable
-			
-variable
-	= variable:("?"[a-zA-Z_]+)
-	{
-		log("Variable found: " + variable.join(""));
 	}
-			
-type
-	= type:([a-zA-Z_]+)
+	
+type_def
+	= type_token _ ";" _
+	/ type_token _ "->" _ type_token ";" _
 	{
-		log("Type found: " + type.join(""));
+	
 	}
+	
+type_token
+	= [a-zA-Z ]+[*]?
+	{
+	
+	}
+	
+relationship_list
+	= relationship_def relationship_list _
+	/ _
+	{
+	
+	}
+	
+relationship_def
+	= predicate_token _ "(" _ relationship_parameter_list ")" _ ";" _
+	{
+	
+	}
+	
+predicate_token
+	= [a-zA-Z-]+
+	{
 
+	}
+	
+relationship_parameter_list
+	= type_token _ "," relationship_parameter_list _
+	/ type_token	
+	{
+	
+	}
+	
 _
 	= [ \t\r\n]*
 

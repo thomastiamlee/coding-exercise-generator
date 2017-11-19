@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/thomastiamlee/coding-exercise-generator#readme",
   "dependencies": {
+    "mocha": "^4.0.1",
     "pegjs": "^0.10.0"
   }
 }

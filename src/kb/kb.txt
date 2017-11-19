@@ -1,2 +1,17 @@
--buy(?p - person, ?i)
--eat(?x)
+#types;
+person;
+student->person;
+location;
+restaurant->location;
+nonnegative value*;
+monetary value*->nonnegative value*;
+distance value*->nonnegative value*;
+mass value*->nonnegative value*;
+height*->distance value*;
+weight*->mass value*;
+string value*;
+person name*->string value*;
+#relationships;
+has(person,name);
+has(person,height);
+has(person,weight);

@@ -5,7 +5,7 @@ const Peg = require("pegjs");
 function parseKnowledgeBase() {
 	var grammar = fs.readFileSync("./src/grammar/domain.txt", "utf-8");
 	var kb = fs.readFileSync("./src/kb/kb.txt", "utf-8");
-	var parser = Peg.generate(grammar);
+	var parser = Peg.generate(grammar, {trace: false});
 	
 	parser.parse(kb);
 }
