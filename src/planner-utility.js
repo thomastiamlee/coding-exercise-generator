@@ -13,7 +13,16 @@ function getAvailableActions(table, kb) {
 /* Gets all the possible replacements of variables for an action, based on its parameter requirements and preconditions. */
 function getAllPossibleActionVariableReplacements(action, table, kb) {
 	var candidates = getAllPossibleParameterMatches(action, table, kb);
-		
+	var combinations = 1;
+	for (var i = 0; i < candidates.length; i++) {
+		combinations = combinations * candidates[i].length;
+	}
+	for (var i = 0; i < combinations; i++) {
+		var testMatch = [];
+		for (var j = 0; j < candidates.length; j++) {
+			testMatch.push(candidates[j][i % candidates[j].length]);
+		}
+	}
 }
 
 function assertionIsTrue(assertion, kb) {
