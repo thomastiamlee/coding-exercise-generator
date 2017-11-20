@@ -58,6 +58,19 @@ describe("planner-utility", function() {
 			Assert(type4 == -1);
 		});
 	});
+	describe("#fetchActionIndex()", function() {
+		var kb = Parser.parseKnowledgeBase("./test/kbtest.txt");
+		PlannerUtility.initializeKnowledgeBase(kb);
+		var actionList = kb.action_list;
+		var action1 = actionList[PlannerUtility.fetchActionIndex(actionList, "eat")];
+		var action2 = actionList[PlannerUtility.fetchActionIndex(actionList, "mention")];
+		it("action1 should be the eat action.", function() {
+			Assert(action1.name == "eat" && action1.parameters && action1.preconditions && action1.effects);
+		});
+		it("action2 should be the mention action.", function() {
+			Assert(action2.name == "mention" && action2.parameters && action2.preconditions && action2.effects);
+		});
+	});
 	describe("#isExtendedFrom()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbextendtest.txt");
 		PlannerUtility.initializeKnowledgeBase(kb);

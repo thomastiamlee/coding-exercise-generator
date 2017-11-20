@@ -8,6 +8,10 @@ function getAvailableActions(table, kb) {
 	}
 }
 
+function getAllPossibleReplacements(table, action, kb) {
+	
+}
+
 /* Returns if a the given offspring is extended from a given
 parent, based on the types defined in the knowledge base. */
 function isExtendedFrom(offspring, parent, kb) {
@@ -83,8 +87,8 @@ function isPrimitive(type) {
 }
 
 /* Fetches index of a type from the knowledge base, given its
-name. This function assumes that the knowledge base has been
-initialized already. This function returns -1 if the type is
+name. This function assumes that the type list is sorted
+lexicographically. This function returns -1 if the type is
 not found. */
 function fetchTypeIndex(typeList, name) {
 	// Binary search
@@ -106,4 +110,28 @@ function fetchTypeIndex(typeList, name) {
 	return -1;
 }
 
-module.exports = {isPrimitive, initializeMemoryTable, initializeKnowledgeBase, fetchTypeIndex, isExtendedFrom};
+/* Fetches index of an action from the knowledge base, given its
+name. This function assumes that the action list is sorted
+lexicographically. This function returns -1 if the type is
+not found. */
+function fetchActionIndex(actionList, name) {
+	// Binary search
+	var low = 0;
+	var hi = actionList.length - 1;
+	
+	while (low <= hi) {
+		var mid = Math.floor((low + hi) / 2);
+		if (actionList[mid].name == name) {
+			return mid;
+		}
+		else if (actionList[mid].name < name) {
+			low = mid + 1;
+		}
+		else {
+			hi = mid - 1;
+		}
+	}
+	return -1;
+}
+
+module.exports = {isPrimitive, initializeMemoryTable, initializeKnowledgeBase, fetchTypeIndex, fetchActionIndex, isExtendedFrom};
