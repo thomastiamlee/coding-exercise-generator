@@ -26,11 +26,11 @@ describe("planner-utility", function() {
 		it("Memory table should be of length 3.", function() {
 			Assert(res.length == 3);
 		});
-		it("The first element should be {type: \"person\", memory: []]", function() {
-			Assert(res[0].type == "person" && res[0].memory.length == 0);
+		it("The first element should be {id: \"person1\", type: \"person\", memory: []]", function() {
+			Assert(res[0].id == "person1" && res[0].type == "person" && res[0].memory.length == 0);
 		});
-		it("The third element should be {type: \"ramen\", memory: []]", function() {
-			Assert(res[2].type == "ramen" && res[2].memory.length == 0);
+		it("The third element should be {id: \"ramen3\", type: \"ramen\", memory: []]", function() {
+			Assert(res[2].id == "ramen3" && res[2].type == "ramen" && res[2].memory.length == 0);
 		});
 		it("A space with primitives should return null.", function() {
 			Assert(invalidRes == null);
@@ -102,8 +102,6 @@ describe("planner-utility", function() {
 		it("In the feed action, student and person should match the person parameter.", function() {
 			Assert(test1[0].length == 2);
 			var cond1 = false, cond2 = false;
-			console.log("XXX");
-			console.log(test1);
 			for (var i = 0; i < test1[0].length; i++) {
 				if (test1[0][i].type == "person") cond1 = true;
 				else if (test1[0][i].type == "student") cond2 = true;

@@ -95,6 +95,7 @@ function initializeMemoryTable(space, kb) {
 			return null;
 		}
 		res.push({id: name + "" + identifierCounter, type: name, memory: []});
+		identifierCounter++;
 	}
 	return res;
 }
