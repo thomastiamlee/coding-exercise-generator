@@ -7,14 +7,14 @@ describe("parser", function() {
 		it ("Type list should contain 15 elements.", function() {
 			Assert(result.type_list && result.type_list.length == 15);
 		});
-		it("The first element should be [\"person\", []].", function() {
-			Assert(result.type_list[0][0] == "person" && result.type_list[0][1].length == 0);
+		it("The ninth element should be [\"person\", []].", function() {
+			Assert(result.type_list[8][0] == "person" && result.type_list[8][1].length == 0);
 		});
-		it("The fourth element should be [\"restaurant\", [\"location\"]].", function() {
-			Assert(result.type_list[3][0] == "restaurant" && result.type_list[3][1][0] == "location");
+		it("The twelfth element should be [\"restaurant\", [\"location\"]].", function() {
+			Assert(result.type_list[11][0] == "restaurant" && result.type_list[11][1][0] == "location");
 		});
-		it("The fifteenth element should be [\"personname*\", [\"stringvalue*\"]].", function() {
-			Assert(result.type_list[14][0] == "personname*" && result.type_list[14][1][0] == "stringvalue*");
+		it("The tenth element should be [\"personname*\", [\"stringvalue*\"]].", function() {
+			Assert(result.type_list[9][0] == "personname*" && result.type_list[9][1][0] == "stringvalue*");
 		});
 		it("Relationships list should contain 4 elements.", function() {
 			Assert(result.relationship_list && result.relationship_list.length == 4);
@@ -30,36 +30,36 @@ describe("parser", function() {
 		it("Actions list should contain 2 elements.", function() {
 			Assert(result.action_list && result.action_list.length == 2);
 		});
-		it("The first action should be the mention action.", function() {
-			Assert(result.action_list[0].name == "mention");
+		it("The first action should be the eat action.", function() {
+			Assert(result.action_list[0].name == "eat");
 			Assert(result.action_list[0].parameters.length == 2);
-			Assert(result.action_list[0].parameters[0] == "*");
-			Assert(result.action_list[0].parameters[1] == "*");
-			Assert(result.action_list[0].preconditions.length == 2);
-			Assert(result.action_list[0].preconditions[0].truth == true);
-			Assert(result.action_list[0].preconditions[0].predicate == "has");
-			Assert(result.action_list[0].preconditions[0].parameters.length == 2);
-			Assert(result.action_list[0].preconditions[0].parameters[0] == "0");
-			Assert(result.action_list[0].preconditions[0].parameters[1] == "1");
-			Assert(result.action_list[0].preconditions[1].truth == false);
-			Assert(result.action_list[0].preconditions[1].predicate == "visible");
-			Assert(result.action_list[0].preconditions[1].parameters.length == 2);
-			Assert(result.action_list[0].preconditions[1].parameters[0] == "0");
-			Assert(result.action_list[0].preconditions[1].parameters[1] == "1");
-			Assert(result.action_list[0].effects.length == 1);			
-			Assert(result.action_list[0].effects[0].truth == true);
-			Assert(result.action_list[0].effects[0].predicate == "visible");			
-			Assert(result.action_list[0].effects[0].parameters.length == 2);			
-			Assert(result.action_list[0].effects[0].parameters[0] == "0");
-			Assert(result.action_list[0].effects[0].parameters[1] == "1");
+			Assert(result.action_list[0].parameters[0] == "person");
+			Assert(result.action_list[0].parameters[1] == "food");
+			Assert(result.action_list[0].preconditions.length == 0);
+			Assert(result.action_list[0].effects.length == 0);
 		});
-		it("The second action should be the eat action.", function() {
-			Assert(result.action_list[1].name == "eat");
+		it("The second action should be the mention action.", function() {
+			Assert(result.action_list[1].name == "mention");
 			Assert(result.action_list[1].parameters.length == 2);
-			Assert(result.action_list[1].parameters[0] == "person");
-			Assert(result.action_list[1].parameters[1] == "food");
-			Assert(result.action_list[1].preconditions.length == 0);
-			Assert(result.action_list[1].effects.length == 0);
+			Assert(result.action_list[1].parameters[0] == "*");
+			Assert(result.action_list[1].parameters[1] == "*");
+			Assert(result.action_list[1].preconditions.length == 2);
+			Assert(result.action_list[1].preconditions[0].truth == true);
+			Assert(result.action_list[1].preconditions[0].predicate == "has");
+			Assert(result.action_list[1].preconditions[0].parameters.length == 2);
+			Assert(result.action_list[1].preconditions[0].parameters[0] == "0");
+			Assert(result.action_list[1].preconditions[0].parameters[1] == "1");
+			Assert(result.action_list[1].preconditions[1].truth == false);
+			Assert(result.action_list[1].preconditions[1].predicate == "visible");
+			Assert(result.action_list[1].preconditions[1].parameters.length == 2);
+			Assert(result.action_list[1].preconditions[1].parameters[0] == "0");
+			Assert(result.action_list[1].preconditions[1].parameters[1] == "1");
+			Assert(result.action_list[1].effects.length == 1);			
+			Assert(result.action_list[1].effects[0].truth == true);
+			Assert(result.action_list[1].effects[0].predicate == "visible");	
+			Assert(result.action_list[1].effects[0].parameters.length == 2);	
+			Assert(result.action_list[1].effects[0].parameters[0] == "0");
+			Assert(result.action_list[1].effects[0].parameters[1] == "1");
 		});
 	});
 });

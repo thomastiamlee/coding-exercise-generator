@@ -8,6 +8,16 @@ function getAvailableActions(table, kb) {
 	}
 }
 
+/* Gets all the possible replacements of variables for an action, based on its parameter requirements and preconditions. */
+function getAllPossibleActionVariableReplacements(action, table, kb) {
+	var candidates = getAllPossibleParameterMatches(action, table, kb);
+		
+}
+
+function assertionIsTrue(assertion, assertionList, kb) {
+	
+}
+
 /* Gets all the possible combination of space elemets that can be assigned for an action, based on its parameter requirements and
 preconditions. */
 function getAllPossibleParameterMatches(action, table, kb) {
@@ -64,22 +74,6 @@ function isExtendedFrom(offspring, parent, kb) {
 		return true;
 	}
 	return false;
-}
-
-/* This function performs the necessary initializations to the
-knowledge base in preparation for the planning algorithm. */
-function initializeKnowledgeBase(kb) {
-	// Sort types and action lists
-	kb.type_list = kb.type_list.sort(function(a, b) {
-		if (a[0] < b[0]) return -1;
-		else if (a[0] > b[0]) return 1;
-		return 0;
-	});
-	kb.action_list = kb.action_list.sort(function(a, b) {
-		if (a.name < b.name) return -1;
-		else if (a.name > b.name) return 1;
-		return 0;
-	});
 }
 
 /* Initializes the memory table from the space list. The space
@@ -154,4 +148,4 @@ function fetchActionIndex(actionList, name) {
 	return -1;
 }
 
-module.exports = {isPrimitive, initializeMemoryTable, initializeKnowledgeBase, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches};
+module.exports = {isPrimitive, initializeMemoryTable, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches};

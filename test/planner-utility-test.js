@@ -18,10 +18,11 @@ describe("planner-utility", function() {
 		});
 	});
 	describe("#initializeMemoryTable()", function() {
+		var kb = Parser.parseKnowledgeBase("./test/kbtest.txt");
 		var space = ["person", "restaurant", "ramen"];
-		var res = PlannerUtility.initializeMemoryTable(space);
+		var res = PlannerUtility.initializeMemoryTable(space, kb);
 		var invalidSpace = ["person", "height*"];
-		var invalidRes = PlannerUtility.initializeMemoryTable(invalidSpace);
+		var invalidRes = PlannerUtility.initializeMemoryTable(invalidSpace, kb);
 		
 		it("Memory table should be of length 3.", function() {
 			Assert(res.length == 3);
@@ -38,7 +39,6 @@ describe("planner-utility", function() {
 	});
 	describe("#fetchTypeIndex()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbtest.txt");
-		PlannerUtility.initializeKnowledgeBase(kb);
 		var typeList = kb.type_list;
 		var type1 = typeList[PlannerUtility.fetchTypeIndex(typeList, "person")];
 		var type2 = typeList[PlannerUtility.fetchTypeIndex(typeList, "stringvalue*")];
@@ -60,7 +60,6 @@ describe("planner-utility", function() {
 	});
 	describe("#fetchActionIndex()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbtest.txt");
-		PlannerUtility.initializeKnowledgeBase(kb);
 		var actionList = kb.action_list;
 		var action1 = actionList[PlannerUtility.fetchActionIndex(actionList, "eat")];
 		var action2 = actionList[PlannerUtility.fetchActionIndex(actionList, "mention")];
@@ -73,7 +72,6 @@ describe("planner-utility", function() {
 	});
 	describe("#isExtendedFrom()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbextendtest.txt");
-		PlannerUtility.initializeKnowledgeBase(kb);
 		var test1 = PlannerUtility.isExtendedFrom("student", "person", kb);
 		var test2 = PlannerUtility.isExtendedFrom("student", "student", kb);
 		var test3 = PlannerUtility.isExtendedFrom("person", "student", kb);
@@ -93,9 +91,8 @@ describe("planner-utility", function() {
 	});
 	describe("#getAllPossibleParameterMatches()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
-		PlannerUtility.initializeKnowledgeBase(kb);
 		var space = ["student", "person", "dog", "cat", "pet"];
-		var table = PlannerUtility.initializeMemoryTable(space);
+		var table = PlannerUtility.initializeMemoryTable(space, kb);
 		var actionList = kb.action_list;
 		var feedAction = actionList[PlannerUtility.fetchActionIndex(actionList, "feed")];
 		var test1 = PlannerUtility.getAllPossibleParameterMatches(feedAction, table, kb);
