@@ -16,6 +16,10 @@ function isExtendedFrom(offspring, parent, kb) {
 	var temp = [].concat(typeList);
 	var offspringType = fetchType(kb, offspring);
 	stack.push(offspringType);
+	
+	while (stack.length != 0) {
+		
+	}
 }
 
 /* This function performs the necessary initailizations to the
@@ -64,10 +68,10 @@ function isPrimitive(type) {
 	return type.charAt(type.length - 1) == '*';
 }
 
-/* Fetches a type from the knowledge base, given its name.
-This function assumes that the knowledge base has been
+/* Fetches index of a type from the knowledge base, given its
+name. This function assumes that the knowledge base has been
 initialized already. */
-function fetchType(typeList, name) {
+function fetchTypeIndex(typeList, name) {
 	// Binary search
 	var low = 0;
 	var hi = typeList.length - 1;
@@ -76,7 +80,7 @@ function fetchType(typeList, name) {
 		var mid = Math.floor((low + hi) / 2);
 		console.log("mid: " + mid);
 		if (typeList[mid][0] == name) {
-			return typeList[mid];
+			return mid;
 		}
 		else if (typeList[mid][0] < name) {
 			low = mid + 1;
@@ -88,4 +92,4 @@ function fetchType(typeList, name) {
 	return null;
 }
 
-module.exports = {isPrimitive, initializeMemoryTable, initializeKnowledgeBase, fetchType};
+module.exports = {isPrimitive, initializeMemoryTable, initializeKnowledgeBase, fetchTypeIndex};

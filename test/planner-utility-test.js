@@ -36,13 +36,13 @@ describe("planner-utility", function() {
 			Assert(invalidRes == null);
 		});
 	});
-	describe("#fetchType()", function() {
+	describe("#fetchTypeIndex()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbtest.txt");
 		PlannerUtility.initializeKnowledgeBase(kb);
 		var typeList = kb.type_list;
-		var type1 = PlannerUtility.fetchType(typeList, "person");
-		var type2 = PlannerUtility.fetchType(typeList, "stringvalue*");
-		var type3 = PlannerUtility.fetchType(typeList, "food");
+		var type1 = typeList[PlannerUtility.fetchTypeIndex(typeList, "person")];
+		var type2 = typeList[PlannerUtility.fetchTypeIndex(typeList, "stringvalue*")];
+		var type3 = typeList[PlannerUtility.fetchTypeIndex(typeList, "food")];
 		
 		it("type1 should be the person type.", function() {
 			Assert(type1.length == 2 && type1[0] == "person" && type1[1] == null);
