@@ -3,4 +3,4 @@ const Restriction = require("./src/restriction");
 const Reader = require("./src/reader");
 const Parser = require("./src/parser");
 
-Parser.parseKnowledgeBase();
+Parser.parseKnowledgeBase("./src/kb/kb.txt");

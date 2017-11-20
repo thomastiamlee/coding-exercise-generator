@@ -36,7 +36,7 @@ type_def
 	}
 	
 type_token
-	= x:([a-zA-Z ]+)y:([*]?)
+	= x:([a-zA-Z]+)y:([*]?)
 	{
 		if (y == null) {
 			return x.join("");
@@ -68,13 +68,13 @@ relationship_def
 	}
 	
 predicate_token
-	= x:[a-zA-Z-]+
+	= x:[a-zA-Z]+
 	{
 		return x.join("");
 	}
 	
 relationship_parameter_list
-	= x:type_token _ __ y:relationship_parameter_list _
+	= x:type_token __ y:relationship_parameter_list _
 	{
 		return [x].concat(y);
 	}
@@ -91,6 +91,9 @@ action_list
 		}
 		if (c == null) {
 			c = [];
+		}
+		if (d == null) {
+			d = [];
 		}
 		return [{
 			name: a,
