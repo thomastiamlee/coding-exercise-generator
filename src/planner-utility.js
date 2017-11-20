@@ -8,6 +8,39 @@ function getAvailableActions(table, kb) {
 	}
 }
 
+/* Returns if a the given offspring is extended from a given
+parent, based on the types defined in the knowledge base. */
+function isExtendedFrom(offspring, parent, kb) {
+	// Search for all ancestors of the given offspring using BFS
+	var stack = [];
+	var temp = [].concat(typeList);
+	var offspringType = fetchType(kb, offspring);
+	stack.push(offspringType);
+}
+
+/* This function performs the necessary initailizations to the
+knowledge base in preparation for the planning algorithm. */
+function initializeKnowledgeBase(kb) {
+	// Sort types and action lists
+	kb.type_list = kb.type_list.sort(function(a, b) {
+		if (a[0] < b[0]) {
+			return -1;
+		}
+		else if (a[0] > b[0]) {
+			return 1;
+		}
+		return 0;
+	});
+	kb.action_list = kb.action_list.sort(function(a, b) {
+		if (a.name < b.name) {
+			return -1;
+		}
+		else if (a.name > b.name) {
+			return 1;
+		}
+		return 0;
+	});
+}
 
 /* Initializes the memory table from the space list. The space
 list is an array containing non-primitive type names. This
@@ -31,4 +64,28 @@ function isPrimitive(type) {
 	return type.charAt(type.length - 1) == '*';
 }
 
-module.exports = {isPrimitive, initializeMemoryTable};
+/* Fetches a type from the knowledge base, given its name.
+This function assumes that the knowledge base has been
+initialized already. */
+function fetchType(typeList, name) {
+	// Binary search
+	var low = 0;
+	var hi = typeList.length - 1;
+	
+	while (low <= hi) {
+		var mid = Math.floor((low + hi) / 2);
+		console.log("mid: " + mid);
+		if (typeList[mid][0] == name) {
+			return typeList[mid];
+		}
+		else if (typeList[mid][0] < name) {
+			low = mid + 1;
+		}
+		else if (typeList[mid][0] > name) {
+			hi = mid - 1;
+		}
+	}
+	return null;
+}
+
+module.exports = {isPrimitive, initializeMemoryTable, initializeKnowledgeBase, fetchType};

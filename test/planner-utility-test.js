@@ -1,5 +1,6 @@
 const Assert = require("assert");
 const PlannerUtility = require("../src/planner-utility");
+const Parser = require("../src/parser");
 
 describe("planner-utility", function() {
 	describe("#isPrimitive()", function() {
@@ -33,6 +34,24 @@ describe("planner-utility", function() {
 		});
 		it("A space with primitives should return null.", function() {
 			Assert(invalidRes == null);
+		});
+	});
+	describe("#fetchType()", function() {
+		var kb = Parser.parseKnowledgeBase("./test/kbtest.txt");
+		PlannerUtility.initializeKnowledgeBase(kb);
+		var typeList = kb.type_list;
+		var type1 = PlannerUtility.fetchType(typeList, "person");
+		var type2 = PlannerUtility.fetchType(typeList, "stringvalue*");
+		var type3 = PlannerUtility.fetchType(typeList, "food");
+		
+		it("type1 should be the person type.", function() {
+			Assert(type1.length == 2 && type1[0] == "person" && type1[1] == null);
+		});
+		it("type2 should be the stringvalue* type.", function() {
+			Assert(type2.length == 2 && type2[0] == "stringvalue*" && type2[1] == null);
+		});
+		it("type3 should be the food type.", function() {
+			Assert(type3.length == 2 && type3[0] == "food" && type3[1] == "object");
 		});
 	});
 });
