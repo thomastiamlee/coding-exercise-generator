@@ -14,12 +14,10 @@ function isExtendedFrom(offspring, parent, kb) {
 	// Search for all ancestors of the given offspring using BFS
 	var stack = [];
 	var temp = [].concat(typeList);
-	var offspringType = fetchType(kb, offspring);
-	stack.push(offspringType);
+	var offspringIndex = fetchType(temp, offspring);
 	
-	while (stack.length != 0) {
-		
-	}
+	stack.push(temp[offspringIndex]);
+	
 }
 
 /* This function performs the necessary initailizations to the
@@ -70,7 +68,8 @@ function isPrimitive(type) {
 
 /* Fetches index of a type from the knowledge base, given its
 name. This function assumes that the knowledge base has been
-initialized already. */
+initialized already. This function returns -1 if the type is
+not found. */
 function fetchTypeIndex(typeList, name) {
 	// Binary search
 	var low = 0;
@@ -78,7 +77,6 @@ function fetchTypeIndex(typeList, name) {
 	
 	while (low <= hi) {
 		var mid = Math.floor((low + hi) / 2);
-		console.log("mid: " + mid);
 		if (typeList[mid][0] == name) {
 			return mid;
 		}
@@ -89,7 +87,7 @@ function fetchTypeIndex(typeList, name) {
 			hi = mid - 1;
 		}
 	}
-	return null;
+	return -1;
 }
 
 module.exports = {isPrimitive, initializeMemoryTable, initializeKnowledgeBase, fetchTypeIndex};

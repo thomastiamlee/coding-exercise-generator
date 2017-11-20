@@ -43,6 +43,7 @@ describe("planner-utility", function() {
 		var type1 = typeList[PlannerUtility.fetchTypeIndex(typeList, "person")];
 		var type2 = typeList[PlannerUtility.fetchTypeIndex(typeList, "stringvalue*")];
 		var type3 = typeList[PlannerUtility.fetchTypeIndex(typeList, "food")];
+		var type4 = PlannerUtility.fetchTypeIndex(typeList, "banana");
 		
 		it("type1 should be the person type.", function() {
 			Assert(type1.length == 2 && type1[0] == "person" && type1[1] == null);
@@ -52,6 +53,9 @@ describe("planner-utility", function() {
 		});
 		it("type3 should be the food type.", function() {
 			Assert(type3.length == 2 && type3[0] == "food" && type3[1] == "object");
+		});
+		it("type4 does not exist and should be -1", function() {
+			Assert(type4 == -1);
 		});
 	});
 });
