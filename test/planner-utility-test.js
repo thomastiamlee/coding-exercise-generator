@@ -46,16 +46,36 @@ describe("planner-utility", function() {
 		var type4 = PlannerUtility.fetchTypeIndex(typeList, "banana");
 		
 		it("type1 should be the person type.", function() {
-			Assert(type1.length == 2 && type1[0] == "person" && type1[1] == null);
+			Assert(type1.length == 2 && type1[0] == "person" && type1[1].length == 0);
 		});
 		it("type2 should be the stringvalue* type.", function() {
-			Assert(type2.length == 2 && type2[0] == "stringvalue*" && type2[1] == null);
+			Assert(type2.length == 2 && type2[0] == "stringvalue*" && type2[1].length == 0);
 		});
 		it("type3 should be the food type.", function() {
-			Assert(type3.length == 2 && type3[0] == "food" && type3[1] == "object");
+			Assert(type3.length == 2 && type3[0] == "food" && type3[1][0] == "object");
 		});
 		it("type4 does not exist and should be -1", function() {
 			Assert(type4 == -1);
 		});
+	});
+	describe("#isExtendedFrom()", function() {
+		var kb = Parser.parseKnowledgeBase("./test/kbextendtest.txt");
+		PlannerUtility.initializeKnowledgeBase(kb);
+		var test1 = PlannerUtility.isExtendedFrom("student", "person", kb);
+		var test2 = PlannerUtility.isExtendedFrom("student", "student", kb);
+		var test3 = PlannerUtility.isExtendedFrom("person", "student", kb);
+		var test4 = PlannerUtility.isExtendedFrom("spaghetti", "object", kb);
+		var test5 = PlannerUtility.isExtendedFrom("dog", "animal", kb);
+		var test6 = PlannerUtility.isExtendedFrom("dog", "cat", kb);
+		var test7 = PlannerUtility.isExtendedFrom("bulldog", "cat", kb);
+		var test8 = PlannerUtility.isExtendedFrom("distancevalue*", "nonnegativevalue*", kb);
+		it ("student is an offspring of the person.", function() { Assert(test1);	});
+		it ("student is an offspring of the student.", function() {	 Assert(test2); });
+		it ("person is not an offspring of the student.", function() { Assert(!test3); });
+		it ("spaghetti is an offspring of the object.", function() { Assert(test4); });
+		it ("dog is an offspring of the animal.", function() { Assert(test5); });
+		it ("dog is not an offspring of the cat.", function() { Assert(!test6); });
+		it ("bulldog is not an offspring of the cat.", function() { Assert(!test7); });
+		it ("distancevalue* is an offspring of the nonnegativevalue*.", function() { Assert(test8); });
 	});
 });

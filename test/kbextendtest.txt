@@ -1,0 +1,17 @@
+#types;
+nonnegativevalue*;
+person;
+student->person;
+object;
+edible->object;
+pasta->edible;
+spaghetti->pasta;
+animal;
+dog->animal;
+cat->animal;
+bulldog->dog;
+distancevalue*->nonnegativevalue*;
+
+#relationships;
+
+#actions;

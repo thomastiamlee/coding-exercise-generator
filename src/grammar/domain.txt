@@ -28,11 +28,11 @@ type_list
 type_def
 	= x:type_token _ ";" _
 	{
-		return [x, null];
+		return [x, []];
 	}
 	/ x:type_token _ "->" _ y:type_token ";" _
 	{
-		return [x, y];
+		return [x, [y]];
 	}
 	
 type_token

@@ -12,34 +12,50 @@ function getAvailableActions(table, kb) {
 parent, based on the types defined in the knowledge base. */
 function isExtendedFrom(offspring, parent, kb) {
 	// Search for all ancestors of the given offspring using BFS
+	var res = [];
 	var stack = [];
-	var temp = [].concat(typeList);
-	var offspringIndex = fetchType(temp, offspring);
-	
+	var temp = [].concat(kb.type_list);
+	var offspringIndex = fetchTypeIndex(temp, offspring);
+	if (offspringIndex == -1) {
+		return false;
+	}
 	stack.push(temp[offspringIndex]);
-	
+	temp.splice(offspringIndex, 1);
+	while (stack.length != 0) {
+		var top = stack[0];
+		res.push(top);
+		stack.splice(0, 1);
+		var extendedFrom = top[1];
+		for (var i = 0; i < extendedFrom.length; i++) {
+			var index = fetchTypeIndex(temp, extendedFrom[i]);
+			stack.push(temp[index]);
+			temp.splice(index, 1);
+		}
+	}
+	res = res.sort(function(a, b) {
+		if (a[0] < b[0]) return -1;
+		else if (a[0] > b[0]) return 1;
+		return 0;
+	});
+	var index = fetchTypeIndex(res, parent);
+	if (index != -1) {
+		return true;
+	}
+	return false;
 }
 
-/* This function performs the necessary initailizations to the
+/* This function performs the necessary initializations to the
 knowledge base in preparation for the planning algorithm. */
 function initializeKnowledgeBase(kb) {
 	// Sort types and action lists
 	kb.type_list = kb.type_list.sort(function(a, b) {
-		if (a[0] < b[0]) {
-			return -1;
-		}
-		else if (a[0] > b[0]) {
-			return 1;
-		}
+		if (a[0] < b[0]) return -1;
+		else if (a[0] > b[0]) return 1;
 		return 0;
 	});
 	kb.action_list = kb.action_list.sort(function(a, b) {
-		if (a.name < b.name) {
-			return -1;
-		}
-		else if (a.name > b.name) {
-			return 1;
-		}
+		if (a.name < b.name) return -1;
+		else if (a.name > b.name) return 1;
 		return 0;
 	});
 }
@@ -83,11 +99,11 @@ function fetchTypeIndex(typeList, name) {
 		else if (typeList[mid][0] < name) {
 			low = mid + 1;
 		}
-		else if (typeList[mid][0] > name) {
+		else {
 			hi = mid - 1;
 		}
 	}
 	return -1;
 }
 
-module.exports = {isPrimitive, initializeMemoryTable, initializeKnowledgeBase, fetchTypeIndex};
+module.exports = {isPrimitive, initializeMemoryTable, initializeKnowledgeBase, fetchTypeIndex, isExtendedFrom};

@@ -7,14 +7,14 @@ describe("parser", function() {
 		it ("Type list should contain 15 elements.", function() {
 			Assert(result.type_list && result.type_list.length == 15);
 		});
-		it("The first element should be [\"person\", null].", function() {
-			Assert(result.type_list[0][0] == "person" && result.type_list[0][1] == null);
+		it("The first element should be [\"person\", []].", function() {
+			Assert(result.type_list[0][0] == "person" && result.type_list[0][1].length == 0);
 		});
-		it("The fourth element should be [\"restaurant\", \"location\"].", function() {
-			Assert(result.type_list[3][0] == "restaurant" && result.type_list[3][1] == "location");
+		it("The fourth element should be [\"restaurant\", [\"location\"]].", function() {
+			Assert(result.type_list[3][0] == "restaurant" && result.type_list[3][1][0] == "location");
 		});
-		it("The fifteenth element should be [\"personname*\", \"stringvalue*\"].", function() {
-			Assert(result.type_list[14][0] == "personname*" && result.type_list[14][1] == "stringvalue*");
+		it("The fifteenth element should be [\"personname*\", [\"stringvalue*\"]].", function() {
+			Assert(result.type_list[14][0] == "personname*" && result.type_list[14][1][0] == "stringvalue*");
 		});
 		it("Relationships list should contain 4 elements.", function() {
 			Assert(result.relationship_list && result.relationship_list.length == 4);
