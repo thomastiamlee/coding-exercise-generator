@@ -8,8 +8,26 @@ function getAvailableActions(table, kb) {
 	}
 }
 
-function getAllPossibleReplacements(table, action, kb) {
-	
+/* Gets all the possible combination of space elemets that can be assigned for an action, based on its parameter requirements and
+preconditions. */
+function getAllPossibleParameterMatches(action, table, kb) {
+	var parameters = action.parameters;
+	// For each parameter, identify all table elements that match the criteria
+	var res = [];
+	for (var i = 0; i < parameters.length; i++) {
+		var typeRequirement = parameters[i];
+		res.push([]);
+		for (var j = 0; j < table.length; j++) {
+			var type = table[j].type;
+			if (typeRequirement == "*") { // wildcard
+				res[i].push(table[j]);
+			}
+			else if (isExtendedFrom(type, typeRequirement, kb)) {
+				res[i].push(table[j]);
+			}
+		}
+	}
+	return res;
 }
 
 /* Returns if a the given offspring is extended from a given
@@ -70,12 +88,13 @@ function returns a table which is needed for planner algorithm.
 This function returns null if the space array is invalid. */
 function initializeMemoryTable(space, kb) {
 	var res = [];
+	var identifierCounter = 1;
 	for (var i = 0; i < space.length; i++) {
 		var name = space[i];
 		if (isPrimitive(name)) {
 			return null;
 		}
-		res.push({type: name, memory: []});
+		res.push({id: name + "" + identifierCounter, type: name, memory: []});
 	}
 	return res;
 }
@@ -134,4 +153,4 @@ function fetchActionIndex(actionList, name) {
 	return -1;
 }
 
-module.exports = {isPrimitive, initializeMemoryTable, initializeKnowledgeBase, fetchTypeIndex, fetchActionIndex, isExtendedFrom};
+module.exports = {isPrimitive, initializeMemoryTable, initializeKnowledgeBase, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches};

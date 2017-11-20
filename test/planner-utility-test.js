@@ -91,4 +91,34 @@ describe("planner-utility", function() {
 		it ("bulldog is not an offspring of the cat.", function() { Assert(!test7); });
 		it ("distancevalue* is an offspring of the nonnegativevalue*.", function() { Assert(test8); });
 	});
+	describe("#getAllPossibleParameterMatches()", function() {
+		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
+		PlannerUtility.initializeKnowledgeBase(kb);
+		var space = ["student", "person", "dog", "cat", "pet"];
+		var table = PlannerUtility.initializeMemoryTable(space);
+		var actionList = kb.action_list;
+		var feedAction = actionList[PlannerUtility.fetchActionIndex(actionList, "feed")];
+		var test1 = PlannerUtility.getAllPossibleParameterMatches(feedAction, table, kb);
+		it("In the feed action, student and person should match the person parameter.", function() {
+			Assert(test1[0].length == 2);
+			var cond1 = false, cond2 = false;
+			console.log("XXX");
+			console.log(test1);
+			for (var i = 0; i < test1[0].length; i++) {
+				if (test1[0][i].type == "person") cond1 = true;
+				else if (test1[0][i].type == "student") cond2 = true;
+			}
+			Assert(cond1 && cond2);
+		});
+		it("In the feed action, dog, cat and pet should match the pet parameter.", function() {
+			Assert(test1[1].length == 3);
+			var cond1 = false, cond2 = false, cond3 = false; 
+			for (var i = 0; i < test1[1].length; i++) {
+				if (test1[1][i].type == "dog") cond1 = true;
+				else if (test1[1][i].type == "cat") cond2 = true;
+				else if (test1[1][i].type == "pet") cond2 = true;
+			}
+			Assert(cond1 && cond2);
+		});
+	});
 });

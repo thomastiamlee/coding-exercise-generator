@@ -1,0 +1,14 @@
+#types;
+pet;
+dog->pet;
+cat->pet;
+person;
+student->person;
+
+#relationships;
+
+#actions;
+name: feed;
+parameters: person pet;
+preconditions: owns(person pet) hungry(pet);
+effects: !hungry(pet);
