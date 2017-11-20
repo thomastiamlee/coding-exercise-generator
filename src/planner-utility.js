@@ -13,16 +13,58 @@ function getAvailableActions(table, kb) {
 /* Gets all the possible replacements of variables for an action, based on its parameter requirements and preconditions. */
 function getAllPossibleActionVariableReplacements(action, table, kb) {
 	var candidates = getAllPossibleParameterMatches(action, table, kb);
+	var res = [];
 	var combinations = 1;
+	var preconditions = action.preconditions;
 	for (var i = 0; i < candidates.length; i++) {
 		combinations = combinations * candidates[i].length;
 	}
+	// Loop through all combinations
 	for (var i = 0; i < combinations; i++) {
 		var testMatch = [];
+		var ccl = 1;
+		// Build the parameter list
 		for (var j = 0; j < candidates.length; j++) {
-			testMatch.push(candidates[j][i % candidates[j].length]);
+			var len = candidates[j].length;
+			testMatch.push(candidates[j][Math.floor(i / ccl) % len]);
+			testMatch[j] = testMatch[j].id;
+			ccl *= len;
+		}
+		// Loop through all preconditions
+		var valid = true;
+		for (var j = 0; j < preconditions.length; j++) {
+			var params = preconditions[j].parameters;
+			var newParams = [];
+			for (var k = 0; k < params.length; k++) {
+				if (params[k].charAt(0) >= '0' && params[k].charAt(0) <= '9') {
+					// replace
+					var index = parseInt(params[k]);
+					newParams.push(testMatch[index]);
+				}
+				else {
+					newParams.push(params[k]);
+				}
+			}
+			var testAssertion = {
+				truth: preconditions[j].truth,
+				predicate: preconditions[j].predicate,
+				parameters: newParams
+			}
+			console.log("CHECKING:");
+			console.log(testAssertion);
+			if (assertionIsTrue(testAssertion, kb) == false) {
+				valid = false;
+				break;
+			}
+		}
+		
+		if (valid) {
+			res.push(testMatch);
 		}
 	}
+	
+	console.log(res);
+	return res;
 }
 
 function assertionIsTrue(assertion, kb) {
@@ -183,4 +225,4 @@ function fetchActionIndex(actionList, name) {
 	return -1;
 }
 
-module.exports = {isPrimitive, initializeMemoryTable, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches, assertionIsTrue};
+module.exports = {isPrimitive, initializeMemoryTable, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, assertionIsTrue};

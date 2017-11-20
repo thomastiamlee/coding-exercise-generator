@@ -17,6 +17,10 @@ function addType(kb, type) {
 	sortKnowledgeBase(kb);
 }
 
+function addAssertion(kb, assertion) {
+	
+}
+
 
 /* This function sorts the knowledge base's types and actions
 lexicographically. */

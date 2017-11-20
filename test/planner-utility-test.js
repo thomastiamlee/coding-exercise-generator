@@ -148,4 +148,12 @@ describe("planner-utility", function() {
 		it("!bestfriend(student1 dog3) should be false.", function() { Assert(!test8); });
 		it("hungry(dog3) should be false.", function() { Assert(!test9); });
 	});
+	describe("#getAllPossibleActionVariableReplacements()", function() {
+		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
+		var space = ["student", "person", "dog", "cat", "pet"];
+		var table = PlannerUtility.initializeMemoryTable(space, kb);
+		var actionList = kb.action_list;
+		var feedAction = actionList[PlannerUtility.fetchActionIndex(actionList, "feed")];
+		var test1 = PlannerUtility.getAllPossibleActionVariableReplacements(feedAction, table, kb);
+	});
 });
