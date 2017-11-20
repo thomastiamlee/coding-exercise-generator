@@ -1,3 +1,5 @@
+const Parser = require("./parser");
+
 /* Returns an array containing the available actions given the
 current space and the knowledge base. */
 function getAvailableActions(table, kb) {
@@ -14,8 +16,30 @@ function getAllPossibleActionVariableReplacements(action, table, kb) {
 		
 }
 
-function assertionIsTrue(assertion, assertionList, kb) {
-	
+function assertionIsTrue(assertion, kb) {
+	var assertionList = kb.relationship_list;
+	var queryPredicate = assertion.predicate;
+	var queryParameters = assertion.parameters;
+	for (var i = 0; i < assertionList.length; i++) {
+		var currentAssertion = assertionList[i];
+		var assertionPredicate = currentAssertion.predicate;
+		var assertionParameters = currentAssertion.parameters;
+		if (assertionPredicate == queryPredicate && assertionParameters.length == queryParameters.length) {
+			// Check if each parameter matches
+			var assumption = true;
+			for (var j = 0; j < queryParameters.length; j++) {
+				var currentQueryParameter = queryParameters[j];
+				var currentAssertionParameter = assertionParameters[j];
+				if (isExtendedFrom(currentQueryParameter, currentAssertionParameter, kb) == false) {
+					assumption = false;
+				}
+			}
+			if (assumption) {
+				if (assertion.truth) return true; return false;
+			}
+		}
+	}
+	if (assertion.truth) return false; return true;
 }
 
 /* Gets all the possible combination of space elemets that can be assigned for an action, based on its parameter requirements and
@@ -88,7 +112,9 @@ function initializeMemoryTable(space, kb) {
 		if (isPrimitive(name)) {
 			return null;
 		}
-		res.push({id: name + "" + identifierCounter, type: name, memory: []});
+		var identifier = name + "" + identifierCounter;
+		res.push({id: identifier, type: name, memory: []});
+		Parser.addType(kb, [identifier, [name]]);
 		identifierCounter++;
 	}
 	return res;
@@ -148,4 +174,4 @@ function fetchActionIndex(actionList, name) {
 	return -1;
 }
 
-module.exports = {isPrimitive, initializeMemoryTable, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches};
+module.exports = {isPrimitive, initializeMemoryTable, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches, assertionIsTrue};

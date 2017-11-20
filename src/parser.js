@@ -9,7 +9,6 @@ function parseKnowledgeBase(path) {
 	
 	var result = parser.parse(kb);
 	sortKnowledgeBase(result);
-	console.log(result);
 	return result;
 }
 

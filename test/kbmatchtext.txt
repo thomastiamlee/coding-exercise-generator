@@ -4,8 +4,14 @@ dog->pet;
 cat->pet;
 person;
 student->person;
+nonnegativevalue*;
+distancevalue*->nonnegativevalue*;
+height*->distancevalue*;
 
 #relationships;
+has(person height*);
+canown(person pet);
+bestfriend(person dog);
 
 #actions;
 name: feed;
