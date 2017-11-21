@@ -67,6 +67,11 @@ function getAllPossibleActionVariableReplacements(action, table, kb) {
 	return res;
 }
 
+/* Checks if an assertion is true, given the assertions in the knowledge
+base.  The format of the assertion parameter is as follows:
+{ truth: <truth value>, predicate: <predicate>, parameters: <array of
+strings> }
+For the parameters, represent instances with their respective identifiers. */
 function assertionIsTrue(assertion, kb) {
 	var assertionList = kb.relationship_list;
 	var queryPredicate = assertion.predicate;
