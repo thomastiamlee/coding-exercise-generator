@@ -50,8 +50,6 @@ function getAllPossibleActionVariableReplacements(action, table, kb) {
 				predicate: preconditions[j].predicate,
 				parameters: newParams
 			}
-			console.log("CHECKING:");
-			console.log(testAssertion);
 			if (assertionIsTrue(testAssertion, kb) == false) {
 				valid = false;
 				break;
@@ -62,8 +60,6 @@ function getAllPossibleActionVariableReplacements(action, table, kb) {
 			res.push(testMatch);
 		}
 	}
-	
-	console.log(res);
 	return res;
 }
 
@@ -170,7 +166,7 @@ function initializeMemoryTable(space, kb) {
 		}
 		var identifier = name + "" + identifierCounter;
 		res.push({id: identifier, type: name, memory: []});
-		Parser.addType(kb, [identifier, [name]]);
+		addType(kb, [identifier, [name]]);
 		identifierCounter++;
 	}
 	return res;
@@ -230,4 +226,31 @@ function fetchActionIndex(actionList, name) {
 	return -1;
 }
 
-module.exports = {isPrimitive, initializeMemoryTable, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, assertionIsTrue};
+function addType(kb, type) {
+	kb.type_list.push(type);
+	sortKnowledgeBase(kb);
+}
+
+function addAssertion(kb, assertion) {
+	
+}
+
+
+/* This function sorts the knowledge base's types and actions
+lexicographically. */
+function sortKnowledgeBase(kb) {
+	// Sort types and action lists
+	kb.type_list = kb.type_list.sort(function(a, b) {
+		if (a[0] < b[0]) return -1;
+		else if (a[0] > b[0]) return 1;
+		return 0;
+	});
+	kb.action_list = kb.action_list.sort(function(a, b) {
+		if (a.name < b.name) return -1;
+		else if (a.name > b.name) return 1;
+		return 0;
+	});
+}
+
+
+module.exports = {addType, addAssertion, sortKnowledgeBase, isPrimitive, initializeMemoryTable, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, assertionIsTrue};
