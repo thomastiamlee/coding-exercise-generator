@@ -231,8 +231,38 @@ function addType(kb, type) {
 	sortKnowledgeBase(kb);
 }
 
+/* This function adds a new assertion in the knowledge base. The format
+of the assertion is as follows:
+{ truth: <truth value>, predicate: <predicate>, parameters: <array of
+strings> }
+For the parameters, use the identifier for instances. */
 function addAssertion(kb, assertion) {
-	
+	var truth = assertion.truth;
+	var relationshipList = kb.relationship_list;
+	// Try to find if the assertion already exists
+	var index = -1;
+	for (var i = 0; i < relationshipList.length; i++) {
+		var predicate = relationshipList[i].predicate;
+		if (predicate == assertion.predicate) {
+			var same = true;
+			for (var j = 0; j < assertion.parameters.length; j++) {
+				if (assertion.parameters[j] != relationshipList[i].parameters[j]) {
+					same = false;
+					break;
+				}
+			}
+			if (same) {
+				index = i;
+				break;
+			}
+		}
+	}
+	if (truth && index == -1) {
+		relationshipList.push(assertion);
+	}
+	else if (!truth && index != -1) {
+		relationshipList.splice(index, 1);
+	}
 }
 
 

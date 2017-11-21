@@ -156,4 +156,52 @@ describe("planner-utility", function() {
 		var feedAction = actionList[PlannerUtility.fetchActionIndex(actionList, "feed")];
 		var test1 = PlannerUtility.getAllPossibleActionVariableReplacements(feedAction, table, kb);
 	});
+	describe("#addAssertion()", function() {
+		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
+		var space = ["student", "person", "dog", "cat", "pet"];
+		var table = PlannerUtility.initializeMemoryTable(space, kb);
+		PlannerUtility.addAssertion(kb, { truth: true, predicate: "hungry", parameters: ["dog3"]});
+		PlannerUtility.addAssertion(kb, { truth: true, predicate: "owns", parameters: ["student1", "dog3"]});
+		PlannerUtility.addAssertion(kb, { truth: false, predicate: "bestfriend", parameters: ["person", "dog"]});
+		var relationshipList = kb.relationship_list;
+		it("The relationship hungry(dog3) should have been added", function() {
+			var found = false;
+			for (var i = 0; i < relationshipList.length; i++) {
+				var current = relationshipList[i];
+				if (current.predicate == "hungry") {
+					if (current.parameters.length == 1 && current.parameters[0] == "dog3") {
+						found = true;
+						break;
+					}
+				}
+			}
+			Assert(found);
+		});
+		it("The relationship owns(student1 dog3) should have been added", function() {
+			var found = false;
+			for (var i = 0; i < relationshipList.length; i++) {
+				var current = relationshipList[i];
+				if (current.predicate == "owns") {
+					if (current.parameters.length == 2 && current.parameters[0] == "student1" && current.parameters[1] == "dog3") {
+						found = true;
+						break;
+					}
+				}
+			}
+			Assert(found);
+		});	
+		it("The relationship bestfriend(person dog) should have been removed", function() {
+			var found = false;
+			for (var i = 0; i < relationshipList.length; i++) {
+				var current = relationshipList[i];
+				if (current.predicate == "bestfriend") {
+					if (current.parameters.length == 2 && current.parameters[0] == "person" && current.parameters[1] == "dog") {
+						found = true;
+						break;
+					}
+				}
+			}
+			Assert(!found);
+		});
+	});
 });
