@@ -10,11 +10,17 @@ height*->distancevalue*;
 
 #relationships;
 has(person height*);
+has(cat height*);
 canown(person pet);
 bestfriend(person dog);
 
 #actions;
 name: feed;
 parameters: person pet;
-preconditions: owns(person pet) hungry(pet);
-effects: !hungry(pet);
+preconditions: owns(0 1) hungry(1);
+effects: !hungry(1);
+
+name: mentionheight;
+parameters: *;
+preconditions: has(0 height*);
+effects: visible(0 height*);

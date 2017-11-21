@@ -60,6 +60,7 @@ function getAllPossibleActionVariableReplacements(action, table, kb) {
 			res.push(testMatch);
 		}
 	}
+	console.log(res);
 	return res;
 }
 
