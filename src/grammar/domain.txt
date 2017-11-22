@@ -138,7 +138,7 @@ wildcard_token
 	}
 
 action_condition_list
-	= a:"!"? b:predicate_token _ "(" c:assertion_parameter_list? _ ")" __ d:action_condition_list
+	= a:("!"?) b:predicate_token _ "(" c:assertion_parameter_list? _ ")" __ d:action_condition_list
 	{
 		if (a == null) {
 			a = true;
@@ -155,7 +155,7 @@ action_condition_list
 			parameters: c
 		}].concat(d);
 	}
-	/ a:"!"? b:predicate_token _ "(" c:assertion_parameter_list? _ ")" _
+	/ a:("!"?) b:predicate_token _ "(" c:assertion_parameter_list? _ ")" _
 	{
 		if (a == null) {
 			a = true;

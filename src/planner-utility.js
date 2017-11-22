@@ -50,17 +50,20 @@ function getAllPossibleActionVariableReplacements(action, table, kb) {
 				predicate: preconditions[j].predicate,
 				parameters: newParams
 			}
+			console.log("Testing assertion: ");
+			console.log(testAssertion);
 			if (assertionIsTrue(testAssertion, kb) == false) {
+				console.log("Assertion is false!");
 				valid = false;
 				break;
 			}
+			console.log("Assertion is true!");
 		}
 		
 		if (valid) {
 			res.push(testMatch);
 		}
 	}
-	console.log(res);
 	return res;
 }
 
