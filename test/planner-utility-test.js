@@ -36,6 +36,16 @@ describe("planner-utility", function() {
 		it("A space with primitives should return null.", function() {
 			Assert(invalidRes == null);
 		});
+		it("All primitives from the knowledge base should have been extracted.", function() {
+			Assert(res.primitives && res.primitives.length == 8);
+			var checklist = ["nonnegativevalue*", "personname*", "massvalue*"];
+			for (var i = 0; i < res.primitives.length; i++) {
+				if (checklist.indexOf(res.primitives[i]) != -1) {
+					checklist.splice(checklist.indexOf(res.primitives[i]), 1);
+				}
+			}
+			Assert(checklist.length == 0);
+		});
 	});
 	describe("#fetchTypeIndex()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbtest.txt");

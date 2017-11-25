@@ -173,6 +173,14 @@ function initializeMemoryTable(space, kb) {
 		addType(kb, [identifier, [name]]);
 		identifierCounter++;
 	}
+	// Extract all the primitives from the knowledge base. */
+	res.primitives = [];
+	var typeList = kb.type_list;
+	for (var i = 0; i < typeList.length; i++) {
+		if (isPrimitive(typeList[i][0])) {
+			res.primitives.push(typeList[i][0]);
+		}
+	}
 	return res;
 }
 

@@ -7,6 +7,7 @@ pasta->food;
 location;
 restaurant->location;
 cafeteria->location;
+
 height*;
 weight*;
 personname*;
