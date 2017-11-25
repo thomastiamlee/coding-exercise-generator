@@ -104,16 +104,17 @@ function getAllPossibleParameterMatches(action, table, kb) {
 	var parameters = action.parameters;
 	// For each parameter, identify all table elements that match the criteria
 	var res = [];
+	var candidates = table.nonprimitives.concat(table.primitives);
 	for (var i = 0; i < parameters.length; i++) {
 		var typeRequirement = parameters[i];
 		res.push([]);
-		for (var j = 0; j < table.length; j++) {
-			var type = table[j].type;
+		for (var j = 0; j < candidates.length; j++) {
+			var type = candidates[j].id;
 			if (typeRequirement == "*") { // wildcard
-				res[i].push(table[j]);
+				res[i].push(candidates[j]);
 			}
 			else if (isExtendedFrom(type, typeRequirement, kb)) {
-				res[i].push(table[j]);
+				res[i].push(candidates[j]);
 			}
 		}
 	}
@@ -163,13 +164,14 @@ This function returns null if the space array is invalid. */
 function initializeMemoryTable(space, kb) {
 	var res = [];
 	var identifierCounter = 1;
+	res.nonprimitives = [];
 	for (var i = 0; i < space.length; i++) {
 		var name = space[i];
 		if (isPrimitive(name)) {
 			return null;
 		}
 		var identifier = name + "" + identifierCounter;
-		res.push({id: identifier, type: name, memory: []});
+		res.nonprimitives.push({id: identifier, memory: []});
 		addType(kb, [identifier, [name]]);
 		identifierCounter++;
 	}
@@ -178,7 +180,7 @@ function initializeMemoryTable(space, kb) {
 	var typeList = kb.type_list;
 	for (var i = 0; i < typeList.length; i++) {
 		if (isPrimitive(typeList[i][0])) {
-			res.primitives.push(typeList[i][0]);
+			res.primitives.push({id: typeList[i][0]});
 		}
 	}
 	return res;

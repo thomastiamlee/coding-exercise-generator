@@ -24,27 +24,29 @@ describe("planner-utility", function() {
 		var invalidSpace = ["person", "height*"];
 		var invalidRes = PlannerUtility.initializeMemoryTable(invalidSpace, kb);
 		
-		it("Memory table should be of length 3.", function() {
-			Assert(res.length == 3);
+		it("Nonprimitives should be of length 3.", function() {
+			Assert(res.nonprimitives.length == 3);
 		});
-		it("The first element should be {id: \"person1\", type: \"person\", memory: []]", function() {
-			Assert(res[0].id == "person1" && res[0].type == "person" && res[0].memory.length == 0);
+		it("The first element should be {id: \"person1\", memory: []]", function() {
+			Assert(res.nonprimitives[0].id == "person1" && res.nonprimitives[0].memory.length == 0);
 		});
-		it("The third element should be {id: \"ramen3\", type: \"ramen\", memory: []]", function() {
-			Assert(res[2].id == "ramen3" && res[2].type == "ramen" && res[2].memory.length == 0);
+		it("The third element should be {id: \"ramen3\", memory: []]", function() {
+			Assert(res.nonprimitives[2].id == "ramen3" && res.nonprimitives[2].memory.length == 0);
 		});
-		it("A space with primitives should return null.", function() {
+		it("A space initialization with primitives should return null.", function() {
 			Assert(invalidRes == null);
 		});
-		it("All primitives from the knowledge base should have been extracted.", function() {
+		it("Primitives should be on length 3.", function() {
 			Assert(res.primitives && res.primitives.length == 8);
-			var checklist = ["nonnegativevalue*", "personname*", "massvalue*"];
+		});
+		it("Primitives should contain nonnegativevalue*, massvalue*, and personname*.", function() {
+			var x1 = false, x2 = false, x3 = false;
 			for (var i = 0; i < res.primitives.length; i++) {
-				if (checklist.indexOf(res.primitives[i]) != -1) {
-					checklist.splice(checklist.indexOf(res.primitives[i]), 1);
-				}
+				if (res.primitives[i].id == "nonnegativevalue*") x1 = true;
+				if (res.primitives[i].id == "massvalue*") x2 = true;
+				if (res.primitives[i].id == "personname*") x3 = true;
 			}
-			Assert(checklist.length == 0);
+			Assert(x1 && x2 && x3);
 		});
 	});
 	describe("#fetchTypeIndex()", function() {
@@ -106,22 +108,22 @@ describe("planner-utility", function() {
 		var actionList = kb.action_list;
 		var feedAction = actionList[PlannerUtility.fetchActionIndex(actionList, "feed")];
 		var test1 = PlannerUtility.getAllPossibleParameterMatches(feedAction, table, kb);
-		it("In the feed action, student and person should match the person parameter.", function() {
+		it("In the feed action, student1 and person2 should match the person parameter.", function() {
 			Assert(test1[0].length == 2);
 			var cond1 = false, cond2 = false;
 			for (var i = 0; i < test1[0].length; i++) {
-				if (test1[0][i].type == "person") cond1 = true;
-				else if (test1[0][i].type == "student") cond2 = true;
+				if (test1[0][i].id == "person2") cond1 = true;
+				else if (test1[0][i].id == "student1") cond2 = true;
 			}
 			Assert(cond1 && cond2);
 		});
-		it("In the feed action, dog, cat and pet should match the pet parameter.", function() {
+		it("In the feed action, dog3, cat4 and pet5 should match the pet parameter.", function() {
 			Assert(test1[1].length == 3);
 			var cond1 = false, cond2 = false, cond3 = false; 
 			for (var i = 0; i < test1[1].length; i++) {
-				if (test1[1][i].type == "dog") cond1 = true;
-				else if (test1[1][i].type == "cat") cond2 = true;
-				else if (test1[1][i].type == "pet") cond2 = true;
+				if (test1[1][i].id == "dog3") cond1 = true;
+				else if (test1[1][i].id == "cat4") cond2 = true;
+				else if (test1[1][i].id == "pet5") cond2 = true;
 			}
 			Assert(cond1 && cond2);
 		});
