@@ -4,10 +4,15 @@ const Parser = require("./parser");
 current space and the knowledge base. */
 function getAvailableActions(table, kb) {
 	var actionList = kb.action_list;
-	var result = [];
+	var availableActions = [];
 	for (var i = 0; i < actionList.length; i++) {
-				
+		var possible = getAllPossibleActionVariableReplacements(actionList[i], table, kb);
+		// Randomly choose an action
+		for (var j = 0; j < possible.length; j++) {
+			availableActions.push({action: actionList[i], parameters: possible[j]});
+		}
 	}
+	return availableActions;
 }
 
 /* Gets all the possible replacements of variables for an action, based on its parameter requirements and preconditions. */
@@ -50,14 +55,10 @@ function getAllPossibleActionVariableReplacements(action, table, kb) {
 				predicate: preconditions[j].predicate,
 				parameters: newParams
 			}
-			console.log("Testing assertion: ");
-			console.log(testAssertion);
 			if (assertionIsTrue(testAssertion, kb) == false) {
-				console.log("Assertion is false!");
 				valid = false;
 				break;
 			}
-			console.log("Assertion is true!");
 		}
 		
 		if (valid) {
@@ -297,4 +298,4 @@ function sortKnowledgeBase(kb) {
 }
 
 
-module.exports = {addType, addAssertion, sortKnowledgeBase, isPrimitive, initializeMemoryTable, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, assertionIsTrue};
+module.exports = {addType, addAssertion, sortKnowledgeBase, isPrimitive, initializeMemoryTable, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, assertionIsTrue, getAvailableActions};

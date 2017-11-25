@@ -10,14 +10,7 @@ function planExercise(space) {
 	var table = PlannerUtility.initializeMemoryTable(space, kb);
 	
 	// Search for available actions
-	var actionList = kb.action_list;
-	for (var i = 0; i < actionList.length; i++) {
-		console.log("Checking: " + actionList[i].name);
-		var possible = PlannerUtility.getAllPossibleActionVariableReplacements(actionList[i], table, kb);
-		for (var j = 0; j < possible.length; j++) {
-			console.log(possible[j]);
-		}
-	}
+	console.log(PlannerUtility.getAvailableActions(table, kb));
 }
 
 

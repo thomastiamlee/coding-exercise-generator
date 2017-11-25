@@ -233,4 +233,39 @@ describe("planner-utility", function() {
 			Assert(!found);
 		});
 	});
+	describe("#getAvailableActions()", function() {
+		var kb1 = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
+		var space1 = ["student", "student"];
+		var table1 = PlannerUtility.initializeMemoryTable(space1, kb1);
+		var availableActions1 = PlannerUtility.getAvailableActions(table1, kb1);
+		var kb2 = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
+		var space2 = ["person", "cat"];
+		var table2 = PlannerUtility.initializeMemoryTable(space2, kb2);
+		PlannerUtility.addAssertion(kb2, {truth: true, predicate: "owns", parameters: ["person1", "cat2"]});
+		PlannerUtility.addAssertion(kb2, {truth: true, predicate: "hungry", parameters: ["cat2"]});
+		var availableActions2 = PlannerUtility.getAvailableActions(table2, kb2);
+		it("In space1, there should be 2 available actions.", function() {
+			Assert(availableActions1.length == 2);
+		});
+		it("In space1, there should be an action for mentioning the height of student1 and student2.", function() {
+			var x1 = false, x2 = false;
+			for (var i = 0; i < availableActions1.length; i++) {
+				if (availableActions1[i].action.name == "mentionheight" && availableActions1[i].parameters[0] == "student1") x1 = true;
+				if (availableActions1[i].action.name == "mentionheight" && availableActions1[i].parameters[0] == "student2") x2 = true;
+			}
+			Assert(x1 && x2);
+		});
+		it("In space2, there should be 3 available actions.", function() {
+			Assert(availableActions2.length == 3);
+		});
+		it("In space2, there should be an action for mentioning the height of student1 and cat2, as well as person1 feeding cat2.", function() {
+			var x1 = false, x2 = false, x3 = false;;
+			for (var i = 0; i < availableActions2.length; i++) {
+				if (availableActions2[i].action.name == "mentionheight" && availableActions2[i].parameters[0] == "person1") x1 = true;
+				if (availableActions2[i].action.name == "mentionheight" && availableActions2[i].parameters[0] == "cat2") x2 = true;
+				if (availableActions2[i].action.name == "feed" && availableActions2[i].parameters[0] == "person1" && availableActions2[i].parameters[1] == "cat2") x3 = true;
+			}
+			Assert(x1 && x2 && x3);
+		});
+	});
 });
