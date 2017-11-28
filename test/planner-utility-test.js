@@ -268,4 +268,27 @@ describe("planner-utility", function() {
 			Assert(x1 && x2 && x3);
 		});
 	});
+	describe("#executeAction()", function() {
+		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
+		var space = ["student", "pet"];
+		var table = PlannerUtility.initializeMemoryTable(space, kb);
+		var mentionHeightAction = kb.action_list[PlannerUtility.fetchActionIndex(kb.action_list, "mentionheight")];
+		var feedAction = kb.action_list[PlannerUtility.fetchActionIndex(kb.action_list, "feed")];
+		it("height should be visible on student1 only after executing the action.", function() {
+			Assert(PlannerUtility.assertionIsTrue({
+				truth: false, predicate: "visible", parameters: ["student1", "height*"]
+			}, kb));
+			PlannerUtility.executeAction(mentionHeightAction, ["student1"], kb);
+			Assert(PlannerUtility.assertionIsTrue({
+				truth: true, predicate: "visible", parameters: ["student1", "height*"]
+			}, kb));
+		});
+		it("pet should not be hungry after applying the feed action", function() {
+			PlannerUtility.addAssertion(kb, { truth: true, predicate: "hungry", parameters: ["pet2"]});
+			PlannerUtility.addAssertion(kb, { truth: true, predicate: "owns", parameters: ["student1", "pet2"]});
+			Assert(PlannerUtility.assertionIsTrue({ truth: true, predicate: "hungry", parameters: ["pet2"]}, kb));
+			PlannerUtility.executeAction(feedAction, ["student1", "pet2"], kb);
+			Assert(PlannerUtility.assertionIsTrue({ truth: false, predicate: "hungry", parameters: ["pet2"]}, kb));
+		});
+	});
 });

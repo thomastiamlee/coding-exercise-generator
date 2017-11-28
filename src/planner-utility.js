@@ -1,5 +1,28 @@
 const Parser = require("./parser");
 
+/* Executes a given action with the given parameters. Updates the assertions in the knowledge base as a result of performing the action. */
+function executeAction(action, parameters, kb) {
+	console.log(action);
+	var effectList = action.effects;
+	for (var i = 0; i < effectList.length; i++) {
+		var current = effectList[i];
+		var truth = current.truth;
+		var predicate = current.predicate;
+		var currentParameters = current.parameters;
+		for (var j = 0; j < currentParameters.length; j++) {
+			if (currentParameters[j].charAt(0) >= '0' && currentParameters[j].charAt(0) <= '9') {
+				var index = parseInt(currentParameters[j]);
+				currentParameters[j] = parameters[index];
+			}
+		}
+		addAssertion(kb, {
+			truth: truth,
+			predicate: predicate,
+			parameters: currentParameters
+		});
+	}
+}
+
 /* Returns an array containing the available actions given the
 current space and the knowledge base. */
 function getAvailableActions(table, kb) {
@@ -298,4 +321,4 @@ function sortKnowledgeBase(kb) {
 }
 
 
-module.exports = {addType, addAssertion, sortKnowledgeBase, isPrimitive, initializeMemoryTable, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, assertionIsTrue, getAvailableActions};
+module.exports = {addType, addAssertion, sortKnowledgeBase, isPrimitive, initializeMemoryTable, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, assertionIsTrue, getAvailableActions, executeAction};
