@@ -22,5 +22,5 @@ effects: !hungry(1);
 
 name: mentionheight;
 parameters: *;
-preconditions: has(0 height*);
+preconditions: has(0 height*) !visible(0 height*);
 effects: visible(0 height*);

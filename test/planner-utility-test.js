@@ -270,11 +270,11 @@ describe("planner-utility", function() {
 	});
 	describe("#executeAction()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
-		var space = ["student", "pet"];
+		var space = ["student", "cat"];
 		var table = PlannerUtility.initializeMemoryTable(space, kb);
 		var mentionHeightAction = kb.action_list[PlannerUtility.fetchActionIndex(kb.action_list, "mentionheight")];
 		var feedAction = kb.action_list[PlannerUtility.fetchActionIndex(kb.action_list, "feed")];
-		it("height should be visible on student1 only after executing the action.", function() {
+		it("height should be visible on student1 only after executing the mentionheight.", function() {
 			Assert(PlannerUtility.assertionIsTrue({
 				truth: false, predicate: "visible", parameters: ["student1", "height*"]
 			}, kb));
@@ -282,13 +282,22 @@ describe("planner-utility", function() {
 			Assert(PlannerUtility.assertionIsTrue({
 				truth: true, predicate: "visible", parameters: ["student1", "height*"]
 			}, kb));
+			var list = PlannerUtility.getAvailableActions(table, kb);
+			console.log(list);
+			var counter = 0;
+			for (var i = 0; i < list.length; i++) {
+				if (list[i].action.name == "mentionheight") {
+					counter++;
+				}
+			}
+			Assert(counter == 1);
 		});
 		it("pet should not be hungry after applying the feed action", function() {
-			PlannerUtility.addAssertion(kb, { truth: true, predicate: "hungry", parameters: ["pet2"]});
-			PlannerUtility.addAssertion(kb, { truth: true, predicate: "owns", parameters: ["student1", "pet2"]});
-			Assert(PlannerUtility.assertionIsTrue({ truth: true, predicate: "hungry", parameters: ["pet2"]}, kb));
-			PlannerUtility.executeAction(feedAction, ["student1", "pet2"], kb);
-			Assert(PlannerUtility.assertionIsTrue({ truth: false, predicate: "hungry", parameters: ["pet2"]}, kb));
+			PlannerUtility.addAssertion(kb, { truth: true, predicate: "hungry", parameters: ["cat2"]});
+			PlannerUtility.addAssertion(kb, { truth: true, predicate: "owns", parameters: ["student1", "cat2"]});
+			Assert(PlannerUtility.assertionIsTrue({ truth: true, predicate: "hungry", parameters: ["cat2"]}, kb));
+			PlannerUtility.executeAction(feedAction, ["student1", "cat2"], kb);
+			Assert(PlannerUtility.assertionIsTrue({ truth: false, predicate: "hungry", parameters: ["cat2"]}, kb));
 		});
 	});
 });
