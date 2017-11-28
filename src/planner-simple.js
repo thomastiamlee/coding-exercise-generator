@@ -19,7 +19,8 @@ function planExercise(space) {
 		var randomIndex = Math.floor(Math.random() * actions.length);
 		var chosenAction = actions[randomIndex];
 		console.log("Chosen action: ");
-		console.log(chosenAction);
+		console.log(chosenAction.action.name);
+		console.log(chosenAction.parameters);
 		
 		PlannerUtility.executeAction(chosenAction.action, chosenAction.parameters, kb);
 	}
