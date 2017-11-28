@@ -1,7 +1,7 @@
 const Parser = require("./parser");
 
 /* Executes a given action with the given parameters. Updates the assertions in the knowledge base as a result of performing the action. */
-function executeAction(action, parameters, kb) {
+function executeAction(kb, action, parameters) {
 	var effectList = action.effects;
 	for (var i = 0; i < effectList.length; i++) {
 		var current = effectList[i];
@@ -25,11 +25,11 @@ function executeAction(action, parameters, kb) {
 
 /* Returns an array containing the available actions given the
 current space and the knowledge base. */
-function getAvailableActions(table, kb) {
+function getAvailableActions(kb, table) {
 	var actionList = kb.action_list;
 	var availableActions = [];
 	for (var i = 0; i < actionList.length; i++) {
-		var possible = getAllPossibleActionVariableReplacements(actionList[i], table, kb);
+		var possible = getAllPossibleActionVariableReplacements(kb, actionList[i], table);
 		// Randomly choose an action
 		for (var j = 0; j < possible.length; j++) {
 			availableActions.push({action: actionList[i], parameters: possible[j]});
@@ -39,8 +39,8 @@ function getAvailableActions(table, kb) {
 }
 
 /* Gets all the possible replacements of variables for an action, based on its parameter requirements and preconditions. */
-function getAllPossibleActionVariableReplacements(action, table, kb) {
-	var candidates = getAllPossibleParameterMatches(action, table, kb);
+function getAllPossibleActionVariableReplacements(kb, action, table) {
+	var candidates = getAllPossibleParameterMatches(kb, action, table);
 	var res = [];
 	var combinations = 1;
 	var preconditions = action.preconditions;
@@ -78,7 +78,7 @@ function getAllPossibleActionVariableReplacements(action, table, kb) {
 				predicate: preconditions[j].predicate,
 				parameters: newParams
 			}
-			if (assertionIsTrue(testAssertion, kb) == false) {
+			if (assertionIsTrue(kb, testAssertion) == false) {
 				valid = false;
 				break;
 			}
@@ -96,7 +96,7 @@ base.  The format of the assertion parameter is as follows:
 { truth: <truth value>, predicate: <predicate>, parameters: <array of
 strings> }
 For the parameters, represent instances with their respective identifiers. */
-function assertionIsTrue(assertion, kb) {
+function assertionIsTrue(kb, assertion) {
 	var assertionList = kb.relationship_list;
 	var queryPredicate = assertion.predicate;
 	var queryParameters = assertion.parameters;
@@ -110,7 +110,7 @@ function assertionIsTrue(assertion, kb) {
 			for (var j = 0; j < queryParameters.length; j++) {
 				var currentQueryParameter = queryParameters[j];
 				var currentAssertionParameter = assertionParameters[j];
-				if (isExtendedFrom(currentQueryParameter, currentAssertionParameter, kb) == false) {
+				if (isExtendedFrom(kb, currentQueryParameter, currentAssertionParameter) == false) {
 					assumption = false;
 				}
 			}
@@ -124,7 +124,7 @@ function assertionIsTrue(assertion, kb) {
 
 /* Gets all the possible combination of space elemets that can be assigned for an action, based on its parameter requirements and
 preconditions. */
-function getAllPossibleParameterMatches(action, table, kb) {
+function getAllPossibleParameterMatches(kb, action, table) {
 	var parameters = action.parameters;
 	// For each parameter, identify all table elements that match the criteria
 	var res = [];
@@ -137,7 +137,7 @@ function getAllPossibleParameterMatches(action, table, kb) {
 			if (typeRequirement == "*") { // wildcard
 				res[i].push(candidates[j]);
 			}
-			else if (isExtendedFrom(type, typeRequirement, kb)) {
+			else if (isExtendedFrom(kb, type, typeRequirement)) {
 				res[i].push(candidates[j]);
 			}
 		}
@@ -147,7 +147,7 @@ function getAllPossibleParameterMatches(action, table, kb) {
 
 /* Returns if a the given offspring is extended from a given
 parent, based on the types defined in the knowledge base. */
-function isExtendedFrom(offspring, parent, kb) {
+function isExtendedFrom(kb, offspring, parent) {
 	// Search for all ancestors of the given offspring using BFS
 	var res = [];
 	var stack = [];
@@ -185,7 +185,7 @@ function isExtendedFrom(offspring, parent, kb) {
 list is an array containing non-primitive type names. This
 function returns a table which is needed for planner algorithm.
 This function returns null if the space array is invalid. */
-function initializeMemoryTable(space, kb) {
+function initializeMemoryTable(kb, space) {
 	var res = [];
 	var identifierCounter = 1;
 	res.nonprimitives = [];

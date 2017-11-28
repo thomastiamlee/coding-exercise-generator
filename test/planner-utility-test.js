@@ -20,9 +20,9 @@ describe("planner-utility", function() {
 	describe("#initializeMemoryTable()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbtest.txt");
 		var space = ["person", "restaurant", "ramen"];
-		var res = PlannerUtility.initializeMemoryTable(space, kb);
+		var res = PlannerUtility.initializeMemoryTable(kb, space);
 		var invalidSpace = ["person", "height*"];
-		var invalidRes = PlannerUtility.initializeMemoryTable(invalidSpace, kb);
+		var invalidRes = PlannerUtility.initializeMemoryTable(kb, invalidSpace);
 		
 		it("Nonprimitives should be of length 3.", function() {
 			Assert(res.nonprimitives.length == 3);
@@ -84,14 +84,14 @@ describe("planner-utility", function() {
 	});
 	describe("#isExtendedFrom()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbextendtest.txt");
-		var test1 = PlannerUtility.isExtendedFrom("student", "person", kb);
-		var test2 = PlannerUtility.isExtendedFrom("student", "student", kb);
-		var test3 = PlannerUtility.isExtendedFrom("person", "student", kb);
-		var test4 = PlannerUtility.isExtendedFrom("spaghetti", "object", kb);
-		var test5 = PlannerUtility.isExtendedFrom("dog", "animal", kb);
-		var test6 = PlannerUtility.isExtendedFrom("dog", "cat", kb);
-		var test7 = PlannerUtility.isExtendedFrom("bulldog", "cat", kb);
-		var test8 = PlannerUtility.isExtendedFrom("distancevalue*", "nonnegativevalue*", kb);
+		var test1 = PlannerUtility.isExtendedFrom(kb, "student", "person");
+		var test2 = PlannerUtility.isExtendedFrom(kb, "student", "student");
+		var test3 = PlannerUtility.isExtendedFrom(kb, "person", "student");
+		var test4 = PlannerUtility.isExtendedFrom(kb, "spaghetti", "object");
+		var test5 = PlannerUtility.isExtendedFrom(kb, "dog", "animal");
+		var test6 = PlannerUtility.isExtendedFrom(kb, "dog", "cat");
+		var test7 = PlannerUtility.isExtendedFrom(kb, "bulldog", "cat");
+		var test8 = PlannerUtility.isExtendedFrom(kb, "distancevalue*", "nonnegativevalue*");
 		it ("student is an offspring of the person.", function() { Assert(test1);	});
 		it ("student is an offspring of the student.", function() {	 Assert(test2); });
 		it ("person is not an offspring of the student.", function() { Assert(!test3); });
@@ -104,10 +104,10 @@ describe("planner-utility", function() {
 	describe("#getAllPossibleParameterMatches()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "person", "dog", "cat", "pet"];
-		var table = PlannerUtility.initializeMemoryTable(space, kb);
+		var table = PlannerUtility.initializeMemoryTable(kb, space);
 		var actionList = kb.action_list;
 		var feedAction = actionList[PlannerUtility.fetchActionIndex(actionList, "feed")];
-		var test1 = PlannerUtility.getAllPossibleParameterMatches(feedAction, table, kb);
+		var test1 = PlannerUtility.getAllPossibleParameterMatches(kb, feedAction, table);
 		it("In the feed action, student1 and person2 should match the person parameter.", function() {
 			Assert(test1[0].length == 2);
 			var cond1 = false, cond2 = false;
@@ -131,25 +131,25 @@ describe("planner-utility", function() {
 	describe("#assertionIsTrue()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "person", "dog", "cat", "pet"];
-		var table = PlannerUtility.initializeMemoryTable(space, kb);
+		var table = PlannerUtility.initializeMemoryTable(kb, space);
 		var assertion1 = { truth: true, predicate: "has", parameters: ["person", "height*"] };
-		var test1 = PlannerUtility.assertionIsTrue(assertion1, kb);
+		var test1 = PlannerUtility.assertionIsTrue(kb, assertion1);
 		var assertion2 = { truth: true, predicate: "has", parameters: ["student", "height*"] };
-		var test2 = PlannerUtility.assertionIsTrue(assertion2, kb);
+		var test2 = PlannerUtility.assertionIsTrue(kb, assertion2);
 		var assertion3 = { truth: false, predicate: "has", parameters: ["person", "height*"] };
-		var test3 = PlannerUtility.assertionIsTrue(assertion3, kb);
+		var test3 = PlannerUtility.assertionIsTrue(kb, assertion3);
 		var assertion4 = { truth: false, predicate: "has", parameters: ["student", "height*"] };
-		var test4 = PlannerUtility.assertionIsTrue(assertion4, kb);
+		var test4 = PlannerUtility.assertionIsTrue(kb, assertion4);
 		var assertion5 = { truth: true, predicate: "has", parameters: ["student1", "height*"] };
-		var test5 = PlannerUtility.assertionIsTrue(assertion5, kb);
+		var test5 = PlannerUtility.assertionIsTrue(kb, assertion5);
 		var assertion6 = { truth: true, predicate: "canown", parameters: ["person2", "pet5"] };
-		var test6 = PlannerUtility.assertionIsTrue(assertion6, kb);
+		var test6 = PlannerUtility.assertionIsTrue(kb, assertion6);
 		var assertion7 = { truth: true, predicate: "has", parameters: ["pet5", "height*"] };
-		var test7 = PlannerUtility.assertionIsTrue(assertion7, kb);
+		var test7 = PlannerUtility.assertionIsTrue(kb, assertion7);
 		var assertion8 = { truth: false, predicate: "bestfriend", parameters: ["student1", "dog3"] };
-		var test8 = PlannerUtility.assertionIsTrue(assertion8, kb);
+		var test8 = PlannerUtility.assertionIsTrue(kb, assertion8);
 		var assertion9 = { truth: true, predicate: "hungry", parameters: ["dog3"] };
-		var test9 = PlannerUtility.assertionIsTrue(assertion9, kb);
+		var test9 = PlannerUtility.assertionIsTrue(kb, assertion9);
 		it("has(person height*) should be true.", function() { Assert(test1); });
 		it("has(student height*) should be true.", function() { Assert(test2); });
 		it("!has(person height*) should be false.", function() { Assert(!test3); });
@@ -163,15 +163,15 @@ describe("planner-utility", function() {
 	describe("#getAllPossibleActionVariableReplacements()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "person", "dog", "cat", "pet"];
-		var table = PlannerUtility.initializeMemoryTable(space, kb);
+		var table = PlannerUtility.initializeMemoryTable(kb, space);
 		var actionList = kb.action_list;
 		var feedAction = actionList[PlannerUtility.fetchActionIndex(actionList, "feed")];
 		var mentionHeightAction = actionList[PlannerUtility.fetchActionIndex(actionList, "mentionheight")];
 		PlannerUtility.addAssertion(kb, { truth: true, predicate: "hungry", parameters: ["dog3"] });
 		PlannerUtility.addAssertion(kb, { truth: true, predicate: "owns", parameters: ["student1", "dog3"] });
 		PlannerUtility.addAssertion(kb, { truth: true, predicate: "owns", parameters: ["student1", "cat4"] });
-		var test1 = PlannerUtility.getAllPossibleActionVariableReplacements(feedAction, table, kb);
-		var test2 = PlannerUtility.getAllPossibleActionVariableReplacements(mentionHeightAction, table, kb);
+		var test1 = PlannerUtility.getAllPossibleActionVariableReplacements(kb, feedAction, table);
+		var test2 = PlannerUtility.getAllPossibleActionVariableReplacements(kb,  mentionHeightAction, table);
 		it("test1 should have one possibility: feed(student1 dog3).", function() {
 			Assert(test1.length == 1 && test1[0][0] == "student1" && test1[0][1] == "dog3");
 		});
@@ -188,7 +188,7 @@ describe("planner-utility", function() {
 	describe("#addAssertion()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "person", "dog", "cat", "pet"];
-		var table = PlannerUtility.initializeMemoryTable(space, kb);
+		var table = PlannerUtility.initializeMemoryTable(kb, space);
 		PlannerUtility.addAssertion(kb, { truth: true, predicate: "hungry", parameters: ["dog3"]});
 		PlannerUtility.addAssertion(kb, { truth: true, predicate: "owns", parameters: ["student1", "dog3"]});
 		PlannerUtility.addAssertion(kb, { truth: false, predicate: "bestfriend", parameters: ["person", "dog"]});
@@ -236,14 +236,14 @@ describe("planner-utility", function() {
 	describe("#getAvailableActions()", function() {
 		var kb1 = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space1 = ["student", "student"];
-		var table1 = PlannerUtility.initializeMemoryTable(space1, kb1);
-		var availableActions1 = PlannerUtility.getAvailableActions(table1, kb1);
+		var table1 = PlannerUtility.initializeMemoryTable(kb1, space1);
+		var availableActions1 = PlannerUtility.getAvailableActions(kb1, table1);
 		var kb2 = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space2 = ["person", "cat"];
-		var table2 = PlannerUtility.initializeMemoryTable(space2, kb2);
+		var table2 = PlannerUtility.initializeMemoryTable(kb2, space2);
 		PlannerUtility.addAssertion(kb2, {truth: true, predicate: "owns", parameters: ["person1", "cat2"]});
 		PlannerUtility.addAssertion(kb2, {truth: true, predicate: "hungry", parameters: ["cat2"]});
-		var availableActions2 = PlannerUtility.getAvailableActions(table2, kb2);
+		var availableActions2 = PlannerUtility.getAvailableActions(kb2, table2);
 		it("In space1, there should be 2 available actions.", function() {
 			Assert(availableActions1.length == 2);
 		});
@@ -271,18 +271,14 @@ describe("planner-utility", function() {
 	describe("#executeAction()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "cat"];
-		var table = PlannerUtility.initializeMemoryTable(space, kb);
+		var table = PlannerUtility.initializeMemoryTable(kb, space);
 		var mentionHeightAction = kb.action_list[PlannerUtility.fetchActionIndex(kb.action_list, "mentionheight")];
 		var feedAction = kb.action_list[PlannerUtility.fetchActionIndex(kb.action_list, "feed")];
 		it("height should be visible on student1 only after executing the mentionheight.", function() {
-			Assert(PlannerUtility.assertionIsTrue({
-				truth: false, predicate: "visible", parameters: ["student1", "height*"]
-			}, kb));
-			PlannerUtility.executeAction(mentionHeightAction, ["student1"], kb);
-			Assert(PlannerUtility.assertionIsTrue({
-				truth: true, predicate: "visible", parameters: ["student1", "height*"]
-			}, kb));
-			var list = PlannerUtility.getAvailableActions(table, kb);
+			Assert(PlannerUtility.assertionIsTrue(kb, {	truth: false, predicate: "visible", parameters: ["student1", "height*"]	}));
+			PlannerUtility.executeAction(kb, mentionHeightAction, ["student1"]);
+			Assert(PlannerUtility.assertionIsTrue(kb, { truth: true, predicate: "visible", parameters: ["student1", "height*"] }));
+			var list = PlannerUtility.getAvailableActions(kb, table);
 			console.log(list);
 			var counter = 0;
 			for (var i = 0; i < list.length; i++) {
@@ -295,9 +291,9 @@ describe("planner-utility", function() {
 		it("pet should not be hungry after applying the feed action", function() {
 			PlannerUtility.addAssertion(kb, { truth: true, predicate: "hungry", parameters: ["cat2"]});
 			PlannerUtility.addAssertion(kb, { truth: true, predicate: "owns", parameters: ["student1", "cat2"]});
-			Assert(PlannerUtility.assertionIsTrue({ truth: true, predicate: "hungry", parameters: ["cat2"]}, kb));
-			PlannerUtility.executeAction(feedAction, ["student1", "cat2"], kb);
-			Assert(PlannerUtility.assertionIsTrue({ truth: false, predicate: "hungry", parameters: ["cat2"]}, kb));
+			Assert(PlannerUtility.assertionIsTrue(kb, { truth: true, predicate: "hungry", parameters: ["cat2"]}));
+			PlannerUtility.executeAction(kb, feedAction, ["student1", "cat2"]);
+			Assert(PlannerUtility.assertionIsTrue(kb, { truth: false, predicate: "hungry", parameters: ["cat2"]}));
 		});
 	});
 });

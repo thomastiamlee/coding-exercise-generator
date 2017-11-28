@@ -7,11 +7,11 @@ that will serve as possible elements in the story. */
 function planExercise(space) {
 	var kb = Parser.parseKnowledgeBase("./src/kb/simple-space.txt");
 	// Create an object for each space element
-	var table = PlannerUtility.initializeMemoryTable(space, kb);
+	var table = PlannerUtility.initializeMemoryTable(kb, space);
 	
 	// Search for available actions
 	while (true) {
-		var actions = PlannerUtility.getAvailableActions(table, kb);
+		var actions = PlannerUtility.getAvailableActions(kb, table);
 		if (actions.length == 0) {
 			break;
 		}
@@ -22,7 +22,7 @@ function planExercise(space) {
 		console.log(chosenAction.action.name);
 		console.log(chosenAction.parameters);
 		
-		PlannerUtility.executeAction(chosenAction.action, chosenAction.parameters, kb);
+		PlannerUtility.executeAction(kb, chosenAction.action, chosenAction.parameters);
 	}
 }
 
