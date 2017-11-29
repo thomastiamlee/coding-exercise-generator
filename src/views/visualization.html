@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<!-- Stylesheets -->
+		<link rel="stylesheet" href="css/normalize.css" />
+		<link rel="stylesheet" href="css/skeleton.css" />
+		<link rel="stylesheet" href="css/visualization.css" />
+		<!-- Base scripts -->	
+		<script src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script>
+	</head>
+	<body>
+		<div class="container" id="main-container">
+			<div class="row">
+				<div class="twelve columns">
+					<h5>Visualization Tool</h5>
+				</div>
+			</div>
+			<form>
+				<div class="row">
+					<div class="twelve columns">
+						<label for="fileNameInput">File name:</label>
+						<input type="text" name="fileName">
+						<input type="submit">
+					</div>
+				</div>
+			</form>
+			<div class="row">
+				<div class="six columns">
+					<p>Flowchart:</p>
+				</div>
+				<div class="six columns">
+					<p>Text:</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="six columns">
+					<div class="mermaid">
+						graph TD
+						A[x1 = 3 + i1]
+						B[x2 = x1 *2]
+						C{x2 > i2}
+						D(return 0)
+						E(return x2)
+						A --> B
+						B --> C
+						C --> D
+						C --> E
+					</div>
+				</div>
+				<div class="six columns">
+<pre>%INPUTS
+i1-number
+i2-number
+%VARIABLES
+x1-number
+x2-number
+%NODES
+o,[i1],(number-3),[x1],+,1
+o,[x1],(number-2),[x2],*,2
+c,[x2],[i2],>,3,4
+r,(number-0)
+r,[x2]</pre>
+				</div>
+			</div>
+		</div>
+	
+		
+	
+		<!-- Base scripts -->
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous" 
+		</script>
+		<!-- Application scripts -->
+		$(document).ready(function() {
+			mermaid.initialize({startOnLoad:true});
+		});
+	</body>	
+</html>
