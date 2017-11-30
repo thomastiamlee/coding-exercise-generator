@@ -273,10 +273,8 @@ function loadExercise(file, blocks) {
 			}
 		}
 	}
-	
-	console.log(symbolMappings);
-	
-	return {head: nodes[0].node, input: inputVariables};
+		
+	return {head: nodes[0].node, input: inputVariables, symbols: symbolMappings};
 }
 
 /* Utility function for searching the symbol mappings to get the actual variable object of a given key.
@@ -285,6 +283,17 @@ function getOperandFromSymbol(name, symbolMappings) {
 	for (var i = 0; i < symbolMappings.length; i++) {
 		if (symbolMappings[i].name == name) {
 			return symbolMappings[i].obj;
+		}
+	}
+	return null;
+}
+
+/* Utility function for searching the symbol mappings to get the variable name of a given operand.
+This function returns null is the symbol was not found. */
+function getSymbolFromOperand(operand, symbolMappings) {
+	for (var i = 0; i < symbolMappings.length; i++) {
+		if (symbolMappings[i].obj == operand) {
+			return symbolMappings[i].name;
 		}
 	}
 	return null;
@@ -329,6 +338,7 @@ function convertOperandStringToObject(operandString, symbolMappings) {
 function convertToFlowchartDefinition(exercise) {
 	var head = exercise.head;
 	var inputs = exercise.inputs;
+	var symbols = exercise.symbols;
 	var res = "graph TD\n";
 	var nodeInformation = "";
 	var nodeConnections = "";
@@ -336,16 +346,42 @@ function convertToFlowchartDefinition(exercise) {
 	var nodeList = head.getAllSolutionSuccessors();
 	for (var i = 0; i < nodeList.length; i++) {
 		var currentNode = nodeList[i];
-		if (currentNode.type == Component.NODE_TYPE_BLOCK_OPERATION) {
-			
+		var letter = String.fromCharCode(65 + i);
+		var operandStrings = [];
+		var operands = currentNode.inputOperands;
+		for (var j = 0; j < operands.length; j++) {
+			if (operands[j] instanceof Component.operand) {
+				operandStrings.push(operands[j].value);
+			}
+			else if (operands[j] instanceof Component.variable) {
+				operandStrings.push(getSymbolFromOperand(operands[j], symbols));
+			}
 		}
-		else if (currentNode.type == Component.NODE_TYPE_BLOCK_CONDITION) {
-			
+		var successors = currentNode.solutionSuccessors;
+		
+		var nodeLine = "";
+		var connectionLine = "";
+		if (currentNode.type == Component.NODE_TYPE_OPERATION) {
+			var operator = currentNode.operator;
+			var variableOutput = getSymbolFromOperand(currentNode.variableOutput, symbols);
+			nodeLine += letter + "[" + variableOutput + " = " + operandStrings[0] + " " + operator + " " + operandStrings[1] + "]\n";
+			connectionLine += letter + " --> " + String.fromCharCode(65 + nodeList.indexOf(successors[0])) + "\n";
+		}
+		else if (currentNode.type == Component.NODE_TYPE_CONDITION) {
+			var operator = currentNode.operator;
+			nodeLine += letter + "{" + operandStrings[0] + " " + operator + " " + operandStrings[1] + "}\n";
+			connectionLine += letter + " -->|true| " + String.fromCharCode(65 + nodeList.indexOf(successors[0])) + "\n";
+			connectionLine += letter + " -->|false| " + String.fromCharCode(65 + nodeList.indexOf(successors[1])) + "\n";
 		}
 		else if (currentNode.type == Component.NODE_TYPE_RETURN) {
-			console.log(currentNode.inputOperands);
+			nodeLine += letter + "(return " + operandStrings[0] + ")\n";
 		}
+		if (nodeLine != "")	nodeInformation += nodeLine;
+		if (connectionLine != "") nodeConnections += connectionLine;
 	}
+		
+	res += nodeInformation + nodeConnections;
+	return res;
 }
 
-module.exports = {loadExercise, loadBlocks, buildBlockFromInformation, convertToFlowchartDefinition};
+module.exports = {loadExercise, loadBlocks, buildBlockFromInformation, convertToFlowchartDefinition, getOperandFromSymbol, getSymbolFromOperand};
