@@ -166,6 +166,30 @@ function node(type) {
 			}
 		}
 	}
+	
+	/* Gets all the children from this node, including this node, following the solution path, following in-order traversal. */
+	this.getAllSolutionSuccessors = function(added) {
+		if (!added) {
+			added = [];
+		}
+		var target = this;
+		while (target.type == NODE_TYPE_BLOCK_OPERATION || target.type == NODE_TYPE_BLOCK_CONDITION) {
+			target = target.internalHead;
+		}
+		added.push(target);
+		var res = [target];
+		if (target.type == NODE_TYPE_OPERATION) {
+			var first = target.solutionSuccessors[0];
+			if (added.indexOf(first) == -1) res = res.concat(first.getAllSolutionSuccessors(added));
+		}
+		else if (target.type == NODE_TYPE_CONDITION) {
+			var first = target.solutionSuccessors[0];
+			if (added.indexOf(first) == -1) res = res.concat(first.getAllSolutionSuccessors(added));
+			var second = target.solutionSuccessors[1];
+			if (added.indexOf(second) == -1) res = res.concat(second.getAllSolutionSuccessors(added));
+		}
+		return res;
+	}
 }
 
 function operand(type, value) {

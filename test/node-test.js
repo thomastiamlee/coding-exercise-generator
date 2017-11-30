@@ -459,5 +459,52 @@ describe("node", function() {
 			});
 		});
 	});
+	
+	describe("#getAllSolutionSuccessors()", function() {
+		var o1 = new Component.variable("number");
+		var o2 = new Component.variable("number");
+		var o3 = new Component.variable("number");
+		var n1 = new Component.node(Component.NODE_TYPE_CONDITION);
+		n1.attachInputOperand(new Component.placeholder(0), 0);
+		n1.attachInputOperand(new Component.placeholder(1), 1);
+		n1.setOperator("<");
+		var n2 = new Component.node(Component.NODE_TYPE_OPERATION);
+		n2.attachInputOperand(new Component.placeholder(0), 0);
+		n2.attachInputOperand(new Component.operand("number", 0), 1);
+		n2.setOperator("+");
+		n2.setVariableOutput(new Component.placeholder(-1));
+		var n3 = new Component.node(Component.NODE_TYPE_OPERATION);
+		n3.attachInputOperand(new Component.placeholder(1), 0);
+		n3.attachInputOperand(new Component.operand("number", 0), 1);
+		n3.setOperator("+");
+		n3.setVariableOutput(new Component.placeholder(-1));
+		n1.attachNode(n2, 0);
+		n1.attachNode(n3, 1);
+		var n4 = new Component.node(Component.NODE_TYPE_BLOCK_OPERATION);
+		n4.setInternalHead(n1);
+		n4.setInternalTerminalNodes([n2, n3]);
+		n4.attachInputOperand(o1, 0);
+		n4.attachInputOperand(o2, 1);
+		n4.setVariableOutput(o3);
+		var n5 = new Component.node(Component.NODE_TYPE_RETURN);
+		n5.attachInputOperand(o3, 0);
+		n4.attachNode(n5, 0);
+		var res = n4.getAllSolutionSuccessors();
+		
+		it("There should be 4 solution successors from n4.", function() {
+			Assert(res.length == 4);
+		});
+		it("n1, n2, n3, and n5 should be the successors from n4.", function() { 
+			var list = [n1, n2, n3, n5];
+			var passed = true;
+			for (var i = 0; i < res.length; i++) {
+				if (list.indexOf(res[i]) == -1) {
+					passed = false;
+				}
+				list.splice(list.indexOf(res[i]), 1);
+			}
+			Assert(passed);
+		});
+	});
 });
 				

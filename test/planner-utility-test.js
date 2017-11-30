@@ -279,7 +279,6 @@ describe("planner-utility", function() {
 			PlannerUtility.executeAction(kb, mentionHeightAction, ["student1"]);
 			Assert(PlannerUtility.assertionIsTrue(kb, { truth: true, predicate: "visible", parameters: ["student1", "height*"] }));
 			var list = PlannerUtility.getAvailableActions(kb, table);
-			console.log(list);
 			var counter = 0;
 			for (var i = 0; i < list.length; i++) {
 				if (list[i].action.name == "mentionheight") {

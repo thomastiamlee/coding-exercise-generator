@@ -322,4 +322,11 @@ function convertOperandStringToObject(operandString, symbolMappings) {
 	}
 }
 
-module.exports = {loadExercise, loadBlocks, buildBlockFromInformation};
+/* Converts an exercise to a flowchart definition, given its head. */
+function convertToFlowchartDefinition(head) {
+	var nodeList = [];
+	
+	
+}
+
+module.exports = {loadExercise, loadBlocks, buildBlockFromInformation, convertToFlowchartDefinition};
