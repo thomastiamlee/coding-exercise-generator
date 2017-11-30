@@ -184,7 +184,7 @@ function assertionIsTrue(kb, table, assertion) {
 
 /* Gets all the possible combination of space elemets that can be assigned for an action, based on its parameter requirements and
 preconditions. */
-function getAllPossibleParameterMatches(kb, action, table) {
+function getAllPossibleParameterMatches(kb, table, action) {
 	var parameters = action.parameters;
 	// For each parameter, identify all table elements that match the criteria
 	var res = [];

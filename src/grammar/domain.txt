@@ -8,10 +8,17 @@ start
 	= _ "#types;" _ x:type_list "#relationships;" _ y:relationship_list _
 	"#actions;" _ z:action_list _
 	{
+		var primitives = [];
+		for (var i = 0; i < x.length; i++) {
+			if (x[i][0].indexOf("*") != -1) {
+				primitives.push(x[i]);
+			}
+		}
 		return {
 			type_list: x,
 			relationship_list: y,
-			action_list: z
+			action_list: z,
+			primitive_list: primitives
 		}
 	}
 	

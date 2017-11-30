@@ -113,7 +113,8 @@ describe("planner-utility", function() {
 	describe("#getAllPossibleParameterMatches()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "person", "dog", "cat", "pet"];
-		var table = PlannerUtility.initializeMemoryTable(kb, space);
+		var table = new PlannerUtility.memory();
+		table.addSpace(space);
 		var actionList = kb.action_list;
 		var feedAction = actionList[PlannerUtility.fetchActionIndex(actionList, "feed")];
 		var test1 = PlannerUtility.getAllPossibleParameterMatches(kb, feedAction, table);
