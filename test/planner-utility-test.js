@@ -246,16 +246,18 @@ describe("planner-utility", function() {
 			Assert(!found);
 		});
 	});
-	/*describe("#getAvailableActions()", function() {
+	describe("#getAvailableActions()", function() {
 		var kb1 = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space1 = ["student", "student"];
-		var table1 = PlannerUtility.initializeMemoryTable(kb1, space1);
+		var table1 = new PlannerUtility.memory();
+		table1.addSpace(space1);
 		var availableActions1 = PlannerUtility.getAvailableActions(kb1, table1);
 		var kb2 = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space2 = ["person", "cat"];
-		var table2 = PlannerUtility.initializeMemoryTable(kb2, space2);
-		PlannerUtility.addAssertion(kb2, {truth: true, predicate: "owns", parameters: ["person1", "cat2"]});
-		PlannerUtility.addAssertion(kb2, {truth: true, predicate: "hungry", parameters: ["cat2"]});
+		var table2 = new PlannerUtility.memory();
+		table2.addSpace(space2);
+		table2.addAssertion({truth: true, predicate: "owns", parameters: ["person1", "cat2"]});
+		table2.addAssertion({truth: true, predicate: "hungry", parameters: ["cat2"]});
 		var availableActions2 = PlannerUtility.getAvailableActions(kb2, table2);
 		it("In space1, there should be 4 available actions.", function() {
 			Assert(availableActions1.length == 4);
@@ -283,6 +285,7 @@ describe("planner-utility", function() {
 			Assert(x1 && x2 && x3);
 		});
 	});
+	/*
 	describe("#executeAction()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "cat"];

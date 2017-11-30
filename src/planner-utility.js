@@ -81,8 +81,7 @@ function getAvailableActions(kb, table) {
 	var actionList = kb.action_list;
 	var availableActions = [];
 	for (var i = 0; i < actionList.length; i++) {
-		var possible = getAllPossibleActionVariableReplacements(kb, actionList[i], table);
-		// Randomly choose an action
+		var possible = getAllPossibleActionVariableReplacements(kb, table, actionList[i]);
 		for (var j = 0; j < possible.length; j++) {
 			availableActions.push({action: actionList[i], parameters: possible[j]});
 		}
