@@ -218,6 +218,48 @@ function initializeMemoryTable(kb, space) {
 	return res;
 }
 
+function memory() {
+	this.counter = 1;
+	this.space = [];
+	this.assertions = [];
+	this.variables = [];
+	
+	this.addSpace = function(type) {
+		var id = type + counter;
+		this.space.push([id, [type]]);
+		this.counter = this.counter + 1;
+	}
+	
+	this.addAssertion = function(assertion) {
+		var truth = assertion.truth;
+		var assertionList = this.assertions;
+		// Try to find if the assertion already exists
+		var index = -1;
+		for (var i = 0; i < assertionList.length; i++) {
+			var predicate = assertionList[i].predicate;
+			if (predicate == assertion.predicate) {
+				var same = true;
+				for (var j = 0; j < assertion.parameters.length; j++) {
+					if (assertion.parameters[j] != assertionList[i].parameters[j]) {
+						same = false;
+						break;
+					}
+				}
+				if (same) {
+					index = i;
+					break;
+				}
+			}
+		}
+		if (truth && index == -1) {
+			assertionList.push(assertion);
+		}
+		else if (!truth && index != -1) {
+			assertionList.splice(index, 1);
+		}
+	}
+}
+
 /* Checks if a type is primitive or not. A type is primitive if
 its name ends with an asterisk symbol (*). */
 function isPrimitive(type) {
