@@ -1,5 +1,57 @@
 const Parser = require("./parser");
 
+/* Constructor for the memory table, which serves as the main mechanism for remembering
+information during the planning process. */
+function memory() {
+	this.counter = 1;
+	this.space = [];
+	this.assertions = [];
+	this.variables = [];
+	
+	/* Adds a new space entity in the memory. space can be a single string representing the
+	type of the new space entity or it can be an array of strings representing multiple
+	types. */
+	this.addSpace = function(space) {
+		if (space.constructor !== Array) {
+			space = [space];
+		}
+		for (var i = 0; i < space.length; i++) {
+			var id = space + this.counter;
+			this.space.push([id, [space]]);
+			this.counter = this.counter + 1;
+		}
+	}
+	
+	this.addAssertion = function(assertion) {
+		var truth = assertion.truth;
+		var assertionList = this.assertions;
+		// Try to find if the assertion already exists
+		var index = -1;
+		for (var i = 0; i < assertionList.length; i++) {
+			var predicate = assertionList[i].predicate;
+			if (predicate == assertion.predicate) {
+				var same = true;
+				for (var j = 0; j < assertion.parameters.length; j++) {
+					if (assertion.parameters[j] != assertionList[i].parameters[j]) {
+						same = false;
+						break;
+					}
+				}
+				if (same) {
+					index = i;
+					break;
+				}
+			}
+		}
+		if (truth && index == -1) {
+			assertionList.push(assertion);
+		}
+		else if (!truth && index != -1) {
+			assertionList.splice(index, 1);
+		}
+	}
+}
+
 /* Executes a given action with the given parameters. Updates the assertions in the knowledge base as a result of performing the action. */
 function executeAction(kb, action, parameters) {
 	var effectList = action.effects;
@@ -193,7 +245,7 @@ function isExtendedFrom(kb, offspring, parent) {
 list is an array containing non-primitive type names. This
 function returns a table which is needed for planner algorithm.
 This function returns null if the space array is invalid. */
-function initializeMemoryTable(kb, space) {
+/*function initializeMemoryTable(kb, space) {
 	var res = [];
 	var identifierCounter = 1;
 	res.nonprimitives = [];
@@ -207,7 +259,7 @@ function initializeMemoryTable(kb, space) {
 		addType(kb, [identifier, [name]]);
 		identifierCounter++;
 	}
-	// Extract all the primitives from the knowledge base. */
+	// Extract all the primitives from the knowledge base.
 	res.primitives = [];
 	var typeList = kb.type_list;
 	for (var i = 0; i < typeList.length; i++) {
@@ -216,49 +268,7 @@ function initializeMemoryTable(kb, space) {
 		}
 	}
 	return res;
-}
-
-function memory() {
-	this.counter = 1;
-	this.space = [];
-	this.assertions = [];
-	this.variables = [];
-	
-	this.addSpace = function(type) {
-		var id = type + counter;
-		this.space.push([id, [type]]);
-		this.counter = this.counter + 1;
-	}
-	
-	this.addAssertion = function(assertion) {
-		var truth = assertion.truth;
-		var assertionList = this.assertions;
-		// Try to find if the assertion already exists
-		var index = -1;
-		for (var i = 0; i < assertionList.length; i++) {
-			var predicate = assertionList[i].predicate;
-			if (predicate == assertion.predicate) {
-				var same = true;
-				for (var j = 0; j < assertion.parameters.length; j++) {
-					if (assertion.parameters[j] != assertionList[i].parameters[j]) {
-						same = false;
-						break;
-					}
-				}
-				if (same) {
-					index = i;
-					break;
-				}
-			}
-		}
-		if (truth && index == -1) {
-			assertionList.push(assertion);
-		}
-		else if (!truth && index != -1) {
-			assertionList.splice(index, 1);
-		}
-	}
-}
+}*/
 
 /* Checks if a type is primitive or not. A type is primitive if
 its name ends with an asterisk symbol (*). */
@@ -371,4 +381,4 @@ function sortKnowledgeBase(kb) {
 }
 
 
-module.exports = {addType, addAssertion, sortKnowledgeBase, isPrimitive, initializeMemoryTable, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, assertionIsTrue, getAvailableActions, executeAction};
+module.exports = {memory, addType, addAssertion, sortKnowledgeBase, isPrimitive, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, assertionIsTrue, getAvailableActions, executeAction};
