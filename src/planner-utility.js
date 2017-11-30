@@ -188,20 +188,23 @@ function getAllPossibleParameterMatches(kb, table, action) {
 	var parameters = action.parameters;
 	// For each parameter, identify all table elements that match the criteria
 	var res = [];
-	var candidates = table.nonprimitives.concat(table.primitives);
+	var candidates = table.space.concat(kb.primitive_list);
+	console.log(candidates);
 	for (var i = 0; i < parameters.length; i++) {
 		var typeRequirement = parameters[i];
 		res.push([]);
 		for (var j = 0; j < candidates.length; j++) {
-			var type = candidates[j].id;
+			var type = candidates[j][0];
 			if (typeRequirement == "*") { // wildcard
-				res[i].push(candidates[j]);
+				res[i].push(candidates[j][0]);
 			}
-			else if (isExtendedFrom(kb, type, typeRequirement)) {
-				res[i].push(candidates[j]);
+			else if (isExtendedFrom(kb, table, type, typeRequirement)) {
+				res[i].push(candidates[j][0]);
 			}
 		}
 	}
+	console.log("MATCH");
+	console.log(res);
 	return res;
 }
 

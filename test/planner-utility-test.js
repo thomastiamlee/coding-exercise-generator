@@ -109,7 +109,6 @@ describe("planner-utility", function() {
 		it ("student1 is an offspring of person.", function() { Assert(test9); });
 		it ("dog2 is not an offspring of person.", function() { Assert(!test10); });
 	});
-	/*
 	describe("#getAllPossibleParameterMatches()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "person", "dog", "cat", "pet"];
@@ -117,13 +116,13 @@ describe("planner-utility", function() {
 		table.addSpace(space);
 		var actionList = kb.action_list;
 		var feedAction = actionList[PlannerUtility.fetchActionIndex(actionList, "feed")];
-		var test1 = PlannerUtility.getAllPossibleParameterMatches(kb, feedAction, table);
+		var test1 = PlannerUtility.getAllPossibleParameterMatches(kb, table, feedAction);
 		it("In the feed action, student1 and person2 should match the person parameter.", function() {
 			Assert(test1[0].length == 2);
 			var cond1 = false, cond2 = false;
 			for (var i = 0; i < test1[0].length; i++) {
-				if (test1[0][i].id == "person2") cond1 = true;
-				else if (test1[0][i].id == "student1") cond2 = true;
+				if (test1[0][i] == "person2") cond1 = true;
+				else if (test1[0][i] == "student1") cond2 = true;
 			}
 			Assert(cond1 && cond2);
 		});
@@ -131,14 +130,13 @@ describe("planner-utility", function() {
 			Assert(test1[1].length == 3);
 			var cond1 = false, cond2 = false, cond3 = false; 
 			for (var i = 0; i < test1[1].length; i++) {
-				if (test1[1][i].id == "dog3") cond1 = true;
-				else if (test1[1][i].id == "cat4") cond2 = true;
-				else if (test1[1][i].id == "pet5") cond2 = true;
+				if (test1[1][i] == "dog3") cond1 = true;
+				else if (test1[1][i] == "cat4") cond2 = true;
+				else if (test1[1][i] == "pet5") cond2 = true;
 			}
 			Assert(cond1 && cond2);
 		});
 	});
-	*/
 	describe("#assertionIsTrue()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "person", "dog", "cat", "pet"];
