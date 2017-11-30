@@ -240,41 +240,6 @@ function isExtendedFrom(kb, table, offspring, parent) {
 	return false;
 }
 
-/* Initializes the memory table from the space list. The space
-list is an array containing non-primitive type names. This
-function returns a table which is needed for planner algorithm.
-This function returns null if the space array is invalid. */
-/*function initializeMemoryTable(kb, space) {
-	var res = [];
-	var identifierCounter = 1;
-	res.nonprimitives = [];
-	for (var i = 0; i < space.length; i++) {
-		var name = space[i];
-		if (isPrimitive(name)) {
-			return null;
-		}
-		var identifier = name + "" + identifierCounter;
-		res.nonprimitives.push({id: identifier, memory: []});
-		addType(kb, [identifier, [name]]);
-		identifierCounter++;
-	}
-	// Extract all the primitives from the knowledge base.
-	res.primitives = [];
-	var typeList = kb.type_list;
-	for (var i = 0; i < typeList.length; i++) {
-		if (isPrimitive(typeList[i][0])) {
-			res.primitives.push({id: typeList[i][0]});
-		}
-	}
-	return res;
-}*/
-
-/* Checks if a type is primitive or not. A type is primitive if
-its name ends with an asterisk symbol (*). */
-function isPrimitive(type) {
-	return type.charAt(type.length - 1) == '*';
-}
-
 function sortTypeList(list) {
 	list.sort(function(a, b) {
 		if (a[0] < b[0]) return -1;
@@ -388,4 +353,4 @@ function sortKnowledgeBase(kb) {
 }
 
 
-module.exports = {memory, addType, addAssertion, sortKnowledgeBase, isPrimitive, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, assertionIsTrue, getAvailableActions, executeAction};
+module.exports = {memory, addType, addAssertion, sortKnowledgeBase, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, assertionIsTrue, getAvailableActions, executeAction};

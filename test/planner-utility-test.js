@@ -3,53 +3,6 @@ const PlannerUtility = require("../src/planner-utility");
 const Parser = require("../src/parser");
 
 describe("planner-utility", function() {
-	/*describe("#isPrimitive()", function() {
-		it("name should not be primitive", function() {
-			Assert(PlannerUtility.isPrimitive("name") == false);
-		});
-		it("height should not be primitive", function() {
-			Assert(PlannerUtility.isPrimitive("height") == false);
-		});
-		it("name* should be primitive", function() {
-			Assert(PlannerUtility.isPrimitive("name*") == true);
-		});
-		it("height* should be primitive", function() {
-			Assert(PlannerUtility.isPrimitive("height*") == true);
-		});
-	});
-	describe("#initializeMemoryTable()", function() {
-		var kb = Parser.parseKnowledgeBase("./test/kbtest.txt");
-		var space = ["person", "restaurant", "ramen"];
-		var res = PlannerUtility.initializeMemoryTable(kb, space);
-		var invalidSpace = ["person", "height*"];
-		var invalidRes = PlannerUtility.initializeMemoryTable(kb, invalidSpace);
-		
-		it("Nonprimitives should be of length 3.", function() {
-			Assert(res.nonprimitives.length == 3);
-		});
-		it("The first element should be {id: \"person1\", memory: []]", function() {
-			Assert(res.nonprimitives[0].id == "person1" && res.nonprimitives[0].memory.length == 0);
-		});
-		it("The third element should be {id: \"ramen3\", memory: []]", function() {
-			Assert(res.nonprimitives[2].id == "ramen3" && res.nonprimitives[2].memory.length == 0);
-		});
-		it("A space initialization with primitives should return null.", function() {
-			Assert(invalidRes == null);
-		});
-		it("Primitives should be on length 3.", function() {
-			Assert(res.primitives && res.primitives.length == 8);
-		});
-		it("Primitives should contain nonnegativevalue*, massvalue*, and personname*.", function() {
-			var x1 = false, x2 = false, x3 = false;
-			for (var i = 0; i < res.primitives.length; i++) {
-				if (res.primitives[i].id == "nonnegativevalue*") x1 = true;
-				if (res.primitives[i].id == "massvalue*") x2 = true;
-				if (res.primitives[i].id == "personname*") x3 = true;
-			}
-			Assert(x1 && x2 && x3);
-		});
-	});
-	*/
 	describe("#fetchTypeIndex()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbtest.txt");
 		var typeList = kb.type_list;
