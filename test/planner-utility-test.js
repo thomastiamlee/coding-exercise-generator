@@ -82,16 +82,22 @@ describe("planner-utility", function() {
 			Assert(action2.name == "mention" && action2.parameters && action2.preconditions && action2.effects);
 		});
 	});
+	*/
 	describe("#isExtendedFrom()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbextendtest.txt");
-		var test1 = PlannerUtility.isExtendedFrom(kb, "student", "person");
-		var test2 = PlannerUtility.isExtendedFrom(kb, "student", "student");
-		var test3 = PlannerUtility.isExtendedFrom(kb, "person", "student");
-		var test4 = PlannerUtility.isExtendedFrom(kb, "spaghetti", "object");
-		var test5 = PlannerUtility.isExtendedFrom(kb, "dog", "animal");
-		var test6 = PlannerUtility.isExtendedFrom(kb, "dog", "cat");
-		var test7 = PlannerUtility.isExtendedFrom(kb, "bulldog", "cat");
-		var test8 = PlannerUtility.isExtendedFrom(kb, "distancevalue*", "nonnegativevalue*");
+		var space = ["student", "dog"];
+		var table = new PlannerUtility.memory();
+		table.addSpace(space);
+		var test1 = PlannerUtility.isExtendedFrom(kb, table, "student", "person");
+		var test2 = PlannerUtility.isExtendedFrom(kb, table, "student", "student");
+		var test3 = PlannerUtility.isExtendedFrom(kb, table, "person", "student");
+		var test4 = PlannerUtility.isExtendedFrom(kb, table, "spaghetti", "object");
+		var test5 = PlannerUtility.isExtendedFrom(kb, table, "dog", "animal");
+		var test6 = PlannerUtility.isExtendedFrom(kb, table, "dog", "cat");
+		var test7 = PlannerUtility.isExtendedFrom(kb, table, "bulldog", "cat");
+		var test8 = PlannerUtility.isExtendedFrom(kb, table, "distancevalue*", "nonnegativevalue*");
+		var test9 = PlannerUtility.isExtendedFrom(kb, table, "student1", "person");
+		var test10 = PlannerUtility.isExtendedFrom(kb, table, "dog2", "person");
 		it ("student is an offspring of the person.", function() { Assert(test1);	});
 		it ("student is an offspring of the student.", function() {	 Assert(test2); });
 		it ("person is not an offspring of the student.", function() { Assert(!test3); });
@@ -100,7 +106,10 @@ describe("planner-utility", function() {
 		it ("dog is not an offspring of the cat.", function() { Assert(!test6); });
 		it ("bulldog is not an offspring of the cat.", function() { Assert(!test7); });
 		it ("distancevalue* is an offspring of the nonnegativevalue*.", function() { Assert(test8); });
+		it ("student1 is an offspring of person.", function() { Assert(test9); });
+		it ("dog2 is not an offspring of person.", function() { Assert(!test10); });
 	});
+	/*
 	describe("#getAllPossibleParameterMatches()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "person", "dog", "cat", "pet"];
@@ -131,25 +140,26 @@ describe("planner-utility", function() {
 	describe("#assertionIsTrue()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "person", "dog", "cat", "pet"];
-		var table = PlannerUtility.initializeMemoryTable(kb, space);
+		var table = new PlannerUtility.memory();
+		table.addSpace(space);
 		var assertion1 = { truth: true, predicate: "has", parameters: ["person", "height*"] };
-		var test1 = PlannerUtility.assertionIsTrue(kb, assertion1);
+		var test1 = PlannerUtility.assertionIsTrue(kb, table, assertion1);
 		var assertion2 = { truth: true, predicate: "has", parameters: ["student", "height*"] };
-		var test2 = PlannerUtility.assertionIsTrue(kb, assertion2);
+		var test2 = PlannerUtility.assertionIsTrue(kb, table, assertion2);
 		var assertion3 = { truth: false, predicate: "has", parameters: ["person", "height*"] };
-		var test3 = PlannerUtility.assertionIsTrue(kb, assertion3);
+		var test3 = PlannerUtility.assertionIsTrue(kb, table, assertion3);
 		var assertion4 = { truth: false, predicate: "has", parameters: ["student", "height*"] };
-		var test4 = PlannerUtility.assertionIsTrue(kb, assertion4);
+		var test4 = PlannerUtility.assertionIsTrue(kb, table, assertion4);
 		var assertion5 = { truth: true, predicate: "has", parameters: ["student1", "height*"] };
-		var test5 = PlannerUtility.assertionIsTrue(kb, assertion5);
+		var test5 = PlannerUtility.assertionIsTrue(kb, table, assertion5);
 		var assertion6 = { truth: true, predicate: "canown", parameters: ["person2", "pet5"] };
-		var test6 = PlannerUtility.assertionIsTrue(kb, assertion6);
+		var test6 = PlannerUtility.assertionIsTrue(kb, table, assertion6);
 		var assertion7 = { truth: true, predicate: "has", parameters: ["pet5", "height*"] };
-		var test7 = PlannerUtility.assertionIsTrue(kb, assertion7);
+		var test7 = PlannerUtility.assertionIsTrue(kb, table, assertion7);
 		var assertion8 = { truth: false, predicate: "bestfriend", parameters: ["student1", "dog3"] };
-		var test8 = PlannerUtility.assertionIsTrue(kb, assertion8);
+		var test8 = PlannerUtility.assertionIsTrue(kb, table, assertion8);
 		var assertion9 = { truth: true, predicate: "hungry", parameters: ["dog3"] };
-		var test9 = PlannerUtility.assertionIsTrue(kb, assertion9);
+		var test9 = PlannerUtility.assertionIsTrue(kb, table, assertion9);
 		it("has(person height*) should be true.", function() { Assert(test1); });
 		it("has(student height*) should be true.", function() { Assert(test2); });
 		it("!has(person height*) should be false.", function() { Assert(!test3); });
@@ -188,16 +198,12 @@ describe("planner-utility", function() {
 	describe("#addAssertion()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "person", "dog", "cat", "pet"];
-		// var table = PlannerUtility.initializeMemoryTable(kb, space);
 		var table = new PlannerUtility.memory();
 		table.addSpace(space);
 		table.addAssertion({ truth: true, predicate: "hungry", parameters: ["dog3"]});
 		table.addAssertion({ truth: true, predicate: "owns", parameters: ["student1", "dog3"]});
 		table.addAssertion({ truth: true, predicate: "bestfriend", parameters: ["person2", "dog"]});
 		table.addAssertion({ truth: false, predicate: "bestfriend", parameters: ["person2", "dog"]});
-		//PlannerUtility.addAssertion(kb, { truth: true, predicate: "hungry", parameters: ["dog3"]});
-		//PlannerUtility.addAssertion(kb, { truth: true, predicate: "owns", parameters: ["student1", "dog3"]});
-		//PlannerUtility.addAssertion(kb, { truth: false, predicate: "bestfriend", parameters: ["person", "dog"]});
 		var assertionList = table.assertions;
 		it("The relationship hungry(dog3) should have been added", function() {
 			var found = false;
@@ -279,7 +285,7 @@ describe("planner-utility", function() {
 	describe("#executeAction()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "cat"];
-		var table = PlannerUtility.initializeMemoryTable(kb, space);
+		var table = new PlannerUtility.memory();
 		var mentionHeightAction = kb.action_list[PlannerUtility.fetchActionIndex(kb.action_list, "mentionheight")];
 		var feedAction = kb.action_list[PlannerUtility.fetchActionIndex(kb.action_list, "feed")];
 		it("height should be visible on student1 only after executing the mentionheight.", function() {

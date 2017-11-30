@@ -16,8 +16,8 @@ function memory() {
 			space = [space];
 		}
 		for (var i = 0; i < space.length; i++) {
-			var id = space + this.counter;
-			this.space.push([id, [space]]);
+			var id = space[i] + this.counter;
+			this.space.push([id, [space[i]]]);
 			this.counter = this.counter + 1;
 		}
 	}
@@ -53,7 +53,7 @@ function memory() {
 }
 
 /* Executes a given action with the given parameters. Updates the assertions in the knowledge base as a result of performing the action. */
-function executeAction(kb, action, parameters) {
+function executeAction(kb, table, action, parameters) {
 	var effectList = action.effects;
 	for (var i = 0; i < effectList.length; i++) {
 		var current = effectList[i];
@@ -71,7 +71,7 @@ function executeAction(kb, action, parameters) {
 			predicate: predicate,
 			parameters: currentParameters
 		}
-		addAssertion(kb, newAssertion);
+		table.addAssertion(newAssertion);
 	}
 }
 
@@ -156,8 +156,8 @@ base.  The format of the assertion parameter is as follows:
 { truth: <truth value>, predicate: <predicate>, parameters: <array of
 strings> }
 For the parameters, represent instances with their respective identifiers. */
-function assertionIsTrue(kb, assertion) {
-	var assertionList = kb.relationship_list;
+function assertionIsTrue(kb, table, assertion) {
+	var assertionList = kb.relationship_list.concat(table.assertions);
 	var queryPredicate = assertion.predicate;
 	var queryParameters = assertion.parameters;
 	for (var i = 0; i < assertionList.length; i++) {
@@ -207,11 +207,12 @@ function getAllPossibleParameterMatches(kb, action, table) {
 
 /* Returns if a the given offspring is extended from a given
 parent, based on the types defined in the knowledge base. */
-function isExtendedFrom(kb, offspring, parent) {
+function isExtendedFrom(kb, table, offspring, parent) {
 	// Search for all ancestors of the given offspring using BFS
 	var res = [];
 	var stack = [];
-	var temp = [].concat(kb.type_list);
+	var temp = [].concat(kb.type_list).concat(table.space);
+	sortTypeList(temp);
 	var offspringIndex = fetchTypeIndex(temp, offspring);
 	if (offspringIndex == -1) {
 		return false;
@@ -229,11 +230,7 @@ function isExtendedFrom(kb, offspring, parent) {
 			temp.splice(index, 1);
 		}
 	}
-	res = res.sort(function(a, b) {
-		if (a[0] < b[0]) return -1;
-		else if (a[0] > b[0]) return 1;
-		return 0;
-	});
+	sortTypeList(res);
 	var index = fetchTypeIndex(res, parent);
 	if (index != -1) {
 		return true;
@@ -274,6 +271,14 @@ This function returns null if the space array is invalid. */
 its name ends with an asterisk symbol (*). */
 function isPrimitive(type) {
 	return type.charAt(type.length - 1) == '*';
+}
+
+function sortTypeList(list) {
+	list.sort(function(a, b) {
+		if (a[0] < b[0]) return -1;
+		else if (a[0] > b[0]) return 1;
+		return 0;
+	});
 }
 
 /* Fetches index of a type from the knowledge base, given its
