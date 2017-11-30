@@ -30,6 +30,23 @@ describe("reader", function() {
 				var res = result.head.evaluateStructure([{variable: var1, value: 3}, {variable: var2, value: 10}]);
 				Assert(res instanceof Component.operand && res.type == "number" && res.value == 0.0);
 			});
+			it("Symbol list should contain 4 elements.", function() {
+				Assert(result.symbols.length == 4);
+			});
+			it("Symbol list should contain x1, x2, i1, and i2", function() {
+				var list = ["x1", "x2", "i1", "i2"];
+				var names = [];
+				var symbols = result.symbols;
+				for (var i = 0; i < symbols.length; i++) {
+					names.push(symbols[i].name);
+				}
+				for (var i = 0; i < names.length; i++) {
+					if (list.indexOf(names[i]) != -1) {
+						list.splice(list.indexOf(names[i]), 1);
+					}
+				}
+				Assert(list.length == 0);
+			});
 		});
 		describe("Basic test case 2", function() {
 			var result = Reader.loadExercise("./test/sample/sample2.exc");
@@ -61,6 +78,23 @@ describe("reader", function() {
 				var res = result.head.evaluateStructure([{variable: var1, value: 0}, {variable: var2, value: 0}, {variable: var3, value: 100}]);
 				Assert(res instanceof Component.operand && res.type == "number" && res.value == 0.0);
 			});
+			it("Symbol list should contain 6 elements.", function() {
+				Assert(result.symbols.length == 6);
+			});
+			it("Symbol list should contain x, y, z, temp, total, and average", function() {
+				var list = ["x", "y", "z", "temp", "total", "average"];
+				var names = [];
+				var symbols = result.symbols;
+				for (var i = 0; i < symbols.length; i++) {
+					names.push(symbols[i].name);
+				}
+				for (var i = 0; i < names.length; i++) {
+					if (list.indexOf(names[i]) != -1) {
+						list.splice(list.indexOf(names[i]), 1);
+					}
+				}
+				Assert(list.length == 0);
+			});
 		});
 		describe("Loop test case", function() {
 			var result = Reader.loadExercise("./test/sample/sample3.exc");
@@ -83,6 +117,23 @@ describe("reader", function() {
 				var var1 = result.input[0];
 				var res = result.head.evaluateStructure([{variable: var1, value: 0}]);
 				Assert(res instanceof Component.operand && res.type == "number" && res.value == 1.0);
+			});
+			it("Symbol list should contain 2 elements.", function() {
+				Assert(result.symbols.length == 2);
+			});
+			it("Symbol list should contain n and total", function() {
+				var list = ["n", "total"];
+				var names = [];
+				var symbols = result.symbols;
+				for (var i = 0; i < symbols.length; i++) {
+					names.push(symbols[i].name);
+				}
+				for (var i = 0; i < names.length; i++) {
+					if (list.indexOf(names[i]) != -1) {
+						list.splice(list.indexOf(names[i]), 1);
+					}
+				}
+				Assert(list.length == 0);
 			});
 		});
 	});
