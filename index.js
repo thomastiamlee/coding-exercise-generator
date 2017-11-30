@@ -5,5 +5,7 @@ const Parser = require("./src/parser");
 const Planner = require("./src/planner-simple");
 const VisualizationServer = require("./src/visualization-server");
 
-var result = Reader.loadExercise("./test/sample/sample1.exc");
-Reader.convertToFlowchartDefinition(result);
+//var result = Reader.loadExercise("./test/sample/sample1.exc");
+//Reader.convertToFlowchartDefinition(result);
+
+VisualizationServer.start();

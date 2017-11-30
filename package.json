@@ -17,7 +17,10 @@
   },
   "homepage": "https://github.com/thomastiamlee/coding-exercise-generator#readme",
   "dependencies": {
+    "hapi": "^17.1.1",
     "mocha": "^4.0.1",
-    "pegjs": "^0.10.0"
+    "nunjucks-hapi": "^2.1.0",
+    "pegjs": "^0.10.0",
+    "vision": "^5.2.0"
   }
 }
