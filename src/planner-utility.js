@@ -170,7 +170,7 @@ function assertionIsTrue(kb, table, assertion) {
 			for (var j = 0; j < queryParameters.length; j++) {
 				var currentQueryParameter = queryParameters[j];
 				var currentAssertionParameter = assertionParameters[j];
-				if (isExtendedFrom(kb, currentQueryParameter, currentAssertionParameter) == false) {
+				if (isExtendedFrom(kb, table, currentQueryParameter, currentAssertionParameter) == false) {
 					assumption = false;
 				}
 			}

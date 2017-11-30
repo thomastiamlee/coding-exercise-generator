@@ -137,6 +137,7 @@ describe("planner-utility", function() {
 			Assert(cond1 && cond2);
 		});
 	});
+	*/
 	describe("#assertionIsTrue()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "person", "dog", "cat", "pet"];
@@ -170,6 +171,7 @@ describe("planner-utility", function() {
 		it("!bestfriend(student1 dog3) should be false.", function() { Assert(!test8); });
 		it("hungry(dog3) should be false.", function() { Assert(!test9); });
 	});
+	/*
 	describe("#getAllPossibleActionVariableReplacements()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "person", "dog", "cat", "pet"];
