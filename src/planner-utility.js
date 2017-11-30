@@ -23,6 +23,8 @@ function memory() {
 	}
 	
 	this.addAssertion = function(assertion) {
+		console.log("ADDING:");
+		console.log(assertion);
 		var truth = assertion.truth;
 		var assertionList = this.assertions;
 		// Try to find if the assertion already exists
@@ -44,6 +46,7 @@ function memory() {
 			}
 		}
 		if (truth && index == -1) {
+			delete assertion.truth;
 			assertionList.push(assertion);
 		}
 		else if (!truth && index != -1) {
@@ -162,6 +165,7 @@ function assertionIsTrue(kb, table, assertion) {
 		var currentAssertion = assertionList[i];
 		var assertionPredicate = currentAssertion.predicate;
 		var assertionParameters = currentAssertion.parameters;
+		
 		if (assertionPredicate == queryPredicate && assertionParameters.length == queryParameters.length) {
 			// Check if each parameter matches
 			var assumption = true;
