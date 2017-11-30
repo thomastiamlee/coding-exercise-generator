@@ -191,6 +191,7 @@ function loadExercise(file, blocks) {
 		current++;
 		line = content[current];
 	}
+	current++;
 	
 	// Read the variables
 	line = content[current];
@@ -273,6 +274,8 @@ function loadExercise(file, blocks) {
 		}
 	}
 	
+	console.log(symbolMappings);
+	
 	return {head: nodes[0].node, input: inputVariables};
 }
 
@@ -323,10 +326,26 @@ function convertOperandStringToObject(operandString, symbolMappings) {
 }
 
 /* Converts an exercise to a flowchart definition, given its head. */
-function convertToFlowchartDefinition(head) {
-	var nodeList = [];
+function convertToFlowchartDefinition(exercise) {
+	var head = exercise.head;
+	var inputs = exercise.inputs;
+	var res = "graph TD\n";
+	var nodeInformation = "";
+	var nodeConnections = "";
 	
-	
+	var nodeList = head.getAllSolutionSuccessors();
+	for (var i = 0; i < nodeList.length; i++) {
+		var currentNode = nodeList[i];
+		if (currentNode.type == Component.NODE_TYPE_BLOCK_OPERATION) {
+			
+		}
+		else if (currentNode.type == Component.NODE_TYPE_BLOCK_CONDITION) {
+			
+		}
+		else if (currentNode.type == Component.NODE_TYPE_RETURN) {
+			console.log(currentNode.inputOperands);
+		}
+	}
 }
 
 module.exports = {loadExercise, loadBlocks, buildBlockFromInformation, convertToFlowchartDefinition};
