@@ -91,8 +91,8 @@ function getAvailableActions(kb, table) {
 }
 
 /* Gets all the possible replacements of variables for an action, based on its parameter requirements and preconditions. */
-function getAllPossibleActionVariableReplacements(kb, action, table) {
-	var candidates = getAllPossibleParameterMatches(kb, action, table);
+function getAllPossibleActionVariableReplacements(kb, table, action) {
+	var candidates = getAllPossibleParameterMatches(kb, table, action);
 	var res = [];
 	var combinations = 1;
 	var preconditions = action.preconditions;
@@ -107,7 +107,6 @@ function getAllPossibleActionVariableReplacements(kb, action, table) {
 		for (var j = 0; j < candidates.length; j++) {
 			var len = candidates[j].length;
 			testMatch.push(candidates[j][Math.floor(i / ccl) % len]);
-			testMatch[j] = testMatch[j].id;
 			ccl *= len;
 		}
 		// Loop through all preconditions
@@ -130,7 +129,7 @@ function getAllPossibleActionVariableReplacements(kb, action, table) {
 				predicate: preconditions[j].predicate,
 				parameters: newParams
 			}
-			if (assertionIsTrue(kb, testAssertion) == false) {
+			if (assertionIsTrue(kb, table, testAssertion) == false) {
 				valid = false;
 				break;
 			}
@@ -189,7 +188,6 @@ function getAllPossibleParameterMatches(kb, table, action) {
 	// For each parameter, identify all table elements that match the criteria
 	var res = [];
 	var candidates = table.space.concat(kb.primitive_list);
-	console.log(candidates);
 	for (var i = 0; i < parameters.length; i++) {
 		var typeRequirement = parameters[i];
 		res.push([]);
@@ -203,8 +201,6 @@ function getAllPossibleParameterMatches(kb, table, action) {
 			}
 		}
 	}
-	console.log("MATCH");
-	console.log(res);
 	return res;
 }
 

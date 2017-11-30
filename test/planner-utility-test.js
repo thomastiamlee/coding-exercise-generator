@@ -49,6 +49,7 @@ describe("planner-utility", function() {
 			Assert(x1 && x2 && x3);
 		});
 	});
+	*/
 	describe("#fetchTypeIndex()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbtest.txt");
 		var typeList = kb.type_list;
@@ -82,7 +83,6 @@ describe("planner-utility", function() {
 			Assert(action2.name == "mention" && action2.parameters && action2.preconditions && action2.effects);
 		});
 	});
-	*/
 	describe("#isExtendedFrom()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbextendtest.txt");
 		var space = ["student", "dog"];
@@ -170,19 +170,19 @@ describe("planner-utility", function() {
 		it("!bestfriend(student1 dog3) should be false.", function() { Assert(!test8); });
 		it("hungry(dog3) should be false.", function() { Assert(!test9); });
 	});
-	/*
 	describe("#getAllPossibleActionVariableReplacements()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "person", "dog", "cat", "pet"];
-		var table = PlannerUtility.initializeMemoryTable(kb, space);
+		var table = new PlannerUtility.memory();
+		table.addSpace(space);
 		var actionList = kb.action_list;
 		var feedAction = actionList[PlannerUtility.fetchActionIndex(actionList, "feed")];
 		var mentionHeightAction = actionList[PlannerUtility.fetchActionIndex(actionList, "mentionheight")];
-		PlannerUtility.addAssertion(kb, { truth: true, predicate: "hungry", parameters: ["dog3"] });
-		PlannerUtility.addAssertion(kb, { truth: true, predicate: "owns", parameters: ["student1", "dog3"] });
-		PlannerUtility.addAssertion(kb, { truth: true, predicate: "owns", parameters: ["student1", "cat4"] });
-		var test1 = PlannerUtility.getAllPossibleActionVariableReplacements(kb, feedAction, table);
-		var test2 = PlannerUtility.getAllPossibleActionVariableReplacements(kb,  mentionHeightAction, table);
+		table.addAssertion({ truth: true, predicate: "hungry", parameters: ["dog3"] });
+		table.addAssertion({ truth: true, predicate: "owns", parameters: ["student1", "dog3"] });
+		table.addAssertion({ truth: true, predicate: "owns", parameters: ["student1", "cat4"] });
+		var test1 = PlannerUtility.getAllPossibleActionVariableReplacements(kb, table, feedAction);
+		var test2 = PlannerUtility.getAllPossibleActionVariableReplacements(kb, table, mentionHeightAction);
 		it("test1 should have one possibility: feed(student1 dog3).", function() {
 			Assert(test1.length == 1 && test1[0][0] == "student1" && test1[0][1] == "dog3");
 		});
@@ -195,7 +195,7 @@ describe("planner-utility", function() {
 			}
 			Assert(test2.length == 3 && x && y && z);
 		});
-	});*/
+	});
 	describe("#addAssertion()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "person", "dog", "cat", "pet"];
