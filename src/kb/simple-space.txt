@@ -30,3 +30,8 @@ name: gettaller;
 parameters: person person;
 preconditions: visibleproperty(0 height*) visibleproperty(1 height*);
 effects: completed();
+
+name: getbmi;
+parameters: person;
+preconditions: visibleproperty(0 height*) visibleproperty(0 weight*);
+effects: visibleproperty(0 bmi*) completed();
