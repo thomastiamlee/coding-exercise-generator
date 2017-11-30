@@ -25,3 +25,8 @@ name: mention;
 parameters: * *;
 preconditions: hasproperty(0 1) !visibleproperty(0 1);
 effects: visibleproperty(0 1);
+
+name: gettaller;
+parameters: person person;
+preconditions: visibleproperty(0 height*) visibleproperty(1 height*);
+effects: completed();

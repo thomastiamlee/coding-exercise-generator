@@ -83,7 +83,15 @@ function getAllPossibleActionVariableReplacements(kb, action, table) {
 				break;
 			}
 		}
-		
+		// Check for duplicates
+		var seen = [];
+		for (var j = 0; j < testMatch.length; j++) {
+			if (seen.indexOf(testMatch[j]) != -1) {
+				valid = false;
+				break;
+			}
+			seen.push(testMatch[j]);
+		}
 		if (valid) {
 			res.push(testMatch);
 		}

@@ -4,8 +4,7 @@ const PlannerUtility = require("./planner-utility");
 /* Attempts to plan an exercise, given the initial space.
 The space is an array containing non-primitive type names
 that will serve as possible elements in the story. */
-function planExercise(space) {
-	var kb = Parser.parseKnowledgeBase("./src/kb/simple-space.txt");
+function planExercise(kb, space) {
 	// Create an object for each space element
 	var table = PlannerUtility.initializeMemoryTable(kb, space);
 	
@@ -23,6 +22,10 @@ function planExercise(space) {
 		console.log(chosenAction.parameters);
 		
 		PlannerUtility.executeAction(kb, chosenAction.action, chosenAction.parameters);
+		
+		if (PlannerUtility.assertionIsTrue(kb, {truth: true, predicate: "completed", parameters: []})) {
+			break;
+		}
 	}
 }
 

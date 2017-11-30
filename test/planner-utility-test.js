@@ -244,16 +244,18 @@ describe("planner-utility", function() {
 		PlannerUtility.addAssertion(kb2, {truth: true, predicate: "owns", parameters: ["person1", "cat2"]});
 		PlannerUtility.addAssertion(kb2, {truth: true, predicate: "hungry", parameters: ["cat2"]});
 		var availableActions2 = PlannerUtility.getAvailableActions(kb2, table2);
-		it("In space1, there should be 2 available actions.", function() {
-			Assert(availableActions1.length == 2);
+		it("In space1, there should be 4 available actions.", function() {
+			Assert(availableActions1.length == 4);
 		});
-		it("In space1, there should be an action for mentioning the height of student1 and student2.", function() {
-			var x1 = false, x2 = false;
+		it("In space1, there should be an action for mentioning the height of student1 and student2 and comparing their heights.", function() {
+			var x1 = false, x2 = false, x3 = false, x4 = false;
 			for (var i = 0; i < availableActions1.length; i++) {
 				if (availableActions1[i].action.name == "mentionheight" && availableActions1[i].parameters[0] == "student1") x1 = true;
 				if (availableActions1[i].action.name == "mentionheight" && availableActions1[i].parameters[0] == "student2") x2 = true;
+				if (availableActions1[i].action.name == "gettaller" && availableActions1[i].parameters[0] == "student1" && availableActions1[i].parameters[1] == "student2") x3 = true;
+				if (availableActions1[i].action.name == "gettaller" && availableActions1[i].parameters[0] == "student2" && availableActions1[i].parameters[1] == "student1") x4 = true;
 			}
-			Assert(x1 && x2);
+			Assert(x1 && x2 && x3 && x4);
 		});
 		it("In space2, there should be 3 available actions.", function() {
 			Assert(availableActions2.length == 3);
