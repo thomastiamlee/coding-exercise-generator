@@ -1,0 +1,10 @@
+%INPUTS
+n-number
+%VARIABLES
+total-number
+%NODES
+o,(number-0),(number-1),[total],+,1
+c,[n],(number-0),>,2,4
+o,[n],[total],[total],*,3
+o,[n],(number-1),[n],-,1
+r,[total]

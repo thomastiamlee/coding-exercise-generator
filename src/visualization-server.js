@@ -4,6 +4,8 @@ const Path = require("path");
 const Hapi = require("hapi");
 const Vision = require("vision");
 const Nunjucks = require("nunjucks-hapi");
+const Reader = require("./reader");
+const fs = require("fs");
 
 function start() {
 	// Create a server with a host and port
@@ -42,7 +44,15 @@ function start() {
 			method: "GET",
 			path: "/visualize",
 			handler: function(request, reply) {
-				return reply.view("visualization.html");
+				if (request.query.name) {
+					var file = "./src/resources/exercises/" + request.query.name + ".exc";
+					var text = fs.readFileSync(file, "utf-8");
+					var flowchart = Reader.convertToFlowchartDefinition(Reader.loadExercise(file));
+					return reply.view("visualization.html", {text: text, flowchart: flowchart});
+				}
+				else {
+					return reply.view("visualization.html", {text: "", flowchart: ""});
+				}
 			}
 		});
 		
