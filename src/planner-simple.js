@@ -7,7 +7,8 @@ that will serve as possible elements in the story. */
 function planExercise(kb, space) {
 	console.log(kb);
 	// Create an object for each space element
-	var table = PlannerUtility.initializeMemoryTable(kb, space);
+	var table = new PlannerUtility.memory();
+	table.addSpace(space);
 	
 	// Search for available actions
 	while (true) {
@@ -22,9 +23,9 @@ function planExercise(kb, space) {
 		console.log(chosenAction.action.name);
 		console.log(chosenAction.parameters);
 		
-		PlannerUtility.executeAction(kb, chosenAction.action, chosenAction.parameters);
+		PlannerUtility.executeAction(kb, table, chosenAction.action, chosenAction.parameters);
 		
-		if (PlannerUtility.assertionIsTrue(kb, {truth: true, predicate: "completed", parameters: []})) {
+		if (PlannerUtility.assertionIsTrue(kb, table, {truth: true, predicate: "completed", parameters: []})) {
 			break;
 		}
 	}

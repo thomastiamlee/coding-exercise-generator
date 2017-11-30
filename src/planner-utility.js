@@ -23,8 +23,6 @@ function memory() {
 	}
 	
 	this.addAssertion = function(assertion) {
-		console.log("ADDING:");
-		console.log(assertion);
 		var truth = assertion.truth;
 		var assertionList = this.assertions;
 		// Try to find if the assertion already exists
