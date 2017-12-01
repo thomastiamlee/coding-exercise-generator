@@ -27,7 +27,7 @@ function planExercise(kb, space) {
 		}
 	}
 	
-	return plan;
+	return {plan: plan, table, table};
 }
 
 
