@@ -101,7 +101,7 @@ relationship_parameter_list
 	}
 	
 action_list
-	= "name:" _ a:action_name_token _ ";" _ "parameters:" _ b:action_parameter_list? _ ";" _ "preconditions:" _ c:action_condition_list? _ ";" _  "creates:" _ d:create_list? _ ";" _ "effects:" _ e:action_condition_list? _ ";" _ f:action_list
+	= "name:" _ a:action_name_token _ ";" _ "parameters:" _ b:action_parameter_list? _ ";" _ "preconditions:" _ c:action_condition_list? _ ";" _  "creates:" _ d:create_list? _ ";" _ "effects:" _ e:action_condition_list? _ ";" _ f:("~" block_codes "~")? _ g:action_list 
 	{
 		if (b == null) {
 			b = [];
@@ -115,13 +115,18 @@ action_list
 		if (e == null) {
 			e = [];
 		}
+		if (f != null) {
+			f = f[1].trim();
+		}
+		
 		return [{
 			name: a,
 			parameters: b,
 			preconditions: c,
 			creates: d,
-			effects: e
-		}].concat(f);
+			effects: e,
+			blockData: f
+		}].concat(g);
 	}
 	/ _
 	{
@@ -246,6 +251,14 @@ create_owner
 	{
 		return y;
 	}
+	
+block_codes
+	= x:[^~]*
+	{
+		return x.join("");
+	}
+	
+	
 _
 	= [ \t\r\n]*
 
