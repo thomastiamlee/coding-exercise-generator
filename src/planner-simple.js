@@ -5,7 +5,6 @@ const PlannerUtility = require("./planner-utility");
 The space is an array containing non-primitive type names
 that will serve as possible elements in the story. */
 function planExercise(kb, space) {
-	console.log(kb);
 	// Create an object for each space element
 	var table = new PlannerUtility.memory();
 	table.addSpace(space);

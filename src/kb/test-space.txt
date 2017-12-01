@@ -1,24 +1,26 @@
 #types;
 person;
-student->person;
-food;
-ramen->food;
-pasta->food;
-location;
-restaurant->location;
-cafeteria->location;
-height
-weight
-personname
+height*;
+weight*;
+bmi*;
 
 #relationships;
-hasproperty(person height)
-hasproperty(person weight)
-hasproperty(person personname)
 
 #actions;
-name: convertmtokm;
-parameters: distancevalue;
-preconditions: inunit(distancevalue km) !inunit(distancevalue m);
-effects: visibleproperty(0 1);
-create: 
+name: mentionheight;
+parameters: person;
+preconditions: !visibleproperty(0 height*);
+creates: 0<height*;
+effects: visibleproperty(0 height*);
+
+name: mentionweight;
+parameters: person;
+preconditions: !visibleproperty(0 weight*);
+creates: 0<weight*;
+effects: visibleproperty(0 weight*);
+
+name: computebmi;
+parameters: person;
+preconditions: visibleproperty(0 height*) visibleproperty(0 weight*) !visibleproperty(0 bmi*);
+creates: 0<bmi*;
+effects: visibleproperty(0 bmi*);

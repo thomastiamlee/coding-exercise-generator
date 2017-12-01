@@ -101,7 +101,7 @@ relationship_parameter_list
 	}
 	
 action_list
-	= "name:" _ a:action_name_token _ ";" _ "parameters:" _ b:action_parameter_list? _ ";" _ "preconditions:" _ c:action_condition_list? _ ";" _   "effects:" _ d:action_condition_list? _ ";" _ e:action_list
+	= "name:" _ a:action_name_token _ ";" _ "parameters:" _ b:action_parameter_list? _ ";" _ "preconditions:" _ c:action_condition_list? _ ";" _  "creates:" _ d:create_list? _ ";" _ "effects:" _ e:action_condition_list? _ ";" _ f:action_list
 	{
 		if (b == null) {
 			b = [];
@@ -112,12 +112,16 @@ action_list
 		if (d == null) {
 			d = [];
 		}
+		if (e == null) {
+			e = [];
+		}
 		return [{
 			name: a,
 			parameters: b,
 			preconditions: c,
-			effects: d
-		}].concat(e)
+			creates: d,
+			effects: e
+		}].concat(f);
 	}
 	/ _
 	{
@@ -214,6 +218,34 @@ assertion_variable_token
 		return x.join("");
 	}
 	
+create_list
+	= x:create_item __ y:create_list
+	{
+		return [x].concat(y);
+	}
+	/ x:create_item _
+	{
+		return [x];
+	}
+
+create_item
+	= x:create_owner _ "<" _ y:parent_list
+	{
+		return {
+			owner: x,
+			parents: y
+		}
+	}
+
+create_owner
+	= x:assertion_variable_token
+	{
+		return x;
+	}
+	/ x:type_token
+	{
+		return y;
+	}
 _
 	= [ \t\r\n]*
 
