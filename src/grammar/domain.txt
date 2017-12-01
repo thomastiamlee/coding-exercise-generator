@@ -37,9 +37,19 @@ type_def
 	{
 		return [x, []];
 	}
-	/ x:type_token _ "->" _ y:type_token ";" _
+	/ x:type_token _ "->" _ y:parent_list ";" _
 	{
-		return [x, [y]];
+		return [x, y];
+	}
+	
+parent_list
+	= x:type_token _ "," _ y:type_token _
+	{
+		return [x].concat(y);
+	}
+	/ x:type_token _
+	{
+		return [x];
 	}
 	
 type_token

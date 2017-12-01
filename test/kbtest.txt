@@ -6,6 +6,7 @@ restaurant->location;
 object;
 food->object;
 ramen->food;
+
 nonnegativevalue*;
 monetaryvalue*->nonnegativevalue*;
 distancevalue*->nonnegativevalue*;

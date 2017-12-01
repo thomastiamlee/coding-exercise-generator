@@ -51,6 +51,8 @@ describe("planner-utility", function() {
 		var test8 = PlannerUtility.isExtendedFrom(kb, table, "distancevalue*", "nonnegativevalue*");
 		var test9 = PlannerUtility.isExtendedFrom(kb, table, "student1", "person");
 		var test10 = PlannerUtility.isExtendedFrom(kb, table, "dog2", "person");
+		var test11 = PlannerUtility.isExtendedFrom(kb, table, "bulldog", "scary");
+		var test12 = PlannerUtility.isExtendedFrom(kb, table, "dog2", "scary");
 		it ("student is an offspring of the person.", function() { Assert(test1);	});
 		it ("student is an offspring of the student.", function() {	 Assert(test2); });
 		it ("person is not an offspring of the student.", function() { Assert(!test3); });
@@ -61,6 +63,8 @@ describe("planner-utility", function() {
 		it ("distancevalue* is an offspring of the nonnegativevalue*.", function() { Assert(test8); });
 		it ("student1 is an offspring of person.", function() { Assert(test9); });
 		it ("dog2 is not an offspring of person.", function() { Assert(!test10); });
+		it ("bully is an offspring of scary.", function() { Assert(test11); });
+		it ("dog2 is not an offspring of scary.", function() { Assert(!test12); });
 	});
 	describe("#getAllPossibleParameterMatches()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");

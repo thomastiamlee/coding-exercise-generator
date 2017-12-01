@@ -1,4 +1,5 @@
 #types;
+scary;
 nonnegativevalue*;
 person;
 student->person;
@@ -9,7 +10,7 @@ spaghetti->pasta;
 animal;
 dog->animal;
 cat->animal;
-bulldog->dog;
+bulldog->dog, scary;
 distancevalue*->nonnegativevalue*;
 
 #relationships;

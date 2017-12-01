@@ -1,0 +1,24 @@
+#types;
+person;
+student->person;
+food;
+ramen->food;
+pasta->food;
+location;
+restaurant->location;
+cafeteria->location;
+height
+weight
+personname
+
+#relationships;
+hasproperty(person height)
+hasproperty(person weight)
+hasproperty(person personname)
+
+#actions;
+name: convertmtokm;
+parameters: distancevalue;
+preconditions: inunit(distancevalue km) !inunit(distancevalue m);
+effects: visibleproperty(0 1);
+create: 
