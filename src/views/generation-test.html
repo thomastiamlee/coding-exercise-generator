@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<!-- Stylesheets -->
+		<link rel="stylesheet" href="resource/css/normalize.css" />
+		<link rel="stylesheet" href="resource/css/skeleton.css" />
+		<link rel="stylesheet" href="resource/css/visualization.css" />
+		<!-- Base scripts -->	
+		<script src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script>
+	</head>
+	<body>
+		<div class="container" id="main-container">
+			<div class="row">
+				<div class="twelve columns">
+					<h5>Generation Test Tool</h5>
+				</div>
+			</div>
+			<form action="generatetest">
+				<div class="row">
+					<div class="twelve columns">
+						<input type="submit" value="GENERATE">
+					</div>
+				</div>
+			</form>
+			<div class="row">
+				<div class="six columns">
+					<p>Actions:</p>
+				</div>
+				<div class="six columns">
+					<p>Exercise Solution:</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="six columns">
+					<pre id="visualization-text">{{text}}</pre>
+				</div>
+				<div class="six columns">
+					<div id="visualization-flowchart" class="mermaid">{{flowchart}}</div>
+				</div>
+			</div>
+		</div>
+	
+		
+	
+		<!-- Base scripts -->
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous" 
+		</script>
+		<!-- Application scripts -->
+		$(document).ready(function() {
+			mermaid.initialize({startOnLoad:true});
+		});
+	</body>	
+</html>

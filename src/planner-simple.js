@@ -14,9 +14,7 @@ function planExercise(kb, space) {
 	// Search for available actions
 	while (true) {
 		var actions = PlannerUtility.getAvailableActions(kb, table);
-		if (actions.length == 0) {
-			break;
-		}
+		
 		// Choose a random action
 		var randomIndex = Math.floor(Math.random() * actions.length);
 		var chosenAction = actions[randomIndex];

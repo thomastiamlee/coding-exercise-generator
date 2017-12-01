@@ -23,7 +23,7 @@ name: computebmi;
 parameters: person;
 preconditions: visibleproperty(0 height*) visibleproperty(0 weight*) !visibleproperty(0 bmi*);
 creates: 0<bmi*;
-effects: visibleproperty(0 bmi*);
+effects: visibleproperty(0 bmi*) completed();
 ~
 %VARIABLES
 squared-number
