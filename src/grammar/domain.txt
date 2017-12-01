@@ -229,11 +229,11 @@ create_list
 	}
 
 create_item
-	= x:create_owner _ "<" _ y:parent_list
+	= x:create_owner _ "<" _ y:type_token
 	{
 		return {
 			owner: x,
-			parents: y
+			parent: y
 		}
 	}
 

@@ -6,11 +6,10 @@ function memory() {
 	this.counter = 1;
 	this.space = [];
 	this.assertions = [];
-	this.variables = [];
 	
 	/* Adds a new space entity in the memory of the given types. space can be a single string
 	representing the type of the new space entity or it can be an array of strings representing multiple
-	types. */
+	types. In this case, the space is automatically assigned a name based on its type. */
 	this.addSpaceFromType = function(space) {
 		if (space.constructor !== Array) {
 			space = [space];
@@ -19,6 +18,20 @@ function memory() {
 			var id = space[i] + this.counter;
 			this.space.push([id, [space[i]]]);
 			this.counter = this.counter + 1;
+		}
+	}
+	
+	/* Adds a new space entity in the memory with the given owners and types. space and owners can either
+	be a single element to add or an array of elements. space contains the types of the entities to be added
+	and owners contains the owners associated with thos entities. */
+	this.addSpace = function(space, owners) {
+		if (space.constructor !== Array) {
+			space = [space];
+		}
+		for (var i = 0; i < space.length; i++) {
+			var id = owners[i] + "." + space[i] + this.counter;
+			this.space.push([id, [space[i]]]);
+			this.counter = this.counter + 1;	
 		}
 	}
 	
@@ -50,11 +63,6 @@ function memory() {
 		else if (!truth && index != -1) {
 			assertionList.splice(index, 1);
 		}
-	}
-	
-	this.addVariable = function(owner, parents) {
-		var name = owner + "." + parents.join(",");
-		console.log("Added: " + name);
 	}
 }
 
