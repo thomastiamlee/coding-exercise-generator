@@ -40,7 +40,7 @@ describe("planner-utility", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbextendtest.txt");
 		var space = ["student", "dog"];
 		var table = new PlannerUtility.memory();
-		table.addSpace(space);
+		table.addSpaceFromType(space);
 		var test1 = PlannerUtility.isExtendedFrom(kb, table, "student", "person");
 		var test2 = PlannerUtility.isExtendedFrom(kb, table, "student", "student");
 		var test3 = PlannerUtility.isExtendedFrom(kb, table, "person", "student");
@@ -70,7 +70,7 @@ describe("planner-utility", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "person", "dog", "cat", "pet"];
 		var table = new PlannerUtility.memory();
-		table.addSpace(space);
+		table.addSpaceFromType(space);
 		var actionList = kb.action_list;
 		var feedAction = actionList[PlannerUtility.fetchActionIndex(actionList, "feed")];
 		var test1 = PlannerUtility.getAllPossibleParameterMatches(kb, table, feedAction);
@@ -98,7 +98,7 @@ describe("planner-utility", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "person", "dog", "cat", "pet"];
 		var table = new PlannerUtility.memory();
-		table.addSpace(space);
+		table.addSpaceFromType(space);
 		var assertion1 = { truth: true, predicate: "has", parameters: ["person", "height*"] };
 		var test1 = PlannerUtility.assertionIsTrue(kb, table, assertion1);
 		var assertion2 = { truth: true, predicate: "has", parameters: ["student", "height*"] };
@@ -131,7 +131,7 @@ describe("planner-utility", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "person", "dog", "cat", "pet"];
 		var table = new PlannerUtility.memory();
-		table.addSpace(space);
+		table.addSpaceFromType(space);
 		var actionList = kb.action_list;
 		var feedAction = actionList[PlannerUtility.fetchActionIndex(actionList, "feed")];
 		var mentionHeightAction = actionList[PlannerUtility.fetchActionIndex(actionList, "mentionheight")];
@@ -157,7 +157,7 @@ describe("planner-utility", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "person", "dog", "cat", "pet"];
 		var table = new PlannerUtility.memory();
-		table.addSpace(space);
+		table.addSpaceFromType(space);
 		table.addAssertion({ truth: true, predicate: "hungry", parameters: ["dog3"]});
 		table.addAssertion({ truth: true, predicate: "owns", parameters: ["student1", "dog3"]});
 		table.addAssertion({ truth: true, predicate: "bestfriend", parameters: ["person2", "dog"]});
@@ -207,12 +207,12 @@ describe("planner-utility", function() {
 		var kb1 = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space1 = ["student", "student"];
 		var table1 = new PlannerUtility.memory();
-		table1.addSpace(space1);
+		table1.addSpaceFromType(space1);
 		var availableActions1 = PlannerUtility.getAvailableActions(kb1, table1);
 		var kb2 = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space2 = ["person", "cat"];
 		var table2 = new PlannerUtility.memory();
-		table2.addSpace(space2);
+		table2.addSpaceFromType(space2);
 		table2.addAssertion({truth: true, predicate: "owns", parameters: ["person1", "cat2"]});
 		table2.addAssertion({truth: true, predicate: "hungry", parameters: ["cat2"]});
 		var availableActions2 = PlannerUtility.getAvailableActions(kb2, table2);
@@ -246,7 +246,7 @@ describe("planner-utility", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "cat"];
 		var table = new PlannerUtility.memory();
-		table.addSpace(space);
+		table.addSpaceFromType(space);
 		var mentionHeightAction = kb.action_list[PlannerUtility.fetchActionIndex(kb.action_list, "mentionheight")];
 		var feedAction = kb.action_list[PlannerUtility.fetchActionIndex(kb.action_list, "feed")];
 		it("height should be visible on student1 only after executing the mentionheight.", function() {

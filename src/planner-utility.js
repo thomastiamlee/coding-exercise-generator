@@ -8,10 +8,10 @@ function memory() {
 	this.assertions = [];
 	this.variables = [];
 	
-	/* Adds a new space entity in the memory. space can be a single string representing the
-	type of the new space entity or it can be an array of strings representing multiple
+	/* Adds a new space entity in the memory of the given types. space can be a single string
+	representing the type of the new space entity or it can be an array of strings representing multiple
 	types. */
-	this.addSpace = function(space) {
+	this.addSpaceFromType = function(space) {
 		if (space.constructor !== Array) {
 			space = [space];
 		}
@@ -84,7 +84,6 @@ function executeAction(kb, table, action, parameters) {
 		var owner = createList[i].owner;
 		if (owner.charAt(0) >= '0' && owner.charAt(0) <= '9') {
 			var index = parseInt(owner);
-			table.addVariable(parameters[index], createList[i].parents);
 		}
 	}
 }
