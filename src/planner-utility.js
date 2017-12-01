@@ -51,6 +51,11 @@ function memory() {
 			assertionList.splice(index, 1);
 		}
 	}
+	
+	this.addVariable = function(owner, parents) {
+		var name = owner + "." + parents.join(",");
+		console.log("Added: " + name);
+	}
 }
 
 /* Executes a given action with the given parameters. Updates the assertions in the knowledge base as a result of performing the action. */
@@ -73,6 +78,14 @@ function executeAction(kb, table, action, parameters) {
 			parameters: currentParameters
 		}
 		table.addAssertion(newAssertion);
+	}
+	var createList = action.creates;
+	for (var i = 0; i < createList.length; i++) {
+		var owner = createList[i].owner;
+		if (owner.charAt(0) >= '0' && owner.charAt(0) <= '9') {
+			var index = parseInt(owner);
+			table.addVariable(parameters[index], createList[i].parents);
+		}
 	}
 }
 
