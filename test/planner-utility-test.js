@@ -249,7 +249,7 @@ describe("planner-utility", function() {
 		table.addSpaceFromType(space);
 		var mentionHeightAction = kb.action_list[PlannerUtility.fetchActionIndex(kb.action_list, "mentionheight")];
 		var feedAction = kb.action_list[PlannerUtility.fetchActionIndex(kb.action_list, "feed")];
-		it("height should be visible on student1 only after executing the mentionheight.", function() {
+		it("height should be visible on student1 only after executing the mentionheight, and the student1.height entity should be added after.", function() {
 			Assert(PlannerUtility.assertionIsTrue(kb, table, {	truth: false, predicate: "visible", parameters: ["student1", "height*"]	}));
 			PlannerUtility.executeAction(kb, table, mentionHeightAction, ["student1"]);
 			Assert(PlannerUtility.assertionIsTrue(kb, table, { truth: true, predicate: "visible", parameters: ["student1", "height*"] }));
@@ -261,6 +261,7 @@ describe("planner-utility", function() {
 				}
 			}
 			Assert(counter == 1);
+			Assert(table.space.length == 3 && table.space[2][0] == "student1.height*3");
 		});
 		it("pet should not be hungry after applying the feed action", function() {
 			table.addAssertion({ truth: true, predicate: "hungry", parameters: ["cat2"]});

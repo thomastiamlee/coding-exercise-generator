@@ -27,6 +27,7 @@ function memory() {
 	this.addSpace = function(space, owners) {
 		if (space.constructor !== Array) {
 			space = [space];
+			owners = [owners];
 		}
 		for (var i = 0; i < space.length; i++) {
 			var id = owners[i] + "." + space[i] + this.counter;
