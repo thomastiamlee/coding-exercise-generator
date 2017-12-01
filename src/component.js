@@ -180,13 +180,13 @@ function node(type) {
 		var res = [target];
 		if (target.type == NODE_TYPE_OPERATION) {
 			var first = target.solutionSuccessors[0];
-			if (added.indexOf(first) == -1) res = res.concat(first.getAllSolutionSuccessors(added));
+			if (first != null && added.indexOf(first) == -1) res = res.concat(first.getAllSolutionSuccessors(added));
 		}
 		else if (target.type == NODE_TYPE_CONDITION) {
 			var first = target.solutionSuccessors[0];
-			if (added.indexOf(first) == -1) res = res.concat(first.getAllSolutionSuccessors(added));
+			if (first != null && added.indexOf(first) == -1) res = res.concat(first.getAllSolutionSuccessors(added));
 			var second = target.solutionSuccessors[1];
-			if (added.indexOf(second) == -1) res = res.concat(second.getAllSolutionSuccessors(added));
+			if (second != null && added.indexOf(second) == -1) res = res.concat(second.getAllSolutionSuccessors(added));
 		}
 		return res;
 	}

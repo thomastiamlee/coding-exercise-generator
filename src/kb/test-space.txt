@@ -27,6 +27,7 @@ effects: visibleproperty(0 bmi*);
 ~
 %VARIABLES
 squared-number
-o,/0<height*/,/0<height*/,*,1
-@o,[squared],/0<weight*/,/
+%NODES
+o,/0<height*/,/0<height*/,[squared],*,1
+@o,[squared],/0<weight*/,/0<bmi*/,/
 ~

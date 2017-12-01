@@ -302,7 +302,7 @@ function getSymbolFromOperand(operand, symbolMappings) {
 /* Utility function for converting an operand string to the corresponding object.
 [x1] will be converted to the actual x1 variable object.
 (number-3) will be converted to a constant number operand with a value of 3.0.
-This function that all symbolMappings have been read already. */
+This function assumes that all symbolMappings have been read already. */
 function convertOperandStringToObject(operandString, symbolMappings) {
 	// Variable case
 	if (operandString.charAt(0) == '[') {
@@ -365,13 +365,19 @@ function convertToFlowchartDefinition(exercise) {
 			var operator = currentNode.operator;
 			var variableOutput = getSymbolFromOperand(currentNode.variableOutput, symbols);
 			nodeLine += letter + "[" + variableOutput + " = " + operandStrings[0] + " " + operator + " " + operandStrings[1] + "]\n";
-			connectionLine += letter + " --> " + String.fromCharCode(65 + nodeList.indexOf(successors[0])) + "\n";
+			if (successors[0] != null) {
+				connectionLine += letter + " --> " + String.fromCharCode(65 + nodeList.indexOf(successors[0])) + "\n";
+			}
 		}
 		else if (currentNode.type == Component.NODE_TYPE_CONDITION) {
 			var operator = currentNode.operator;
 			nodeLine += letter + "{" + operandStrings[0] + " " + operator + " " + operandStrings[1] + "}\n";
-			connectionLine += letter + " -->|true| " + String.fromCharCode(65 + nodeList.indexOf(successors[0])) + "\n";
-			connectionLine += letter + " -->|false| " + String.fromCharCode(65 + nodeList.indexOf(successors[1])) + "\n";
+			if (successors[0] != null) {
+				connectionLine += letter + " -->|true| " + String.fromCharCode(65 + nodeList.indexOf(successors[0])) + "\n";
+			}
+			if (successors[1] != null) {
+				connectionLine += letter + " -->|false| " + String.fromCharCode(65 + nodeList.indexOf(successors[1])) + "\n";
+			}
 		}
 		else if (currentNode.type == Component.NODE_TYPE_RETURN) {
 			nodeLine += letter + "(return " + operandStrings[0] + ")\n";
