@@ -24,3 +24,9 @@ parameters: person;
 preconditions: visibleproperty(0 height*) visibleproperty(0 weight*) !visibleproperty(0 bmi*);
 creates: 0<bmi*;
 effects: visibleproperty(0 bmi*);
+---
+%VARIABLES
+squared-number
+o,/0<height*/,/0<height*/,*,1
+@o,[squared],/0<weight*/,/
+---

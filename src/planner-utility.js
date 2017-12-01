@@ -30,8 +30,7 @@ function memory() {
 			owners = [owners];
 		}
 		for (var i = 0; i < space.length; i++) {
-			var id = owners[i] + "." + space[i] + this.counter;
-			this.space.push([id, [space[i]]]);
+			var id = owners[i] + "." + space[i]; this.space.push([id, [space[i]]]);
 			this.counter = this.counter + 1;	
 		}
 	}

@@ -261,7 +261,7 @@ describe("planner-utility", function() {
 				}
 			}
 			Assert(counter == 1);
-			Assert(table.space.length == 3 && table.space[2][0] == "student1.height*3");
+			Assert(table.space.length == 3 && table.space[2][0] == "student1.height*");
 		});
 		it("pet should not be hungry after applying the feed action", function() {
 			table.addAssertion({ truth: true, predicate: "hungry", parameters: ["cat2"]});

@@ -9,6 +9,8 @@ function planExercise(kb, space) {
 	var table = new PlannerUtility.memory();
 	table.addSpaceFromType(space);
 	
+	var plan = [];
+	
 	// Search for available actions
 	while (true) {
 		var actions = PlannerUtility.getAvailableActions(kb, table);
@@ -18,16 +20,14 @@ function planExercise(kb, space) {
 		// Choose a random action
 		var randomIndex = Math.floor(Math.random() * actions.length);
 		var chosenAction = actions[randomIndex];
-		console.log("Chosen action: ");
-		console.log(chosenAction.action.name);
-		console.log(chosenAction.parameters);
-		
+		plan.push(chosenAction);
 		PlannerUtility.executeAction(kb, table, chosenAction.action, chosenAction.parameters);
-		
 		if (PlannerUtility.assertionIsTrue(kb, table, {truth: true, predicate: "completed", parameters: []})) {
 			break;
 		}
 	}
+	
+	return plan;
 }
 
 
