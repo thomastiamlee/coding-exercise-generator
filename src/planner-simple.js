@@ -7,7 +7,7 @@ that will serve as possible elements in the story. */
 function planExercise(kb, space) {
 	// Create an object for each space element
 	var table = new PlannerUtility.memory();
-	table.addSpace(space);
+	table.addSpaceFromType(space);
 	
 	// Search for available actions
 	while (true) {

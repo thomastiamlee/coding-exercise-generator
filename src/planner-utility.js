@@ -92,6 +92,7 @@ function executeAction(kb, table, action, parameters) {
 		var owner = createList[i].owner;
 		if (owner.charAt(0) >= '0' && owner.charAt(0) <= '9') {
 			var index = parseInt(owner);
+			table.addSpace(createList[i].parent, parameters[index]);
 		}
 	}
 }
