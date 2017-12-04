@@ -65,7 +65,7 @@ function start() {
 			path: "/generatetest",
 			handler: function(request, reply) {
 				var kb = Parser.parseKnowledgeBase("./src/kb/test-space.txt");
-				var res = Planner.planExercise(kb, ["person"]);
+				var res = Planner.planExercise(kb, ["person", "cat"]);
 				var text = "";
 				for (var i = 0; i < res.plan.length; i++) {
 					text += res.plan[i].action.name + " ";

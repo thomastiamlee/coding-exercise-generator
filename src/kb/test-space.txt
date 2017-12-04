@@ -1,4 +1,5 @@
 #types;
+cat;
 person;
 height*;
 weight*;
@@ -30,4 +31,6 @@ squared-number
 %NODES
 o,/0<height*/,/0<height*/,[squared],*,1
 @o,[squared],/0<weight*/,/0<bmi*/,/
+%RESULTS
+bmi,/0<bmi*/
 ~

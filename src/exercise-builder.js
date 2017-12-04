@@ -38,8 +38,8 @@ function buildExerciseFromActions(plan, table) {
 			var nodes = [];
 			var localHead = null;
 			var localTail = null;
-			while (current < blockData.length) {
-				line = blockData[current];
+			var line = blockData[current];
+			while (line != "%RESULTS") {
 				var isTerminal = false;
 				if (line.charAt(0) == '@') {
 					isTerminal = true;
@@ -90,8 +90,9 @@ function buildExerciseFromActions(plan, table) {
 					localTail = newObj.node;
 				}
 				current++;
+				line = blockData[current];
 			}
-			
+						
 			// Connect the nodes
 			for (var j = 0; j < nodes.length; j++) {
 				var node = nodes[j].node;
@@ -101,6 +102,28 @@ function buildExerciseFromActions(plan, table) {
 						node.attachNode(nodes[successors[k]].node, k);
 					}
 				}
+			}
+			
+			// Read the results
+			current++;
+			while (current < blockData.length) {
+				var line = blockData[current];
+				var lineData = line.split(",");
+				var name = "a" + i + "_" + lineData[0];
+				symbolMappings.push({name: name, obj: new Component.variable("number")})
+				var variableOutput = convertOperandStringToObject("[" + name + "]", parameters, symbolMappings);
+				var operand1 = convertOperandStringToObject(lineData[1], parameters, symbolMappings);
+				var operand2 = convertOperandStringToObject("(number-0)", parameters, symbolMappings);
+				var newNode = new Component.node(Component.NODE_TYPE_OPERATION);
+				newNode.attachInputOperand(operand1, 0);
+				newNode.attachInputOperand(operand2, 1);
+				newNode.setVariableOutput(variableOutput);
+				newNode.setOperator("+");
+				newObj = {node: newNode, successor: []};
+				nodes.push(newObj);
+				localTail.attachNode(newNode, 0);
+				localTail = newNode;
+				current++;
 			}
 			
 			if (lastHead == null) {
@@ -115,7 +138,6 @@ function buildExerciseFromActions(plan, table) {
 	}
 	res.head = head;
 	res.symbols = symbolMappings;
-	//console.log(head);
 	return res;
 }
 
@@ -137,6 +159,8 @@ function getOperandFromSymbol(name, symbolMappings) {
 variable from the memory table.
 This function assumes that all symbolMappings have been read already. */
 function convertOperandStringToObject(operandString, parameters, symbolMappings) {
+	console.log("GETTING: " + operandString);
+	console.log(symbolMappings);
 	// Variable case
 	if (operandString.charAt(0) == '[') {
 		return getOperandFromSymbol(operandString.substring(1, operandString.length - 1), symbolMappings);
@@ -157,8 +181,7 @@ function convertOperandStringToObject(operandString, parameters, symbolMappings)
 		}
 	}
 	else if (operandString.charAt(0) == '/') {
-		var data = operandString.substring(1, 
-		operandString.length - 1);
+		var data = operandString.substring(1, operandString.length - 1);
 		if (data.indexOf("<") != -1) {
 			var index = parseInt(data.split("<")[0]);
 			var name = parameters[index] + "." + data.split("<")[1];
