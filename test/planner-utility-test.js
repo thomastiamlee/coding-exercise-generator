@@ -4,6 +4,27 @@ const Parser = require("../src/parser");
 
 describe("planner-utility", function() {
 	describe("Memory functions", function() {
+		describe("#addSpaceFromType()", function() {
+			it("Space entity should correctly be added.", function() {
+				table = new PlannerUtility.memory();
+				table.addSpaceFromType("person");
+				Assert(table.space.length == 1 && table.space[0][0] == "person1" && table.space[0][1].length == 1 && table.space[0][1][0] == "person");
+			});
+			it("When multiple space entities are added, counter should increment properly.", function() {
+				table = new PlannerUtility.memory();
+				table.addSpaceFromType("person");
+				table.addSpaceFromType("student");
+				Assert(table.space.length == 2 && table.space[0][0] == "person1" && table.space[0][1].length == 1 && table.space[0][1][0] == "person" && table.space[1][0] == "student2" && table.space[1][1].length == 1 && table.space[1][1][0] == "student");
+			});
+			it("It should be possible to add space entities in an array", function() {
+				table = new PlannerUtility.memory();
+				table.addSpaceFromType(["person", "student"]);
+				Assert(table.space.length == 2 && table.space[0][0] == "person1" && table.space[0][1].length == 1 && table.space[0][1][0] == "person" && table.space[1][0] == "student2" && table.space[1][1].length == 1 && table.space[1][1][0] == "student");
+			});
+		});
+		describe("#addSpace()", function() {
+			
+		});
 		describe("#addAssertion()", function() {
 			var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 			var space = ["student", "person", "dog", "cat", "pet"];
