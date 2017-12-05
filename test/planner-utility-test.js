@@ -23,7 +23,16 @@ describe("planner-utility", function() {
 			});
 		});
 		describe("#addSpace()", function() {
-			
+			it("Space entity property should be correctly added.", function() {
+				table = new PlannerUtility.memory();
+				table.addSpace("height*", "person1");
+				Assert(table.space.length == 1 && table.space[0][0] == "person1.height*" && table.space[0][1].length == 1 && table.space[0][1][0] == "height*");
+			});
+			it("It should be possible to add space entities in an array", function() {
+				table = new PlannerUtility.memory();
+				table.addSpace(["height*", "weight*"], ["person1", "person1"]);
+				Assert(table.space.length == 2 && table.space[0][0] == "person1.height*" && table.space[0][1].length == 1 && table.space[0][1][0] == "height*" && table.space[1][0] == "person1.weight*" && table.space[1][1].length == 1 && table.space[1][1][0] == "weight*");
+			});
 		});
 		describe("#addAssertion()", function() {
 			var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
