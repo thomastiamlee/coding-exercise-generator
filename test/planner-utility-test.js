@@ -3,6 +3,88 @@ const PlannerUtility = require("../src/planner-utility");
 const Parser = require("../src/parser");
 
 describe("planner-utility", function() {
+	describe("Memory functions", function() {
+		describe("#addAssertion()", function() {
+			var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
+			var space = ["student", "person", "dog", "cat", "pet"];
+			var table = new PlannerUtility.memory();
+			table.addSpaceFromType(space);
+			table.addAssertion({ truth: true, predicate: "hungry", parameters: ["dog3"]});
+			table.addAssertion({ truth: true, predicate: "owns", parameters: ["student1", "dog3"]});
+			table.addAssertion({ truth: true, predicate: "bestfriend", parameters: ["person2", "dog"]});
+			table.addAssertion({ truth: false, predicate: "bestfriend", parameters: ["person2", "dog"]});
+			var assertionList = table.assertions;
+			it("The relationship hungry(dog3) should have been added", function() {
+				var found = false;
+				for (var i = 0; i < assertionList.length; i++) {
+					var current = assertionList[i];
+					if (current.predicate == "hungry") {
+						if (current.parameters.length == 1 && current.parameters[0] == "dog3") {
+							found = true;
+							break;
+						}
+					}
+				}
+				Assert(found);
+			});
+			it("The relationship owns(student1 dog3) should have been added", function() {
+				var found = false;
+				for (var i = 0; i < assertionList.length; i++) {
+					var current = assertionList[i];
+					if (current.predicate == "owns") {
+						if (current.parameters.length == 2 && current.parameters[0] == "student1" && current.parameters[1] == "dog3") {
+							found = true;
+							break;
+						}
+					}
+				}
+				Assert(found);
+			});	
+			it("The relationship bestfriend(person2 dog) should have been removed", function() {
+				var found = false;
+				for (var i = 0; i < assertionList.length; i++) {
+					var current = assertionList[i];
+					if (current.predicate == "bestfriend") {
+						if (current.parameters.length == 2 && current.parameters[0] == "person" && current.parameters[1] == "dog") {
+							found = true;
+							break;
+						}
+					}
+				}
+				Assert(!found);
+			});
+		});
+		describe("#cloneMemory()", function() {
+			it("Space entity should be cloned.", function() {
+				var table1 = new PlannerUtility.memory();
+				table1.addSpaceFromType("person");
+				var table2 = table1.cloneMemory();
+				Assert(table2.space.length == 1 && table2.space[0][0] == "person1");
+			});			
+			it("Assertion should be cloned.", function() {
+				var table1 = new PlannerUtility.memory();
+				table1.addAssertion({truth: true, predicate: "has", parameters: ["person", "name"]});
+				var table2 = table1.cloneMemory();
+				Assert(table2.assertions.length == 1 && table2.assertions[0].predicate == "has");
+			});
+			it("Cloned memory's space should not affect the original memory object.", function() {
+				var table1 = new PlannerUtility.memory();
+				table1.addSpaceFromType("person");
+				var table2 = table1.cloneMemory();
+				table2.addSpaceFromType("student");
+				Assert(table1.space.length == 1);
+				Assert(table2.space.length == 2);
+			});
+			it("Cloned memory's assertions should not affect the original memory object.", function() {
+				var table1 = new PlannerUtility.memory();
+				table1.addAssertion({truth: true, predicate: "has", parameters: ["person", "name"]});
+				var table2 = table1.cloneMemory();
+				table1.addAssertion({truth: false, predicate: "has", parameters: ["person", "name"]});
+				Assert(table1.assertions.length == 0);
+				Assert(table2.assertions.length == 1);
+			});
+		});
+	});
 	describe("#fetchTypeIndex()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbtest.txt");
 		var typeList = kb.type_list;
@@ -151,56 +233,6 @@ describe("planner-utility", function() {
 				if (test2[i][0] == "cat4") z = true;
 			}
 			Assert(test2.length == 3 && x && y && z);
-		});
-	});
-	describe("#addAssertion()", function() {
-		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
-		var space = ["student", "person", "dog", "cat", "pet"];
-		var table = new PlannerUtility.memory();
-		table.addSpaceFromType(space);
-		table.addAssertion({ truth: true, predicate: "hungry", parameters: ["dog3"]});
-		table.addAssertion({ truth: true, predicate: "owns", parameters: ["student1", "dog3"]});
-		table.addAssertion({ truth: true, predicate: "bestfriend", parameters: ["person2", "dog"]});
-		table.addAssertion({ truth: false, predicate: "bestfriend", parameters: ["person2", "dog"]});
-		var assertionList = table.assertions;
-		it("The relationship hungry(dog3) should have been added", function() {
-			var found = false;
-			for (var i = 0; i < assertionList.length; i++) {
-				var current = assertionList[i];
-				if (current.predicate == "hungry") {
-					if (current.parameters.length == 1 && current.parameters[0] == "dog3") {
-						found = true;
-						break;
-					}
-				}
-			}
-			Assert(found);
-		});
-		it("The relationship owns(student1 dog3) should have been added", function() {
-			var found = false;
-			for (var i = 0; i < assertionList.length; i++) {
-				var current = assertionList[i];
-				if (current.predicate == "owns") {
-					if (current.parameters.length == 2 && current.parameters[0] == "student1" && current.parameters[1] == "dog3") {
-						found = true;
-						break;
-					}
-				}
-			}
-			Assert(found);
-		});	
-		it("The relationship bestfriend(person2 dog) should have been removed", function() {
-			var found = false;
-			for (var i = 0; i < assertionList.length; i++) {
-				var current = assertionList[i];
-				if (current.predicate == "bestfriend") {
-					if (current.parameters.length == 2 && current.parameters[0] == "person" && current.parameters[1] == "dog") {
-						found = true;
-						break;
-					}
-				}
-			}
-			Assert(!found);
 		});
 	});
 	describe("#getAvailableActions()", function() {

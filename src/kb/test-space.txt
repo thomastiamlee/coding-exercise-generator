@@ -24,7 +24,7 @@ preconditions: !visibleproperty(0 height*);
 creates: 0<height*;
 effects: visibleproperty(0 height*) in(0<height* feet*) ;
 
-name: mentionweight;
+name: mentionweightinkilograms;
 parameters: person;
 preconditions: !visibleproperty(0 weight*);
 creates: 0<weight*;

@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/thomastiamlee/coding-exercise-generator#readme",
   "dependencies": {
+    "clone": "^2.1.1",
     "hapi": "^16.5.2",
     "inert": "^4.2.1",
     "mocha": "^4.0.1",

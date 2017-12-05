@@ -1,4 +1,5 @@
 const Parser = require("./parser");
+const Clone = require("clone");
 
 /* Constructor for the memory table, which serves as the main mechanism for remembering
 information during the planning process. */
@@ -63,7 +64,12 @@ function memory() {
 			assertionList.splice(index, 1);
 		}
 	}
+	
+	this.cloneMemory = function() {
+		return Clone(this);
+	}
 }
+
 
 /* Executes a given action with the given parameters. Updates the assertions in the knowledge base as a result of performing the action. */
 function executeAction(kb, table, action, parameters) {
