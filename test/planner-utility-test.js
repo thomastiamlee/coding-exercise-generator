@@ -114,6 +114,32 @@ describe("planner-utility", function() {
 				Assert(table2.assertions.length == 1);
 			});
 		});
+		describe("#isEquivalent()", function() {
+			it("Test case 1", function() {
+				var table1 = new PlannerUtility.memory();
+				table1.addSpaceFromType("person");
+				var table2 = table1.cloneMemory();
+				Assert(table1.isEquivalent(table2));
+			});
+			it("Test case 2", function() {
+				var table1 = new PlannerUtility.memory();
+				table1.addSpaceFromType(["person", "student"]);
+				var table2 = new PlannerUtility.memory();
+				table2.addSpaceFromType(["person", "student"]);
+				Assert(table1.isEquivalent(table2));
+				table2.addAssertion({truth: true, predicate: "has", parameters: ["person", "name"]});
+				Assert(!table1.isEquivalent(table2));
+			});
+			it("Test case 3", function() {
+				var table1 = new PlannerUtility.memory();
+				table1.addAssertion({truth: true, predicate: "has", parameters: ["person", "name"]});
+				table1.addAssertion({truth: true, predicate: "has", parameters: ["person", "height"]});
+				var table2 = new PlannerUtility.memory();
+				table2.addAssertion({truth: true, predicate: "has", parameters: ["person", "height"]});
+				table2.addAssertion({truth: true, predicate: "has", parameters: ["person", "name"]});
+				Assert(table1.isEquivalent(table2));
+			});
+		});
 	});
 	describe("#fetchTypeIndex()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbtest.txt");

@@ -68,6 +68,43 @@ function memory() {
 	this.cloneMemory = function() {
 		return Clone(this);
 	}
+	
+	this.isEquivalent = function(o) {
+		function assertionSort(a, b) {
+			if (a.predicate != b.predicate) {
+				return a.predicate < b.predicate ? -1 : 1;
+			}
+			else if (a.truth != b.truth) {
+				return a.truth ? -1 : 1;
+			}
+			else {
+				var aStr = a.parameters.join(",");
+				var bStr = b.parameters.join(",");
+				return aStr < bStr ? -1 : 1;
+			}
+		}
+		
+		function spaceSort(a, b) {
+			return a[0] < b[0] ? -1 : 1;
+		}
+		
+		var space = Clone(this.space);
+		var oSpace = Clone(o.space);
+		space.sort(spaceSort);
+		oSpace.sort(spaceSort);
+		
+		var assertions = Clone(this.assertions);
+		var oAssertions = Clone(o.assertions);
+		assertions.sort(assertionSort);
+		oAssertions.sort(assertionSort);
+		
+		space = JSON.stringify(space);
+		oSpace = JSON.stringify(oSpace);
+		assertions = JSON.stringify(assertions);
+		oAssertions = JSON.stringify(oAssertions);
+	
+		return space == oSpace && assertions == oAssertions;
+	}
 }
 
 
