@@ -12,23 +12,51 @@ function planExercise(kb, space) {
 	var plan = [];
 	
 	// Search for available actions
+	var visited = [];
+	var available = [];
+	visited.push(table);
+	available.push(PlannerUtility.getAvailableActions(kb, table));
+	
 	while (true) {
-		var actions = PlannerUtility.getAvailableActions(kb, table);
-		if (actions.length == 0) {
-			break;
-		}
-		// Choose a random action
-		var randomIndex = Math.floor(Math.random() * actions.length);
-		var chosenAction = actions[randomIndex];
+		var currentOptions = available[visited.length - 1];
+		var currentTable = visited[visited.length - 1];
 		
-		plan.push(chosenAction);
-		PlannerUtility.executeAction(kb, table, chosenAction.action, chosenAction.parameters);
-		if (PlannerUtility.assertionIsTrue(kb, table, {truth: true, predicate: "completed", parameters: []})) {
+		if (currentOptions.length == 0) {
+			if (visited.length == 1) {
+				return null;
+			}
+			else {
+				visited.splice(visited.length - 1, 1);
+				available.splice(available.length - 1, 1);
+				plan.splice(plan.length - 1, 1);
+			}
+		}
+		else {
+			var randomIndex = Math.floor(Math.random() * currentOptions.length);
+			var chosenAction = currentOptions[randomIndex];
+			var cloneTable = currentTable.cloneMemory();
+			currentOptions.splice(randomIndex, 1);
+			PlannerUtility.executeAction(kb, cloneTable, chosenAction.action, chosenAction.parameters);
+			var success = true;
+			for (var i = 0; i < visited.length; i++) {
+				if (visited[i].isEquivalent(cloneTable)) {
+					success = false;
+					break;
+				}
+			}
+			if (success) {
+				plan.push(chosenAction);
+				visited.push(cloneTable);
+				available.push(PlannerUtility.getAvailableActions(kb, cloneTable));
+			}
+		}
+		
+		if (PlannerUtility.assertionIsTrue(kb, visited[visited.length - 1], {truth: true, predicate: "completed", parameters: []})) {
 			break;
 		}
 	}
 	
-	return {plan: plan, table, table};
+	return {plan: plan, table: visited[visited.length - 1]};
 }
 
 
