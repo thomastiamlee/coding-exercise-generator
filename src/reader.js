@@ -346,7 +346,7 @@ function convertToFlowchartDefinition(exercise) {
 	var nodeList = head.getAllSolutionSuccessors();
 	for (var i = 0; i < nodeList.length; i++) {
 		var currentNode = nodeList[i];
-		var letter = String.fromCharCode(65 + i);
+		var letter = "N" + (i + 1);
 		var operandStrings = [];
 		var operands = currentNode.inputOperands;
 		for (var j = 0; j < operands.length; j++) {
@@ -366,17 +366,17 @@ function convertToFlowchartDefinition(exercise) {
 			var variableOutput = getSymbolFromOperand(currentNode.variableOutput, symbols);
 			nodeLine += letter + "[" + variableOutput + " = " + operandStrings[0] + " " + operator + " " + operandStrings[1] + "]\n";
 			if (successors[0] != null) {
-				connectionLine += letter + " --> " + String.fromCharCode(65 + nodeList.indexOf(successors[0])) + "\n";
+				connectionLine += letter + " --> N" + (nodeList.indexOf(successors[0]) + 1) + "\n";
 			}
 		}
 		else if (currentNode.type == Component.NODE_TYPE_CONDITION) {
 			var operator = currentNode.operator;
 			nodeLine += letter + "{" + operandStrings[0] + " " + operator + " " + operandStrings[1] + "}\n";
 			if (successors[0] != null) {
-				connectionLine += letter + " -->|true| " + String.fromCharCode(65 + nodeList.indexOf(successors[0])) + "\n";
+				connectionLine += letter + " -->|true| N" + (nodeList.indexOf(successors[0]) + 1) + "\n";
 			}
 			if (successors[1] != null) {
-				connectionLine += letter + " -->|false| " + String.fromCharCode(65 + nodeList.indexOf(successors[1])) + "\n";
+				connectionLine += letter + " -->|false| N" + (nodeList.indexOf(successors[1]) + 1) + "\n";
 			}
 		}
 		else if (currentNode.type == Component.NODE_TYPE_RETURN) {

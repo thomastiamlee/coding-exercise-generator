@@ -109,7 +109,6 @@ function getAvailableActions(kb, table) {
 
 /* Gets all the possible replacements of variables for an action, based on its parameter requirements and preconditions. */
 function getAllPossibleActionVariableReplacements(kb, table, action) {
-	console.log("CHECKING ACTION: " + action.name);
 	var candidates = getAllPossibleParameterMatches(kb, table, action);
 	var res = [];
 	var combinations = 1;
@@ -151,7 +150,6 @@ function getAllPossibleActionVariableReplacements(kb, table, action) {
 				parameters: newParams
 			}
 			if (assertionIsTrue(kb, table, testAssertion) == false) {
-				console.log("FAILED");
 				valid = false;
 				break;
 			}
@@ -178,8 +176,6 @@ base.  The format of the assertion parameter is as follows:
 strings> }
 For the parameters, represent instances with their respective identifiers. */
 function assertionIsTrue(kb, table, assertion) {
-	console.log("CHECKING ASSERTION: ");
-	console.log(assertion);
 	var assertionList = kb.relationship_list.concat(table.assertions);
 	var queryPredicate = assertion.predicate;
 	var queryParameters = assertion.parameters;

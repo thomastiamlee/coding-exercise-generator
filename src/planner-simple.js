@@ -14,10 +14,7 @@ function planExercise(kb, space) {
 	// Search for available actions
 	while (true) {
 		var actions = PlannerUtility.getAvailableActions(kb, table);
-		console.log("CHOSENLIST");
-		console.log(actions);
 		if (actions.length == 0) {
-			console.log("Failed");
 			break;
 		}
 		// Choose a random action

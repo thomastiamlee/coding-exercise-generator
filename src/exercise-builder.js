@@ -132,7 +132,7 @@ function buildExerciseFromActions(plan, table) {
 			}
 			else {
 				lastHead.attachNode(localHead, 0);
-				localTail = lastHead;
+				lastHead = localTail;
 			}
 		}
 	}
@@ -159,8 +159,6 @@ function getOperandFromSymbol(name, symbolMappings) {
 variable from the memory table.
 This function assumes that all symbolMappings have been read already. */
 function convertOperandStringToObject(operandString, parameters, symbolMappings) {
-	console.log("GETTING: " + operandString);
-	console.log(symbolMappings);
 	// Variable case
 	if (operandString.charAt(0) == '[') {
 		return getOperandFromSymbol(operandString.substring(1, operandString.length - 1), symbolMappings);

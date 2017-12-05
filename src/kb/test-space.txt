@@ -43,6 +43,18 @@ effects: in(0 meters*) !in(0 feet*);
 meters,/0/
 ~
 
+name: convertmeterstofeet;
+parameters: distancevalue*;
+preconditions: in(0 meters*);
+creates: ;
+effects: in(0 feet*) !in(0 meters*);
+~
+%VARIABLES
+%NODES
+@o,/0/,(number-0.3048),/0/,/
+%RESULTS
+feet,/0/
+~
 
 name: computebmi;
 parameters: person;
