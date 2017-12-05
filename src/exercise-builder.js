@@ -188,7 +188,9 @@ function convertOperandStringToObject(operandString, parameters, symbolMappings)
 			return getOperandFromSymbol(name, symbolMappings);			
 		}
 		else {
-			return null;
+			var index = parseInt(data);
+			var name = parameters[index];
+			return getOperandFromSymbol(name, symbolMappings);
 		}
 	}
 }

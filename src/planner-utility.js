@@ -74,10 +74,7 @@ function executeAction(kb, table, action, parameters) {
 		var predicate = current.predicate;
 		var currentParameters = [].concat(current.parameters);
 		for (var j = 0; j < currentParameters.length; j++) {
-			if (currentParameters[j].charAt(0) >= '0' && currentParameters[j].charAt(0) <= '9') {
-				var index = parseInt(currentParameters[j]);
-				currentParameters[j] = parameters[index];
-			}
+			currentParameters[j] = replaceParameterName(parameters, currentParameters[j]);
 		}
 		var newAssertion = {
 			truth: truth,
@@ -112,6 +109,7 @@ function getAvailableActions(kb, table) {
 
 /* Gets all the possible replacements of variables for an action, based on its parameter requirements and preconditions. */
 function getAllPossibleActionVariableReplacements(kb, table, action) {
+	console.log("CHECKING ACTION: " + action.name);
 	var candidates = getAllPossibleParameterMatches(kb, table, action);
 	var res = [];
 	var combinations = 1;
@@ -135,6 +133,9 @@ function getAllPossibleActionVariableReplacements(kb, table, action) {
 			var params = preconditions[j].parameters;
 			var newParams = [];
 			for (var k = 0; k < params.length; k++) {
+				var name = replaceParameterName(testMatch, params[k]);
+				newParams.push(name);
+				/*
 				if (params[k].charAt(0) >= '0' && params[k].charAt(0) <= '9') {
 					// replace
 					var index = parseInt(params[k]);
@@ -142,7 +143,7 @@ function getAllPossibleActionVariableReplacements(kb, table, action) {
 				}
 				else {
 					newParams.push(params[k]);
-				}
+				}*/
 			}
 			var testAssertion = {
 				truth: preconditions[j].truth,
@@ -150,6 +151,7 @@ function getAllPossibleActionVariableReplacements(kb, table, action) {
 				parameters: newParams
 			}
 			if (assertionIsTrue(kb, table, testAssertion) == false) {
+				console.log("FAILED");
 				valid = false;
 				break;
 			}
@@ -176,6 +178,8 @@ base.  The format of the assertion parameter is as follows:
 strings> }
 For the parameters, represent instances with their respective identifiers. */
 function assertionIsTrue(kb, table, assertion) {
+	console.log("CHECKING ASSERTION: ");
+	console.log(assertion);
 	var assertionList = kb.relationship_list.concat(table.assertions);
 	var queryPredicate = assertion.predicate;
 	var queryParameters = assertion.parameters;
@@ -368,6 +372,20 @@ function sortKnowledgeBase(kb) {
 		else if (a.name > b.name) return 1;
 		return 0;
 	});
+}
+
+/* This function converts a symbol used in an assertion list to the actual
+variable name. */
+function replaceParameterName(parameters, symbol) {
+	if (symbol.owner) {
+		var index = parseInt(symbol.owner);
+		return parameters[index] + "." + symbol.parent;
+	}
+	else if (symbol.charAt(0) >= '0' && symbol.charAt(0) <= '9') {
+		var index = parseInt(symbol);
+		return parameters[index];
+	}
+	return symbol;
 }
 
 

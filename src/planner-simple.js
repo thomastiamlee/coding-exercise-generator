@@ -14,10 +14,16 @@ function planExercise(kb, space) {
 	// Search for available actions
 	while (true) {
 		var actions = PlannerUtility.getAvailableActions(kb, table);
-		
+		console.log("CHOSENLIST");
+		console.log(actions);
+		if (actions.length == 0) {
+			console.log("Failed");
+			break;
+		}
 		// Choose a random action
 		var randomIndex = Math.floor(Math.random() * actions.length);
 		var chosenAction = actions[randomIndex];
+		
 		plan.push(chosenAction);
 		PlannerUtility.executeAction(kb, table, chosenAction.action, chosenAction.parameters);
 		if (PlannerUtility.assertionIsTrue(kb, table, {truth: true, predicate: "completed", parameters: []})) {

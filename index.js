@@ -15,5 +15,6 @@ var exercise = ExerciseBuilder.buildExerciseFromActions(res.plan, res.table);
 
 
  console.log(Reader.convertToFlowchartDefinition(exercise));
+console.log(res.table.assertions);
 */
 VisualizationServer.start();

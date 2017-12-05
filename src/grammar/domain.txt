@@ -208,11 +208,19 @@ assertion_parameter_list
 	{
 		return [x].concat(y);
 	}
+	/ x:assertion_variable_property_token __ y:assertion_parameter_list
+	{
+		return [x].concat(y);
+	}
 	/ x:type_token
 	{
 		return [x];
 	}
 	/ x:assertion_variable_token
+	{
+		return [x];
+	}
+	/ x:assertion_variable_property_token
 	{
 		return [x];
 	}
@@ -224,17 +232,17 @@ assertion_variable_token
 	}
 	
 create_list
-	= x:create_item __ y:create_list
+	= x:assertion_variable_property_token __ y:create_list
 	{
 		return [x].concat(y);
 	}
-	/ x:create_item _
+	/ x:assertion_variable_property_token _
 	{
 		return [x];
 	}
 
-create_item
-	= x:create_owner _ "<" _ y:type_token
+assertion_variable_property_token
+	= x:assertion_variable_parent _ "<" _ y:type_token
 	{
 		return {
 			owner: x,
@@ -242,14 +250,14 @@ create_item
 		}
 	}
 
-create_owner
+assertion_variable_parent
 	= x:assertion_variable_token
 	{
 		return x;
 	}
 	/ x:type_token
 	{
-		return y;
+		return x;
 	}
 	
 block_codes
