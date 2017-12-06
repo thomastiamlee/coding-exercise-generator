@@ -1,6 +1,56 @@
 const Parser = require("./parser");
 const Clone = require("clone");
 
+/* Constructor for a space entity. name is the unique identifier for this space entity. parents is an
+array containing the list of strings representing the names of the parents of this entity. type is either
+"local" or "global", representing if this entity exists in the global (knowledge base) or local space (memory).
+If the entity is of a global type, a fourth parameter (which defaults to true) determines if it can be
+instantiated on the local space or not. */
+function entity(name, parents, type, instantiatable = true) {
+	this.name = name;
+	this.parents = parents;
+	this.type = type;
+	
+	if (this.type == "global") {
+		this.instantiatable = instantiatable;
+	}
+	else if (this.type == "local") {
+		this.attachments = [];
+		this.attachLocalEntity = function(other, name) {
+			if (other.type == "local") {
+				var found = false;
+				for (var i = 0; i < this.attachments.length; i++) {
+					if (this.attachments[i].name == name) {
+						this.attachments[i].obj = other;
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					this.attachments.push({name: name, obj: other});
+				}
+			}
+		}
+		this.getAttachedLocalEntity = function(name) {
+			for (var i = 0; i < this.attachments.length; i++) {
+				if (this.attachments[i].name == name) {
+					return this.attachments[i].obj;
+				}
+			}
+			return null;
+		}
+		this.removeAttachedLocalEntity = function(name) {
+			for (var i = 0; i < this.attachments.length; i++) {
+				if (this.attachments[i].name == name) {
+					this.attachments.splice(i, 1);
+					break;
+				}
+			}
+		}
+		
+	}
+}
+
 /* Constructor for the memory table, which serves as the main mechanism for remembering
 information during the planning process. */
 function memory() {
@@ -428,4 +478,4 @@ function replaceParameterName(parameters, symbol) {
 }
 
 
-module.exports = {memory, addType, addAssertion, sortKnowledgeBase, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, assertionIsTrue, getAvailableActions, executeAction};
+module.exports = {memory, entity, addType, addAssertion, sortKnowledgeBase, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, assertionIsTrue, getAvailableActions, executeAction};

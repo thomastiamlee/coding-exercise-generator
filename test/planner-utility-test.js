@@ -3,6 +3,64 @@ const PlannerUtility = require("../src/planner-utility");
 const Parser = require("../src/parser");
 
 describe("planner-utility", function() {
+	describe("Space entity function", function() {
+		describe("#attachLocalEntity()", function() {
+			it("height2 should be attached to person1", function() {
+				var entity1 = new PlannerUtility.entity("person1", ["person"], "local");
+				var entity2 = new PlannerUtility.entity("height2", ["height"], "local");
+				entity1.attachLocalEntity(entity2, "height");
+				Assert(entity1.attachments.length == 1 && entity1.attachments[0].obj.name == "height2");
+			});
+			it("height should not be attached to person1 because it is in the global space.", function() {
+				var entity1 = new PlannerUtility.entity("person1", ["person"], "local");
+				var entity2 = new PlannerUtility.entity("height", [], "global");
+				entity1.attachLocalEntity(entity2, "height");
+				Assert(entity1.attachments.length == 0);
+			});
+			it("height2 should be replaced with height3", function() {
+				var entity1 = new PlannerUtility.entity("person1", ["person"], "local");
+				var entity2 = new PlannerUtility.entity("height2", ["height"], "local");
+				var entity3 = new PlannerUtility.entity("height3", ["height"], "local");
+				entity1.attachLocalEntity(entity2, "height");
+				entity1.attachLocalEntity(entity3, "height");
+				Assert(entity1.attachments.length == 1 && entity1.attachments[0].obj.name == "height3");
+			});
+		});
+		describe("#getAttachedLocalEntity()", function() {
+			it("Finding the height of person1 should return the height2 entity", function() {
+				var entity1 = new PlannerUtility.entity("person1", ["person"], "local");
+				var entity2 = new PlannerUtility.entity("height2", ["height"], "local");
+				entity1.attachLocalEntity(entity2, "height");
+				Assert(entity1.getAttachedLocalEntity("height").name == "height2");
+			});
+			it("Finding the height of person1 should return the height3 entity", function() {
+				var entity1 = new PlannerUtility.entity("person1", ["person"], "local");
+				var entity2 = new PlannerUtility.entity("height2", ["height"], "local");
+				var entity3 = new PlannerUtility.entity("height3", ["height"], "local");
+				entity1.attachLocalEntity(entity2, "height");
+				entity1.attachLocalEntity(entity3, "height");
+				Assert(entity1.getAttachedLocalEntity("height").name == "height3");
+			});
+		});
+		describe("#removeAttachedLocalEntity()", function() {
+			it("The height entity should be removed.", function() {
+				var entity1 = new PlannerUtility.entity("person1", ["person"], "local");
+				var entity2 = new PlannerUtility.entity("height2", ["height"], "local");
+				entity1.attachLocalEntity(entity2, "height");
+				entity1.removeAttachedLocalEntity("height");
+				Assert(entity1.attachments.length == 0);
+			});
+			it("The height entity should be removed.", function() {
+				var entity1 = new PlannerUtility.entity("person1", ["person"], "local");
+				var entity2 = new PlannerUtility.entity("height2", ["height"], "local");
+				var entity3 = new PlannerUtility.entity("weight3", ["weight"], "local");
+				entity1.attachLocalEntity(entity2, "height");
+				entity1.attachLocalEntity(entity3, "weight");
+				entity1.removeAttachedLocalEntity("height");
+				Assert(entity1.attachments.length == 1 && entity1.attachments[0].name == "weight");
+			});
+		});
+	});
 	describe("Memory functions", function() {
 		describe("#addSpaceFromType()", function() {
 			it("Space entity should correctly be added.", function() {
