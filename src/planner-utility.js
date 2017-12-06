@@ -51,6 +51,13 @@ function entity(name, parents, type, instantiatable = true) {
 	}
 }
 
+/* Construction for an assertion. predicate is a string representing the predicate name. parameters is an
+array of entity objects that represent the parameters to this assertion. */
+function assertion(predicate, parameters) {
+	this.predicate = predicate;
+	this.parameters = parameters;
+}
+
 /* Constructor for the memory table, which serves as the main mechanism for remembering
 information during the planning process. */
 function memory() {
