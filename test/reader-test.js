@@ -1,7 +1,7 @@
 const Assert = require("assert");
 const Reader = require("../src/reader");
 const Component = require("../src/component");
-		
+
 describe("reader", function() {
 	describe("#loadExercise()", function() {
 		describe("Basic test case 1", function() {
@@ -96,7 +96,7 @@ describe("reader", function() {
 				Assert(list.length == 0);
 			});
 		});
-		describe("Loop test case", function() {
+		describe("Basic test case 3", function() {
 			var result = Reader.loadExercise("./test/sample/sample3.exc");
 			it("Evaluating the structure with an input of 1 should result in 1.", function() {
 				var var1 = result.input[0];
@@ -136,6 +136,19 @@ describe("reader", function() {
 				Assert(list.length == 0);
 			});
 		});
+		describe("Basic test case 4", function() {
+			var result = Reader.loadExercise("./test/sample/sample4.exc");
+			it("Evaluating the structure with an input of 0 should result in 11.", function() {
+				var var1 = result.input[0];
+				var res = result.head.evaluateStructure([{variable: var1, value: 0}]);
+				Assert(res instanceof Component.operand && res.type == "number" && res.value == 11);
+			});
+			it("Evaluating the structure with an input of -11 should result in 0.", function() {
+				var var1 = result.input[0];
+				var res = result.head.evaluateStructure([{variable: var1, value: -11}]);
+				Assert(res instanceof Component.operand && res.type == "number" && res.value == 0.0);
+			});
+		});
 	});
 	describe("#loadBlocks()", function() {
 		var storage = [];
@@ -163,14 +176,14 @@ describe("reader", function() {
 			Assert(target.nodeInformation.length == 3);
 			Assert(target.nodeInformation[0] == "c,/0/,(number-0),<,1,2");
 			Assert(target.nodeInformation[1] == "@o,/0/,(number--1),/blockoutput/,*");
-			Assert(target.nodeInformation[2] == "@o,/0/,(number-0),/blockoutput/,+");			
+			Assert(target.nodeInformation[2] == "@o,/0/,(number-0),/blockoutput/,+");
 		});
 	});
 	describe("#buildBlockFromInformation()", function() {
 		var result = new Component.variable("number");
 		var storage = [];
 		Reader.loadBlocks("./test/sample/block1.blo", storage);
-		
+
 		it ("The average block should fit seamleassly into a structure", function() {
 			var block1 = Reader.buildBlockFromInformation("average2", storage);
 			block1.attachInputOperand(new Component.operand("number", 5), 0);

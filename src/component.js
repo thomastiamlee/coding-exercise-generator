@@ -1,8 +1,9 @@
 NODE_TYPE_OPERATION = 0;
-NODE_TYPE_CONDITION = 1;
-NODE_TYPE_RETURN = 2;
-NODE_TYPE_BLOCK_OPERATION = 3;
-NODE_TYPE_BLOCK_CONDITION = 4;
+NODE_TYPE_ASSIGNMENT = 1;
+NODE_TYPE_CONDITION = 2;
+NODE_TYPE_RETURN = 3;
+NODE_TYPE_BLOCK_OPERATION = 4;
+NODE_TYPE_BLOCK_CONDITION = 5;
 /* Instantiates a new node object of the given type. Use one of the predefined constants above. */
 function node(type) {
 	this.type = type; // the node type
@@ -10,8 +11,8 @@ function node(type) {
 	this.inputOperandRestrictions = []; // the restrictions to the input operands
 	this.successors = []; // the succeeding nodes after the current node
 	this.solutionSuccessors = []; // the succeeding nodes after the current node, used in the solution
-	
-	if (type == NODE_TYPE_OPERATION || type == NODE_TYPE_BLOCK_OPERATION) {
+
+	if (type == NODE_TYPE_OPERATION || type == NODE_TYPE_BLOCK_OPERATION || type == NODE_TYPE_ASSIGNMENT) {
 		this.variableOutput = null;
 		this.setVariableOutput = function(variableOutput) {
 			this.variableOutput = variableOutput;
@@ -33,7 +34,7 @@ function node(type) {
 			this.internalTerminalNodes = internalTerminalNodes;
 		}
 	}
-	
+
 	this.setOperator = function(operator) {
 		this.operator = operator;
 	}
@@ -54,11 +55,11 @@ function node(type) {
 	}
 	this.attachInputOperand = function(operand, index) {
 		this.inputOperands[index] = operand;
-		if (operand instanceof placeholder == false && this.type == NODE_TYPE_BLOCK_OPERATION || this.type == NODE_TYPE_BLOCK_CONDITION) {
+		if (operand instanceof placeholder == false && (this.type == NODE_TYPE_BLOCK_OPERATION || this.type == NODE_TYPE_BLOCK_CONDITION)) {
 			this.internalHead.replaceAllPlaceholders(operand, index);
 		}
 	}
-	
+
 	this.replaceAllPlaceholders = function(operand, index, visited) {
 		if (!visited) { // Prevent checked nodes from being checked again
 			visited = [];
@@ -82,12 +83,18 @@ function node(type) {
 			}
 		}
 	}
-		
+
 	/* This function evaluates this node given a set of operands.
 	If the node is an [block] operation node, it returns an operand representing the result of the operation.
 	If the node is a [block] condition node, it returns true or false, representing the result of the condition.
 	If the node is a return node, it returns the operand to be returned. */
 	this.evaluateThis = function(testOperands) {
+		if (this.type == NODE_TYPE_ASSIGNMENT) {
+			var op1 = testOperands[0].value;
+			var op1Type = testOperands[0].type;
+			var res = new operand(op1Type, op1);
+			return res;
+		}
 		if (this.type == NODE_TYPE_OPERATION) {
 			var op1 = testOperands[0].value;
 			var op2 = testOperands[1].value;
@@ -129,7 +136,7 @@ function node(type) {
 			return testOperands[0];
 		}
 	}
-	
+
 	/* This function determines the return value when the structure is evaluated from this node.
 	Memory is an object representing the mapping of known variables to their respective values. */
 	this.evaluateStructure = function(memory) {
@@ -151,6 +158,11 @@ function node(type) {
 		if (this.type == NODE_TYPE_RETURN) {
 			return this.evaluateThis(tempOperands);
 		}
+		else if (this.type == NODE_TYPE_ASSIGNMENT) {
+			var output = this.evaluateThis(tempOperands);
+			registerToMemory(memory, this.variableOutput, output.value);
+			return this.solutionSuccessors[0].evaluateStructure(memory);
+		}
 		else if (this.type == NODE_TYPE_OPERATION) {
 			var output = this.evaluateThis(tempOperands);
 			registerToMemory(memory, this.variableOutput, output.value);
@@ -166,7 +178,7 @@ function node(type) {
 			}
 		}
 	}
-	
+
 	/* Gets all the children from this node, including this node, following the solution path, following in-order traversal. */
 	this.getAllSolutionSuccessors = function(added) {
 		if (!added) {
@@ -178,7 +190,7 @@ function node(type) {
 		}
 		added.push(target);
 		var res = [target];
-		if (target.type == NODE_TYPE_OPERATION) {
+		if (target.type == NODE_TYPE_OPERATION || target.type == NODE_TYPE_ASSIGNMENT) {
 			var first = target.solutionSuccessors[0];
 			if (first != null && added.indexOf(first) == -1) res = res.concat(first.getAllSolutionSuccessors(added));
 		}
@@ -201,7 +213,7 @@ function operand(type, value) {
 		value = parseInt(value);
 	}
 	this.value = value;
-	
+
 	this.validate = function(restriction) {
 		if (restriction.datatype != this.type) return false;
 		if (this.type == "number") {
@@ -253,5 +265,4 @@ function registerToMemory(memory, variable, value) {
 	}
 }
 
-module.exports = {NODE_TYPE_OPERATION, NODE_TYPE_CONDITION, NODE_TYPE_RETURN, NODE_TYPE_BLOCK_OPERATION, NODE_TYPE_BLOCK_CONDITION, node, operand, variable, placeholder};
-
+module.exports = {NODE_TYPE_OPERATION, NODE_TYPE_CONDITION, NODE_TYPE_RETURN, NODE_TYPE_BLOCK_OPERATION, NODE_TYPE_BLOCK_CONDITION, NODE_TYPE_ASSIGNMENT, node, operand, variable, placeholder};

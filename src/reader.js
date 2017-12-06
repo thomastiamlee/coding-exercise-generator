@@ -37,7 +37,7 @@ function loadBlocks(file, storage) {
 		var nodeInformation = [];
 		line = content[current];
 		while (line != "" && current < content.length) {
-			nodeInformation.push(line);			
+			nodeInformation.push(line);
 			current++;
 			line = content[current];
 		}
@@ -94,7 +94,26 @@ function buildBlockFromInformation(name, storage) {
 		}
 		currentData = current.split(",");
 		var type = currentData[0];
-		if (type == 'o') {
+		if (type == 'a') {
+			var operand1 = convertOperandStringToObject(currentData[1], symbolMappings);
+			var variableOutput = convertOperandStringToObject(currentData[2], symbolMappings);
+			if (isTerminal == false) {
+				successor = [currentData[3]];
+			}
+			else {
+				successor = [];
+			}
+			var newNode = new Component.node(Component.NODE_TYPE_ASSIGNMENT);
+			newNode.attachInputOperand(operand1, 0);
+			newNode.setVariableOutput(variableOutput);
+
+			var newObj = {node: newNode, successor: successor};
+			nodes.push(newObj);
+			if (isTerminal) {
+				internalTerminalNodes.push(newNode);
+			}
+		}
+		else if (type == 'o') {
 			var operand1 = convertOperandStringToObject(currentData[1], symbolMappings);
 			var operand2 = convertOperandStringToObject(currentData[2], symbolMappings);
 			var variableOutput = convertOperandStringToObject(currentData[3], symbolMappings);
@@ -110,7 +129,7 @@ function buildBlockFromInformation(name, storage) {
 			newNode.attachInputOperand(operand2, 1);
 			newNode.setVariableOutput(variableOutput);
 			newNode.setOperator(operator);
-			
+
 			var newObj = {node: newNode, successor: successor};
 			nodes.push(newObj);
 			if (isTerminal) {
@@ -131,7 +150,7 @@ function buildBlockFromInformation(name, storage) {
 			newNode.attachInputOperand(operand1, 0);
 			newNode.attachInputOperand(operand2, 1);
 			newNode.setOperator(operator);
-			
+
 			var newObj = {node: newNode, successor: successor};
 			nodes.push(newObj);
 			if (isTerminal) {
@@ -148,7 +167,7 @@ function buildBlockFromInformation(name, storage) {
 				currentNode.attachNode(nodes[successors[j]].node, j);
 			}
 		}
-	}	
+	}
 	// Build the block
 	if (target.type == "o") {
 		var res = new Component.node(Component.NODE_TYPE_BLOCK_OPERATION);
@@ -168,15 +187,15 @@ function buildBlockFromInformation(name, storage) {
 function loadExercise(file, blocks) {
   var content = File.readFileSync(file, "utf-8").split("\r\n");
 	var current = 1;
-	
+
 	var symbolMappings = [];
 	var inputVariables = [];
 	var nodes = [];
-	
+
 	if (!blocks) {
 		blocks = [];
 	}
-	
+
 	// Read the inputs
 	var line = content[current];
 	while (line != "%VARIABLES") {
@@ -192,7 +211,7 @@ function loadExercise(file, blocks) {
 		line = content[current];
 	}
 	current++;
-	
+
 	// Read the variables
 	line = content[current];
 	while (line != "%NODES") {
@@ -206,27 +225,39 @@ function loadExercise(file, blocks) {
 		current++;
 		line = content[current];
 	}
-	
+
 	// Read the nodes
 	current++;
 	line = content[current];
 	while (current < content.length) {
 		var nodeData = line.split(",");
 		var type = nodeData[0];
-		// Operation node
-		if (type == "o") {
+
+		if (type == 'a') {
+			var operand1 = convertOperandStringToObject(nodeData[1], symbolMappings);
+			var variableOutput = convertOperandStringToObject(nodeData[2], symbolMappings);
+			var successor = nodeData[3];
+
+			var newNode = new Component.node(Component.NODE_TYPE_ASSIGNMENT);
+			newNode.attachInputOperand(operand1, 0);
+			newNode.setVariableOutput(variableOutput);
+
+			var newObj = {node: newNode, successor: [successor]};
+			nodes.push(newObj);
+		}
+		else if (type == "o") {
 			var operand1 = convertOperandStringToObject(nodeData[1], symbolMappings);
 			var operand2 = convertOperandStringToObject(nodeData[2], symbolMappings);
 			var variableOutput = convertOperandStringToObject(nodeData[3], symbolMappings);
 			var operator = nodeData[4];
 			var successor = nodeData[5];
-			
+
 			var newNode = new Component.node(Component.NODE_TYPE_OPERATION);
 			newNode.attachInputOperand(operand1, 0);
 			newNode.attachInputOperand(operand2, 1);
 			newNode.setVariableOutput(variableOutput);
 			newNode.setOperator(operator);
-			
+
 			var newObj = {node: newNode, successor: [successor]};
 			nodes.push(newObj);
 		}
@@ -236,44 +267,44 @@ function loadExercise(file, blocks) {
 			var operator = nodeData[3];
 			var successor1 = nodeData[4];
 			var successor2 = nodeData[5];
-			
+
 			var newNode = new Component.node(Component.NODE_TYPE_CONDITION);
 			newNode.attachInputOperand(operand1, 0);
 			newNode.attachInputOperand(operand2, 1);
 			newNode.setOperator(operator);
-			
+
 			var newObj = {node: newNode, successor: [successor1, successor2]};
 			nodes.push(newObj);
 		}
 		else if (type == "ob") {
 			var blockNname = nodeData[1];
 			var block = buildBlockFromInformation(blockName, blocks);
-			
+
 		}
 		else if (type == "r") {
 			var operand1 = convertOperandStringToObject(nodeData[1], symbolMappings);
-			
+
 			var newNode = new Component.node(Component.NODE_TYPE_RETURN);
 			newNode.attachInputOperand(operand1, 0);
-			
+
 			var newObj = {node: newNode, successor: []};
 			nodes.push(newObj);
 		}
 		current++;
 		line = content[current];
 	}
-		
+
 	// Connect the nodes
 	for (var i = 0; i < nodes.length; i++) {
 		var node = nodes[i].node;
 		var successors = nodes[i].successor;
+
 		for (var j = 0; j < successors.length; j++) {
 			if (successors[j] != null) {
 				node.attachNode(nodes[successors[j]].node, j);
 			}
 		}
 	}
-		
 	return {head: nodes[0].node, input: inputVariables, symbols: symbolMappings};
 }
 
@@ -342,7 +373,7 @@ function convertToFlowchartDefinition(exercise) {
 	var res = "graph TD\n";
 	var nodeInformation = "";
 	var nodeConnections = "";
-	
+
 	var nodeList = head.getAllSolutionSuccessors();
 	for (var i = 0; i < nodeList.length; i++) {
 		var currentNode = nodeList[i];
@@ -358,10 +389,17 @@ function convertToFlowchartDefinition(exercise) {
 			}
 		}
 		var successors = currentNode.solutionSuccessors;
-		
+
 		var nodeLine = "";
 		var connectionLine = "";
-		if (currentNode.type == Component.NODE_TYPE_OPERATION) {
+		if (currentNode.type == Component.NODE_TYPE_ASSIGNMENT) {
+			var variableOutput = getSymbolFromOperand(currentNode.variableOutput, symbols);
+			nodeLine += letter + "[" + variableOutput + " = " + operandStrings[0] + "]\n";
+			if (successors[0] != null) {
+				connectionLine += letter + " --> N" + (nodeList.indexOf(successors[0]) + 1) + "\n";
+			}
+		}
+		else if (currentNode.type == Component.NODE_TYPE_OPERATION) {
 			var operator = currentNode.operator;
 			var variableOutput = getSymbolFromOperand(currentNode.variableOutput, symbols);
 			nodeLine += letter + "[" + variableOutput + " = " + operandStrings[0] + " " + operator + " " + operandStrings[1] + "]\n";
@@ -385,7 +423,7 @@ function convertToFlowchartDefinition(exercise) {
 		if (nodeLine != "")	nodeInformation += nodeLine;
 		if (connectionLine != "") nodeConnections += connectionLine;
 	}
-		
+
 	res += nodeInformation + nodeConnections;
 	return res;
 }

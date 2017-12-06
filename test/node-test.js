@@ -8,12 +8,32 @@ describe("node", function() {
 		var n2 = new Component.node(Component.NODE_TYPE_CONDITION);
 		n1.setOperator("*");
 		n2.setOperator("<");
-		
-		it("Operation node should set its operator to *.", function() { Assert(n1.operator == "*") });		
-		it("Condition node should set its operator to <.", function() { Assert(n2.operator == "<") });		
+
+		it("Operation node should set its operator to *.", function() { Assert(n1.operator == "*") });
+		it("Condition node should set its operator to <.", function() { Assert(n2.operator == "<") });
 	});
-	
+
 	describe("#evaluateThis()", function() {
+    describe("Assignment node on numbers", function() {
+      var o1 = new Component.operand("number", 5);
+			var o2 = new Component.operand("number", -5);
+			var o3 = new Component.operand("number", 0);
+      var n1 = new Component.node(Component.NODE_TYPE_ASSIGNMENT);
+      var n2 = new Component.node(Component.NODE_TYPE_ASSIGNMENT);
+      var n3 = new Component.node(Component.NODE_TYPE_ASSIGNMENT);
+      it("n1 should evaluate to 5.", function() {
+        var res = n1.evaluateThis([o1]);
+        Assert(res.value == 5.0 && res.type == "number");
+      });
+      it("n2 should evaluate to -5.", function() {
+        var res = n2.evaluateThis([o2]);
+        Assert(res.value == -5.0 && res.type == "number");
+      });
+      it("n3 should evaluate to 0.", function() {
+        var res = n3.evaluateThis([o3]);
+        Assert(res.value == 0.0 && res.type == "number");
+      });
+    });
     describe("Operation node on numbers", function() {
 			var o1 = new Component.operand("number", 5);
 			var o2 = new Component.operand("number", -5);
@@ -28,7 +48,7 @@ describe("node", function() {
 			n3.setOperator("*");
 			var n4 = new Component.node(Component.NODE_TYPE_OPERATION);
 			n4.setOperator("/");
-			
+
 			it("5 + -5 should evaluate to 0.", function() {
 				var res = n1.evaluateThis([o1, o2]);
 				Assert(res.value == 0 && res.type == "number");
@@ -67,53 +87,53 @@ describe("node", function() {
 			n5.setOperator("==");
 			var n6 = new Component.node(Component.NODE_TYPE_CONDITION);
 			n6.setOperator("!=");
-			
-			it("10 == 10 should evaluate to true.", function() {	
+
+			it("10 == 10 should evaluate to true.", function() {
 				Assert(n5.evaluateThis([o3, o4]) == true);
 			});
-			it("10 != 10 should evaluate to false.", function() {	
+			it("10 != 10 should evaluate to false.", function() {
 				Assert(n6.evaluateThis([o3, o4]) == false);
 			});
-			it("10 == 9.9 should evaluate to false.", function() {	
+			it("10 == 9.9 should evaluate to false.", function() {
 				Assert(n5.evaluateThis([o3, o5]) == false);
 			});
-			it("10 != 9.9 should evaluate to true.", function() {	
+			it("10 != 9.9 should evaluate to true.", function() {
 				Assert(n6.evaluateThis([o3, o5]) == true);
 			});
-			it("5 >= 5 should evaluate to true.", function() {	
+			it("5 >= 5 should evaluate to true.", function() {
 				Assert(n2.evaluateThis([o1, o2]) == true);
 			});
-			it("5 >= 10 should evaluate to false.", function() {	
+			it("5 >= 10 should evaluate to false.", function() {
 				Assert(n2.evaluateThis([o1, o3]) == false);
 			});
-			it("5 > 5 should evaluate to false.", function() {	
+			it("5 > 5 should evaluate to false.", function() {
 				Assert(n1.evaluateThis([o1, o2]) == false);
 			});
-			it("5 > 10 should evaluate to false.", function() {	
+			it("5 > 10 should evaluate to false.", function() {
 				Assert(n1.evaluateThis([o1, o3]) == false);
 			});
-			it("10 >= 5 should evaluate to true.", function() {	
+			it("10 >= 5 should evaluate to true.", function() {
 				Assert(n2.evaluateThis([o3, o1]) == true);
 			});
-			it("10 > 5 should evaluate to true.", function() {	
+			it("10 > 5 should evaluate to true.", function() {
 				Assert(n1.evaluateThis([o3, o1]) == true);
 			});
-			it("5 <= 5 should evaluate to true.", function() {	
+			it("5 <= 5 should evaluate to true.", function() {
 				Assert(n4.evaluateThis([o1, o2]) == true);
 			});
-			it("5 <= 10 should evaluate to true.", function() {	
+			it("5 <= 10 should evaluate to true.", function() {
 				Assert(n4.evaluateThis([o1, o3]) == true);
 			});
-			it("5 < 5 should evaluate to false.", function() {	
+			it("5 < 5 should evaluate to false.", function() {
 				Assert(n3.evaluateThis([o1, o2]) == false);
 			});
-			it("5 < 10 should evaluate to true.", function() {	
+			it("5 < 10 should evaluate to true.", function() {
 				Assert(n3.evaluateThis([o1, o3]) == true);
 			});
-			it("10 <= 5 should evaluate to false.", function() {	
+			it("10 <= 5 should evaluate to false.", function() {
 				Assert(n4.evaluateThis([o3, o1]) == false);
 			});
-			it("10 < 5 should evaluate to false.", function() {	
+			it("10 < 5 should evaluate to false.", function() {
 				Assert(n3.evaluateThis([o3, o1]) == false);
 			});
 		});
@@ -125,22 +145,27 @@ describe("node", function() {
 			it("Return node on \"neil\" should return \"neil\".", function() {	Assert(n1.evaluateThis([o2]) == o2);	});
 		});
   });
-	
+
 	describe("#evaluateStructure()", function() {
 		var o1 = new Component.operand("number", 5);
 		var o2 = new Component.operand("number", 6);
 		var o3 = new Component.operand("number", 8);
 		var o4 = new Component.operand("string", "neil");
 		var v1 = new Component.variable("number");
-		var n1 = new Component.node(Component.NODE_TYPE_RETURN);
+    var v2 = new Component.variable("number");
+    var n1 = new Component.node(Component.NODE_TYPE_RETURN);
 		n1.attachInputOperand(v1, 0);
 		var n2 = new Component.node(Component.NODE_TYPE_RETURN);
 		n2.attachInputOperand(o4, 0);
+    var n5 = new Component.node(Component.NODE_TYPE_ASSIGNMENT);
+    n5.attachInputOperand(v1, 0);;
+    n5.setVariableOutput(v2);
+    n5.attachNode(n1, 0);
 		var n3 = new Component.node(Component.NODE_TYPE_OPERATION);
 		n3.attachInputOperand(o1, 0);
 		n3.attachInputOperand(o2, 1);
 		n3.setOperator("*");
-		n3.attachNode(n1, 0);
+		n3.attachNode(n5, 0);
 		n3.setVariableOutput(v1);
 		var n4 = new Component.node(Component.NODE_TYPE_CONDITION);
 		n4.attachInputOperand(o2, 0);
@@ -148,7 +173,7 @@ describe("node", function() {
 		n4.setOperator("<");
 		n4.attachNode(n3, 0);
 		n4.attachNode(n2, 1);
-		
+
 		it("Evaluating structure at n2 should result to \"neil\".", function() {
 			var res = n2.evaluateStructure();
 			Assert(res.value == "neil");
@@ -165,7 +190,7 @@ describe("node", function() {
 			Assert(res.type == "number");
 		});
 	});
-	
+
 	describe("#replaceAllPlaceholders()", function() {
 		var o1 = new Component.variable("number");
 		var o2 = new Component.placeholder(0);
@@ -173,7 +198,7 @@ describe("node", function() {
 		var o4 = new Component.operand("number", 10);
 		var o5 = new Component.operand("number", 10);
 		var o6 = new Component.variable("number");
-		
+
 		var n1 = new Component.node(Component.NODE_TYPE_OPERATION);
 		n1.attachInputOperand(o2, 0);
 		n1.attachInputOperand(o4, 1);
@@ -191,10 +216,10 @@ describe("node", function() {
 		n3.setVariableOutput(o1);
 		n1.attachNode(n2, 0);
 		n2.attachNode(n3, 0);
-		
+
 		n1.replaceAllPlaceholders(new Component.operand("number", 5), 0);
 		n1.replaceAllPlaceholders(o6, 1);
-		
+
 		it("The first operand of n1 should have been replaced with 5.", function() {
 			var target = n1.inputOperands[0];
 			Assert(target instanceof Component.operand && target.type == "number" && target.value == 5);
@@ -220,13 +245,13 @@ describe("node", function() {
 			Assert(target == o6);
 		});
 	});
-	
+
 	describe("#attachNode(), #attachInputOperand() and #setVariableOutput()", function() {
 		describe("Simple block operation node case", function() {
 			var o1 = new Component.variable("number");
 			var o2 = new Component.variable("number");
 			var o3 = new Component.variable("number");
-			
+
 			var n1 = new Component.node(Component.NODE_TYPE_OPERATION);
 			n1.attachInputOperand(new Component.operand("number", 2), 0);
 			n1.attachInputOperand(new Component.operand("number", 3), 1);
@@ -251,9 +276,9 @@ describe("node", function() {
 			n5.setVariableOutput(o3);
 			n1.attachNode(n5, 0);
 			var n4 = new Component.node(Component.NODE_TYPE_RETURN);
-			n4.attachInputOperand(o3, 0);	
+			n4.attachInputOperand(o3, 0);
 			n5.attachNode(n4, 0);
-			
+
 			it("n1 should be attached to n5.", function() { Assert(n1.successors[0] == n5); });
 			it("n5 should be attached to n4.", function() { Assert(n5.successors[0] == n4); });
 			it("n1 should be attached to n2 in the solution path.", function() { Assert(n1.solutionSuccessors[0] == n2); });
@@ -287,7 +312,7 @@ describe("node", function() {
 			var n5 = new Component.node(Component.NODE_TYPE_RETURN);
 			n5.attachInputOperand(o2, 0);
 			n3.attachNode(n5, 1);
-			
+
 			it("n3 should be attached to n4 and n5.", function() { Assert(n3.successors[0] == n4 && n3.successors[1] == n5); });
 			it("n1 should be attached to n2 in the solution path.", function() { Assert(n1.solutionSuccessors[0] == n2); });
 			it("n2 should be attached to n4 and n5 in the solution path.", function() { Assert(n2.solutionSuccessors[0] == n4 && n2.solutionSuccessors[1] == n5); });
@@ -341,7 +366,7 @@ describe("node", function() {
 			var n7 = new Component.node(Component.NODE_TYPE_RETURN);
 			n7.attachInputOperand(result, 0);
 			n6.attachNode(n7, 0);
-			
+
 			it("n1 should be attached to n2.", function() { Assert(n1.successors[0] == n2); });
 			it("n2 should be attached to n3 and n5.", function() { Assert(n2.successors[0] == n3 && n2.successors[1] == n5); });
 			it("n3 should be attached to n4.", function() { Assert(n3.successors[0] == n4); });
@@ -386,7 +411,7 @@ describe("node", function() {
 			var n5 = new Component.node(Component.NODE_TYPE_RETURN);
 			n5.attachInputOperand(o3, 0);
 			n4.attachNode(n5, 0);
-			
+
 			it("n1 should be attached to n2 and n3.", function() { Assert(n1.successors[0] == n2 && n1.successors[1] == n3); });
 			it("n4 should be attached to n5.", function() { Assert(n4.successors[0] == n5); });
 			it("n2 and n3 should be attached to n5 in the solution path.", function() { Assert(n2.solutionSuccessors[0] == n5 && n3.solutionSuccessors[0] == n5); });
@@ -397,7 +422,7 @@ describe("node", function() {
 			it("evaluating from n4 with inputs 9.5 and 9 should return 9.", function() {
 				var res = n4.evaluateStructure([{variable: o1, value: 9.5}, {variable: o2, value: 9}]);
 				Assert(res instanceof Component.operand && res.type == "number" && res.value == 9);
-			});			
+			});
 		});
 		describe("Nested blocks case", function() {
 			var input = new Component.variable("number");
@@ -439,7 +464,7 @@ describe("node", function() {
 			var n7 = new Component.node(Component.NODE_TYPE_RETURN);
 			n7.attachInputOperand(new Component.operand("number", 0), 0);
 			n5.attachNode(n7, 1);
-			
+
 			it("n1 should be attached to n2.", function() { Assert(n1.successors[0] == n2); });
 			it("n3 should be attached to n4.", function() { Assert(n3.successors[0] == n4); });
 			it("n5 should be attached to n6 and n7.", function() { Assert(n5.successors[0] == n6 && n5.successors[1] == n7); });
@@ -459,7 +484,7 @@ describe("node", function() {
 			});
 		});
 	});
-	
+
 	describe("#getAllSolutionSuccessors()", function() {
 		var o1 = new Component.variable("number");
 		var o2 = new Component.variable("number");
@@ -490,11 +515,11 @@ describe("node", function() {
 		n5.attachInputOperand(o3, 0);
 		n4.attachNode(n5, 0);
 		var res = n4.getAllSolutionSuccessors();
-		
+
 		it("There should be 4 solution successors from n4.", function() {
 			Assert(res.length == 4);
 		});
-		it("n1, n2, n3, and n5 should be the successors from n4.", function() { 
+		it("n1, n2, n3, and n5 should be the successors from n4.", function() {
 			var list = [n1, n2, n3, n5];
 			var passed = true;
 			for (var i = 0; i < res.length; i++) {
@@ -507,4 +532,3 @@ describe("node", function() {
 		});
 	});
 });
-				

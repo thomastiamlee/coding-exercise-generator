@@ -1,10 +1,10 @@
 %INPUTS
-n1-number
-n2-number
+i1-number
 %VARIABLES
-result-number
+x1-number
 %NODES
-bo,absolute,[n1],[n1],1
-bo,absolute,[n2],[n2],2
-bo,average2,[n1],[n2],[result],3
-r,[result]
+a,(number-5),[x1],1
+o,[x1],[i1],[i1],+,2
+a,(number-6),[x1],3
+o,[x1],[i1],[i1],+,4
+r,[i1]

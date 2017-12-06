@@ -1,0 +1,18 @@
+#global;
+person;
+student->person;
+height;
+weight;
+
+#static;
+meters;
+feet;
+kilograms;
+
+#assertions;
+canhave(person height);
+canhave(person weight);
+
+#actions;
+name: mentionheightinmeters;
+parameters: person height;
