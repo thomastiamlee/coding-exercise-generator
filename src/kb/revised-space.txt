@@ -1,0 +1,21 @@
+#global;
+person;
+student->person;
+height;
+weight;
+
+#static;
+meters;
+feet;
+kilograms;
+
+#assertions;
+canhave(person height);
+canhave(person weight);
+
+#actions;
+name: mentionheightinmeters;
+parameters: person height;
+preconditions: canhave(0 1) !hasproperty(0 1);
+creates: ;
+effects: hasproperty(0 1);

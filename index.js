@@ -20,4 +20,6 @@ console.log(res);
 // console.log(Reader.convertToFlowchartDefinition(exercise));
 //console.log(res.table.assertions);
 */
-VisualizationServer.start();
+//VisualizationServer.start();
+
+console.log(Parser.parseKnowledgeBase("./src/kb/revised-space.txt"));

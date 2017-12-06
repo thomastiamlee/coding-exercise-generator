@@ -3,6 +3,7 @@ const Parser = require("../src/parser");
 
 describe("parser", function() {
 	describe("#parseKnowledgeBase", function() {
+		/*
 		var result = Parser.parseKnowledgeBase("./test/kbtest.txt");
 		it ("Type list should contain 15 elements.", function() {
 			Assert(result.type_list && result.type_list.length == 15);
@@ -61,5 +62,6 @@ describe("parser", function() {
 			Assert(result.action_list[1].effects[0].parameters[0] == "0");
 			Assert(result.action_list[1].effects[0].parameters[1] == "1");
 		});
+		*/
 	});
 });

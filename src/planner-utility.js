@@ -16,6 +16,8 @@ function entity(name, parents, type, instantiatable = true) {
 	}
 	else if (this.type == "local") {
 		this.attachments = [];
+		this.dataType = null;
+		this.value = null;
 		this.attachLocalEntity = function(other, name) {
 			if (other.type == "local") {
 				var found = false;
@@ -51,11 +53,20 @@ function entity(name, parents, type, instantiatable = true) {
 	}
 }
 
-/* Construction for an assertion. predicate is a string representing the predicate name. parameters is an
+/* Constructor for an assertion. predicate is a string representing the predicate name. parameters is an
 array of entity objects that represent the parameters to this assertion. */
 function assertion(predicate, parameters) {
 	this.predicate = predicate;
 	this.parameters = parameters;
+}
+
+
+/* Constructor for the knowledge base. */
+function knowledgeBase() {
+	this.globalEntities = [];
+	this.globalStaticEntities = [];
+	this.globalAssertions = [];
+	this.actions = [];
 }
 
 /* Constructor for the memory table, which serves as the main mechanism for remembering
@@ -64,6 +75,36 @@ function memory() {
 	this.counter = 1;
 	this.space = [];
 	this.assertions = [];
+	this.localEntities = [];
+	
+	/* Creates a new local entity from a global entity and adds it to memory. The name is automatically
+	assigned to ensure that there are no duplicates. */
+	this.createNewLocalEntity = function(globalEntity) {
+		if (globalEntity.instantiatable) {
+			var ctr = 1;
+			var success = false;
+			var name = "";
+			while (!success) {
+				name = globalEntity.name + ctr;
+				for (var i = 0; i < localEntities.length; i++) {
+					if (localEntities[i].name == name) {
+						success = false;
+						break;
+					}
+				}
+				ctr++;
+			}
+			var newEntity = new entity(name, [globalEntity], "local");
+		}
+	}
+	
+	this.getLocalEntity = function(name) {
+		for (var i = 0; i < this.localEntities.length; i++) {
+			if (this.localEntities[i].name == name) {
+				return this.localEntities[i];
+			}
+		}
+	}
 	
 	/* Adds a new space entity in the memory of the given types. space can be a single string
 	representing the type of the new space entity or it can be an array of strings representing multiple
@@ -485,4 +526,4 @@ function replaceParameterName(parameters, symbol) {
 }
 
 
-module.exports = {memory, entity, addType, addAssertion, sortKnowledgeBase, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, assertionIsTrue, getAvailableActions, executeAction};
+module.exports = {memory, entity, assertion, knowledgeBase, addType, addAssertion, sortKnowledgeBase, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, assertionIsTrue, getAvailableActions, executeAction};;
