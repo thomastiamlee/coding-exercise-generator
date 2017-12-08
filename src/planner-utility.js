@@ -358,6 +358,18 @@ function getAllPossibleActionVariableReplacements(kb, table, action) {
 	return res;
 }
 
+function getAvailableActions(kb, table) {
+	var actionList = kb.getAction();
+	var availableActions = [];
+	for (var i = 0; i < actionList.length; i++) {
+		var possible = getAllPossibleActionVariableReplacements(kb, table, actionList[i]);
+		for (var j = 0; j < possible.length; j++) {
+			availableActions.push({action: actionList[i], parameters: possible[j]});
+		}
+	}
+	return availableActions;
+}
+
 /* Executes a given action with the given parameters. Updates the assertions in the knowledge base as a result of performing the action. */
 function executeAction(kb, table, action, parameters) {
 	var effectList = action.effects;
@@ -385,22 +397,6 @@ function executeAction(kb, table, action, parameters) {
 		}
 	}
 }
-
-/* Returns an array containing the available actions given the
-current space and the knowledge base. */
-function getAvailableActions(kb, table) {
-	var actionList = kb.action_list;
-	var availableActions = [];
-	for (var i = 0; i < actionList.length; i++) {
-		var possible = getAllPossibleActionVariableReplacements(kb, table, actionList[i]);
-		for (var j = 0; j < possible.length; j++) {
-			availableActions.push({action: actionList[i], parameters: possible[j]});
-		}
-	}
-	return availableActions;
-}
-
-
 
 function sortTypeList(list) {
 	list.sort(function(a, b) {

@@ -65,8 +65,6 @@ describe("parser", function() {
 		});
 		it("The mention action should have been read.", function() {
 			var mention = result.getAction("mention");
-			console.log("MENTION");
-			console.log(mention);
 			Assert(mention.name == "mention");
 			Assert(mention.parameters.length == 2);
 			Assert(mention.parameters[0] instanceof PlannerUtility.wildcardToken);

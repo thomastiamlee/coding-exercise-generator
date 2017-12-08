@@ -324,58 +324,16 @@ describe("planner-utility", function() {
 			Assert(test2.length == 3 && x && y && z);
 		});
 	});
-	/*
-	describe("#fetchTypeIndex()", function() {
-		var kb = Parser.parseKnowledgeBase("./test/kbtest.txt");
-		var typeList = kb.type_list;
-		var type1 = typeList[PlannerUtility.fetchTypeIndex(typeList, "person")];
-		var type2 = typeList[PlannerUtility.fetchTypeIndex(typeList, "stringvalue*")];
-		var type3 = typeList[PlannerUtility.fetchTypeIndex(typeList, "food")];
-		var type4 = PlannerUtility.fetchTypeIndex(typeList, "banana");
-
-		it("type1 should be the person type.", function() {
-			Assert(type1.length == 2 && type1[0] == "person" && type1[1].length == 0);
-		});
-		it("type2 should be the stringvalue* type.", function() {
-			Assert(type2.length == 2 && type2[0] == "stringvalue*" && type2[1].length == 0);
-		});
-		it("type3 should be the food type.", function() {
-			Assert(type3.length == 2 && type3[0] == "food" && type3[1][0] == "object");
-		});
-		it("type4 does not exist and should be -1", function() {
-			Assert(type4 == -1);
-		});
-	});
-	describe("#fetchActionIndex()", function() {
-		var kb = Parser.parseKnowledgeBase("./test/kbtest.txt");
-		var actionList = kb.action_list;
-		var action1 = actionList[PlannerUtility.fetchActionIndex(actionList, "eat")];
-		var action2 = actionList[PlannerUtility.fetchActionIndex(actionList, "mention")];
-		it("action1 should be the eat action.", function() {
-			Assert(action1.name == "eat" && action1.parameters && action1.preconditions && action1.effects);
-		});
-		it("action2 should be the mention action.", function() {
-			Assert(action2.name == "mention" && action2.parameters && action2.preconditions && action2.effects);
-		});
-	});
-	*/
-/*
-
-
-
-
 	describe("#getAvailableActions()", function() {
 		var kb1 = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
-		var space1 = ["student", "student"];
 		var table1 = new PlannerUtility.memory();
-		table1.addSpaceFromType(space1);
+		table1.createLocalEntity([kb1.getGlobalEntity("student"), kb1.getGlobalEntity("student")]);
 		var availableActions1 = PlannerUtility.getAvailableActions(kb1, table1);
 		var kb2 = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
-		var space2 = ["person", "cat"];
 		var table2 = new PlannerUtility.memory();
-		table2.addSpaceFromType(space2);
-		table2.addAssertion({truth: true, predicate: "owns", parameters: ["person1", "cat2"]});
-		table2.addAssertion({truth: true, predicate: "hungry", parameters: ["cat2"]});
+		table2.createLocalEntity([kb2.getGlobalEntity("person"), kb2.getGlobalEntity("cat")]);
+		table2.assert(new PlannerUtility.assertionQuery(true, "owns", [table2.getLocalEntity("person1"), table2.getLocalEntity("cat1")]));
+		table2.assert(new PlannerUtility.assertionQuery(true, "hungry", [table2.getLocalEntity("cat1")]));
 		var availableActions2 = PlannerUtility.getAvailableActions(kb2, table2);
 		it("In space1, there should be 4 available actions.", function() {
 			Assert(availableActions1.length == 4);
@@ -383,10 +341,10 @@ describe("planner-utility", function() {
 		it("In space1, there should be an action for mentioning the height of student1 and student2 and comparing their heights.", function() {
 			var x1 = false, x2 = false, x3 = false, x4 = false;
 			for (var i = 0; i < availableActions1.length; i++) {
-				if (availableActions1[i].action.name == "mentionheight" && availableActions1[i].parameters[0] == "student1") x1 = true;
-				if (availableActions1[i].action.name == "mentionheight" && availableActions1[i].parameters[0] == "student2") x2 = true;
-				if (availableActions1[i].action.name == "gettaller" && availableActions1[i].parameters[0] == "student1" && availableActions1[i].parameters[1] == "student2") x3 = true;
-				if (availableActions1[i].action.name == "gettaller" && availableActions1[i].parameters[0] == "student2" && availableActions1[i].parameters[1] == "student1") x4 = true;
+				if (availableActions1[i].action.name == "mentionheight" && availableActions1[i].parameters[0] == table1.getLocalEntity("student1")) x1 = true;
+				if (availableActions1[i].action.name == "mentionheight" && availableActions1[i].parameters[0] == table1.getLocalEntity("student2")) x2 = true;
+				if (availableActions1[i].action.name == "gettaller" && availableActions1[i].parameters[0] == table1.getLocalEntity("student1") && availableActions1[i].parameters[1] == table1.getLocalEntity("student2")) x3 = true;
+				if (availableActions1[i].action.name == "gettaller" && availableActions1[i].parameters[0] == table1.getLocalEntity("student2") && availableActions1[i].parameters[1] == table1.getLocalEntity("student1")) x4 = true;
 			}
 			Assert(x1 && x2 && x3 && x4);
 		});
@@ -396,13 +354,20 @@ describe("planner-utility", function() {
 		it("In space2, there should be an action for mentioning the height of student1 and cat2, as well as person1 feeding cat2.", function() {
 			var x1 = false, x2 = false, x3 = false;;
 			for (var i = 0; i < availableActions2.length; i++) {
-				if (availableActions2[i].action.name == "mentionheight" && availableActions2[i].parameters[0] == "person1") x1 = true;
-				if (availableActions2[i].action.name == "mentionheight" && availableActions2[i].parameters[0] == "cat2") x2 = true;
-				if (availableActions2[i].action.name == "feed" && availableActions2[i].parameters[0] == "person1" && availableActions2[i].parameters[1] == "cat2") x3 = true;
+				if (availableActions2[i].action.name == "mentionheight" && availableActions2[i].parameters[0] == table2.getLocalEntity("cat1")) x1 = true;
+				if (availableActions2[i].action.name == "mentionheight" && availableActions2[i].parameters[0] == table2.getLocalEntity("cat1")) x2 = true;
+				if (availableActions2[i].action.name == "feed" && availableActions2[i].parameters[0] == table2.getLocalEntity("person1") && availableActions2[i].parameters[1] == table2.getLocalEntity("cat1")) x3 = true;
 			}
 			Assert(x1 && x2 && x3);
 		});
 	});
+
+/*
+
+
+
+
+
 	describe("#executeAction()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "cat"];
