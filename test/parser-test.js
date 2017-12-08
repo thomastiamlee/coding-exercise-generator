@@ -32,7 +32,6 @@ describe("parser", function() {
 		it("Assertions list should contain 4 elements.", function() {
 			var count = 0;
 			for (var prop in result.globalAssertions) {
-				console.log(prop);
 				count += result.globalAssertions[prop].length;
 			}
 			Assert(count == 4);

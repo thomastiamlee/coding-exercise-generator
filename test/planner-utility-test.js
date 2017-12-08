@@ -75,26 +75,57 @@ describe("planner-utility", function() {
 			});
 		});
 	});
-	/*
 	describe("Memory functions", function() {
-		describe("#addSpaceFromType()", function() {
-			it("Space entity should correctly be added.", function() {
-				table = new PlannerUtility.memory();
-				table.addSpaceFromType("person");
-				Assert(table.space.length == 1 && table.space[0][0] == "person1" && table.space[0][1].length == 1 && table.space[0][1][0] == "person");
+		describe("#getLocalEntity()", function() {
+			var parent1 = new PlannerUtility.entity("person", [null], "global", true);
+			var parent2 = new PlannerUtility.entity("height", [null], "global");
+			var parent3 = new PlannerUtility.entity("weight", [null], "global");
+			var entity1 = new PlannerUtility.entity("person1", [parent1], "local");
+			var entity2 = new PlannerUtility.entity("height2", [parent2], "local");
+			var entity3 = new PlannerUtility.entity("weight3", [parent3], "local");
+			var memory = new PlannerUtility.memory();
+			memory.localEntities.push(entity1);
+			memory.localEntities.push(entity2);
+			memory.localEntities.push(entity3);
+			it("person1 should be found.", function() {
+				Assert(memory.getLocalEntity("person1") instanceof PlannerUtility.entity);
 			});
-			it("When multiple space entities are added, counter should increment properly.", function() {
-				table = new PlannerUtility.memory();
-				table.addSpaceFromType("person");
-				table.addSpaceFromType("student");
-				Assert(table.space.length == 2 && table.space[0][0] == "person1" && table.space[0][1].length == 1 && table.space[0][1][0] == "person" && table.space[1][0] == "student2" && table.space[1][1].length == 1 && table.space[1][1][0] == "student");
+			it("height2 should be found.", function() {
+				Assert(memory.getLocalEntity("height2") instanceof PlannerUtility.entity);
 			});
-			it("It should be possible to add space entities in an array", function() {
+			it("person should not be found", function() {
+				Assert(memory.getLocalEntity("person") == null);
+			})
+		});
+		describe("#createNewLocalEntity()", function() {
+			it("It should be possible to create a local entity from person.", function() {
+				var parent1 = new PlannerUtility.entity("person", [null], "global");
+				var table = new PlannerUtility.memory();
+				table.createLocalEntity(parent1);
+				Assert(table.getLocalEntity("person1") instanceof PlannerUtility.entity);
+				Assert(table.getLocalEntity("person1").type == "local");
+			});
+			it("It should be possible to create two local entities from restaurant.", function() {
+				var parent1 = new PlannerUtility.entity("restaurant", [null], "global");
+				var table = new PlannerUtility.memory();
+				table.createLocalEntity(parent1);
+				table.createLocalEntity(parent1);
+				Assert(table.getLocalEntity("restaurant1") instanceof PlannerUtility.entity);
+				Assert(table.getLocalEntity("restaurant1").type == "local");
+				Assert(table.getLocalEntity("restaurant2") instanceof PlannerUtility.entity);
+				Assert(table.getLocalEntity("restaurant2").type == "local");
+			});
+			it("It should be possible to create local entities from an array", function() {
+				var parent1 = new PlannerUtility.entity("food", [null], "global");
+				var parent2 = new PlannerUtility.entity("fruit", [null], "global");
 				table = new PlannerUtility.memory();
-				table.addSpaceFromType(["person", "student"]);
-				Assert(table.space.length == 2 && table.space[0][0] == "person1" && table.space[0][1].length == 1 && table.space[0][1][0] == "person" && table.space[1][0] == "student2" && table.space[1][1].length == 1 && table.space[1][1][0] == "student");
+				table.createLocalEntity([parent1, parent1, parent2]);
+				Assert(table.getLocalEntity("food1") instanceof PlannerUtility.entity);
+				Assert(table.getLocalEntity("food2") instanceof PlannerUtility.entity);
+				Assert(table.getLocalEntity("fruit1") instanceof PlannerUtility.entity);
 			});
 		});
+		/*
 		describe("#addSpace()", function() {
 			it("Space entity property should be correctly added.", function() {
 				table = new PlannerUtility.memory();
@@ -142,7 +173,7 @@ describe("planner-utility", function() {
 					}
 				}
 				Assert(found);
-			});	
+			});
 			it("The relationship bestfriend(person2 dog) should have been removed", function() {
 				var found = false;
 				for (var i = 0; i < assertionList.length; i++) {
@@ -163,7 +194,7 @@ describe("planner-utility", function() {
 				table1.addSpaceFromType("person");
 				var table2 = table1.cloneMemory();
 				Assert(table2.space.length == 1 && table2.space[0][0] == "person1");
-			});			
+			});
 			it("Assertion should be cloned.", function() {
 				var table1 = new PlannerUtility.memory();
 				table1.addAssertion({truth: true, predicate: "has", parameters: ["person", "name"]});
@@ -213,7 +244,9 @@ describe("planner-utility", function() {
 				Assert(table1.isEquivalent(table2));
 			});
 		});
+		*/
 	});
+	/*
 	describe("#fetchTypeIndex()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbtest.txt");
 		var typeList = kb.type_list;
@@ -221,7 +254,7 @@ describe("planner-utility", function() {
 		var type2 = typeList[PlannerUtility.fetchTypeIndex(typeList, "stringvalue*")];
 		var type3 = typeList[PlannerUtility.fetchTypeIndex(typeList, "food")];
 		var type4 = PlannerUtility.fetchTypeIndex(typeList, "banana");
-		
+
 		it("type1 should be the person type.", function() {
 			Assert(type1.length == 2 && type1[0] == "person" && type1[1].length == 0);
 		});
@@ -296,7 +329,7 @@ describe("planner-utility", function() {
 		});
 		it("In the feed action, dog3, cat4 and pet5 should match the pet parameter.", function() {
 			Assert(test1[1].length == 3);
-			var cond1 = false, cond2 = false, cond3 = false; 
+			var cond1 = false, cond2 = false, cond3 = false;
 			for (var i = 0; i < test1[1].length; i++) {
 				if (test1[1][i] == "dog3") cond1 = true;
 				else if (test1[1][i] == "cat4") cond2 = true;

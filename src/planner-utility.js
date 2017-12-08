@@ -85,22 +85,23 @@ function memory() {
 
 	/* Creates a new local entity from a global entity and adds it to memory. The name is automatically
 	assigned to ensure that there are no duplicates. */
-	this.createNewLocalEntity = function(globalEntity) {
-		if (globalEntity.instantiatable) {
-			var ctr = 1;
-			var success = false;
-			var name = "";
-			while (!success) {
-				name = globalEntity.name + ctr;
-				for (var i = 0; i < localEntities.length; i++) {
-					if (localEntities[i].name == name) {
-						success = false;
-						break;
-					}
+	this.createLocalEntity = function(globalEntities) {
+		if (globalEntities instanceof Array == false) {
+			globalEntities = [globalEntities];
+		}
+		for (var i = 0; i < globalEntities.length; i++) {
+			var globalEntity = globalEntities[i];
+			if (globalEntity.instantiatable) {
+				var ctr = 1;
+				var success = false;
+				var name = globalEntity.name + ctr;
+				while (this.getLocalEntity(name) != null) {
+					ctr++;
+					name = globalEntity.name + ctr;
 				}
-				ctr++;
+				var newEntity = new entity(name, [globalEntity], "local");
+				this.localEntities.push(newEntity);
 			}
-			var newEntity = new entity(name, [globalEntity], "local");
 		}
 	}
 
@@ -110,33 +111,7 @@ function memory() {
 				return this.localEntities[i];
 			}
 		}
-	}
-
-	/* Adds a new space entity in the memory of the given types. space can be a single string
-	representing the type of the new space entity or it can be an array of strings representing multiple
-	types. In this case, the space is automatically assigned a name based on its type. */
-	this.addSpaceFromType = function(space) {
-		if (space.constructor !== Array) {
-			space = [space];
-		}
-		for (var i = 0; i < space.length; i++) {
-			var id = space[i] + this.counter;
-			this.space.push([id, [space[i]]]);
-			this.counter = this.counter + 1;
-		}
-	}
-
-	/* Adds a new space entity in the memory with the given owners and types. space and owners can either
-	be a single element to add or an array of elements. space contains the types of the entities to be added
-	and owners contains the owners associated with thos entities. */
-	this.addSpace = function(space, owners) {
-		if (space.constructor !== Array) {
-			space = [space];
-			owners = [owners];
-		}
-		for (var i = 0; i < space.length; i++) {
-			var id = owners[i] + "." + space[i]; this.space.push([id, [space[i]]]);
-		}
+		return null;
 	}
 
 	this.addAssertion = function(assertion) {
