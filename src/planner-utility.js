@@ -97,7 +97,7 @@ function knowledgeBase() {
 
 	this.getGlobalAssertions = function(name) {
 		if (name) {
-			return this.globalAssertions[name];
+			return this.globalAssertions[name] ? this.globalAssertions[name] : [];
 		}
 		else {
 			var result = [];
@@ -154,7 +154,7 @@ function memory() {
 
 	this.getAssertions = function(name) {
 		if (name) {
-			return this.assertions[name];
+			return this.assertions[name] ? this.assertions[name] : [];
 		}
 		else {
 			var res = [];
@@ -166,9 +166,9 @@ function memory() {
 	}
 
 	this.assert = function(assertionQuery) {
-		var truth = assertion.truth;
-		var predicate = assertion.predicate;
-		var parameters = assertion.parameters;
+		var truth = assertionQuery.truth;
+		var predicate = assertionQuery.predicate;
+		var parameters = assertionQuery.parameters;
 
 		if (this.assertions[predicate]) {
 			var list = this.assertions[predicate];
@@ -186,6 +186,9 @@ function memory() {
 						list.splice(i, 1);
 						i--;
 					}
+				}
+				if (list.length == 0) {
+					delete this.assertions[predicate];
 				}
 			}
 			if (truth) {
@@ -261,11 +264,7 @@ function checkAssertion(kb, table, assertionQuery) {
 	var truth = assertionQuery.truth;
 	var predicate = assertionQuery.predicate;
 	var parameters = assertionQuery.parameters;
-	console.log("checking assertion");
-	console.log(assertionQuery);
-
 	var assertionList = kb.getGlobalAssertions(predicate).concat(table.getAssertions(predicate));
-
 	for (var i = 0; i < assertionList.length; i++) {
 		var currentAssertion = assertionList[i];
 		var assertionParameters = currentAssertion.parameters;

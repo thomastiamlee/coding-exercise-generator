@@ -158,32 +158,32 @@ describe("planner-utility", function() {
 				Assert(table.getLocalEntity("fruit1") instanceof PlannerUtility.entity);
 			});
 		});
-		/*
 		describe("#assert()", function() {
-			var table = new PlannerUtility.memory();
-
 			var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 			var table = new PlannerUtility.memory();
 			table.createLocalEntity([kb.getGlobalEntity("student"), kb.getGlobalEntity("person"), kb.getGlobalEntity("dog"), kb.getGlobalEntity("cat"), kb.getGlobalEntity("pet")]);
-			var query1 = new assetionQuery(true, "hungry", table.getLocalEntity("dog1"));
+			var query1 = new PlannerUtility.assertionQuery(true, "hungry", [table.getLocalEntity("dog1")]);
 			table.assert(query1);
-			//table.addAssertion({ truth: true, predicate: "owns", parameters: ["student1", "dog3"]});
-			//table.addAssertion({ truth: true, predicate: "bestfriend", parameters: ["person2", "dog"]});
-			//table.addAssertion({ truth: false, predicate: "bestfriend", parameters: ["person2", "dog"]});
-			var assertionList = table.assertions;
-			it("The relationship hungry(dog3) should have been added", function() {
-				var found = false;
-				for (var i = 0; i < assertionList.length; i++) {
-					var current = assertionList[i];
-					if (current.predicate == "hungry") {
-						if (current.parameters.length == 1 && current.parameters[0] == "dog3") {
-							found = true;
-							break;
-						}
-					}
-				}
-				Assert(found);
+			var query2 = new PlannerUtility.assertionQuery(true, "owns", [table.getLocalEntity("student1"), table.getLocalEntity("dog1")]);
+			table.assert(query2);
+			var query3 = new PlannerUtility.assertionQuery(true, "favorite", [table.getLocalEntity("person1"), table.getLocalEntity("dog1")]);
+			table.assert(query3);
+			var query4 = new PlannerUtility.assertionQuery(false, "favorite", [table.getLocalEntity("person1"), table.getLocalEntity("dog1")]);
+			table.assert(query4);
+
+			it("The relationship hungry(dog1) should have been added.", function() {
+				var query = new PlannerUtility.assertionQuery(true, "hungry", [table.getLocalEntity("dog1")]);
+				Assert(PlannerUtility.checkAssertion(kb, table, query));
 			});
+			it("The relationship owns(student1 dog1) should have been added.", function() {
+				var query = new PlannerUtility.assertionQuery(true, "owns", [table.getLocalEntity("student1"), table.getLocalEntity("dog1")]);
+				Assert(PlannerUtility.checkAssertion(kb, table, query));
+			});
+			it("The relationship bestfriend(person1 dog1) should have been removed.", function() {
+				var query = new PlannerUtility.assertionQuery(true, "favorite", [table.getLocalEntity("person1"), table.getLocalEntity("dog1")]);
+				Assert(!PlannerUtility.checkAssertion(kb, table, query));
+			});
+			/*
 			it("The relationship owns(student1 dog3) should have been added", function() {
 				var found = false;
 				for (var i = 0; i < assertionList.length; i++) {
@@ -210,9 +210,9 @@ describe("planner-utility", function() {
 				}
 				Assert(!found);
 			});
-
+*/
 		});
-
+/*
 		describe("#addSpace()", function() {
 			it("Space entity property should be correctly added.", function() {
 				table = new PlannerUtility.memory();
