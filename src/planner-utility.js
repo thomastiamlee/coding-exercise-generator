@@ -3,6 +3,10 @@ const Clone = require("clone");
 
 function wildcardToken() {}
 
+function placeholderToken(index) {
+	this.index = index;
+}
+
 /* Constructor for a space entity. name is the unique identifier for this space entity. parents is an
 array containing the list of strings representing the names of the parents of this entity. type is either
 "local" or "global", representing if this entity exists in the global (knowledge base) or local space (memory).
@@ -297,6 +301,63 @@ function getAllPossibleParameterMatches(kb, table, action) {
 	return res;
 }
 
+function getAllPossibleActionVariableReplacements(kb, table, action) {
+	var candidates = getAllPossibleParameterMatches(kb, table, action);
+	var res = [];
+	var combinations = 1;
+	var preconditions = action.preconditions;
+	for (var i = 0; i < candidates.length; i++) {
+		combinations = combinations * candidates[i].length;
+	}
+	// Loop through all combinations
+	for (var i = 0; i < combinations; i++) {
+		var testMatch = [];
+		var ccl = 1;
+		// Build the parameter list
+		for (var j = 0; j < candidates.length; j++) {
+			var len = candidates[j].length;
+			testMatch.push(candidates[j][Math.floor(i / ccl) % len]);
+			ccl *= len;
+		}
+
+		// Loop through all preconditions
+		var valid = true;
+		for (var j = 0; j < preconditions.length; j++) {
+			var params = preconditions[j].parameters;
+			var newParams = [];
+			for (var k = 0; k < params.length; k++) {
+				//var name = replaceParameterName(testMatch, params[k]);
+				if (params[k] instanceof placeholderToken) {
+					newParams.push(testMatch[params[k].index]);
+				}
+				else {
+					newParams.push(params[k]);
+				}
+			}
+			var testAssertion = new assertionQuery(preconditions[j].truth, preconditions[j].predicate, newParams);
+
+
+			if (checkAssertion(kb, table, testAssertion) == false) {
+				valid = false;
+				break;
+			}
+		}
+		// Check for duplicates
+		var seen = [];
+		for (var j = 0; j < testMatch.length; j++) {
+			if (seen.indexOf(testMatch[j]) != -1) {
+				valid = false;
+				break;
+			}
+			seen.push(testMatch[j]);
+		}
+		if (valid) {
+			res.push(testMatch);
+		}
+	}
+	return res;
+}
+
 /* Executes a given action with the given parameters. Updates the assertions in the knowledge base as a result of performing the action. */
 function executeAction(kb, table, action, parameters) {
 	var effectList = action.effects;
@@ -339,68 +400,7 @@ function getAvailableActions(kb, table) {
 	return availableActions;
 }
 
-/* Gets all the possible replacements of variables for an action, based on its parameter requirements and preconditions. */
-function getAllPossibleActionVariableReplacements(kb, table, action) {
-	var candidates = getAllPossibleParameterMatches(kb, table, action);
-	var res = [];
-	var combinations = 1;
-	var preconditions = action.preconditions;
-	for (var i = 0; i < candidates.length; i++) {
-		combinations = combinations * candidates[i].length;
-	}
-	// Loop through all combinations
-	for (var i = 0; i < combinations; i++) {
-		var testMatch = [];
-		var ccl = 1;
-		// Build the parameter list
-		for (var j = 0; j < candidates.length; j++) {
-			var len = candidates[j].length;
-			testMatch.push(candidates[j][Math.floor(i / ccl) % len]);
-			ccl *= len;
-		}
-		// Loop through all preconditions
-		var valid = true;
-		for (var j = 0; j < preconditions.length; j++) {
-			var params = preconditions[j].parameters;
-			var newParams = [];
-			for (var k = 0; k < params.length; k++) {
-				var name = replaceParameterName(testMatch, params[k]);
-				newParams.push(name);
-				/*
-				if (params[k].charAt(0) >= '0' && params[k].charAt(0) <= '9') {
-					// replace
-					var index = parseInt(params[k]);
-					newParams.push(testMatch[index]);
-				}
-				else {
-					newParams.push(params[k]);
-				}*/
-			}
-			var testAssertion = {
-				truth: preconditions[j].truth,
-				predicate: preconditions[j].predicate,
-				parameters: newParams
-			}
-			if (assertionIsTrue(kb, table, testAssertion) == false) {
-				valid = false;
-				break;
-			}
-		}
-		// Check for duplicates
-		var seen = [];
-		for (var j = 0; j < testMatch.length; j++) {
-			if (seen.indexOf(testMatch[j]) != -1) {
-				valid = false;
-				break;
-			}
-			seen.push(testMatch[j]);
-		}
-		if (valid) {
-			res.push(testMatch);
-		}
-	}
-	return res;
-}
+
 
 function sortTypeList(list) {
 	list.sort(function(a, b) {
@@ -446,4 +446,4 @@ function replaceParameterName(parameters, symbol) {
 }
 
 
-module.exports = {wildcardToken, memory, entity, assertion, assertionQuery, knowledgeBase, checkAssertion, addType, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, getAvailableActions, executeAction};;
+module.exports = {wildcardToken, placeholderToken, memory, entity, assertion, assertionQuery, knowledgeBase, checkAssertion, addType, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, getAvailableActions, executeAction};;

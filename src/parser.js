@@ -82,6 +82,43 @@ function parseKnowledgeBase(path) {
 			else if (globalStaticEntities[parameters[j]]) {
 				parameters[j] = globalStaticEntities[parameters[j]];
 			}
+			else {
+				console.error("Warning: invalid assertion parameter");
+			}
+		}
+
+		for (var j = 0; j < preconditions.length; j++) {
+			var currentAssertionParameters = preconditions[j].parameters;
+			for (var k = 0; k < currentAssertionParameters.length; k++) {
+				var current = currentAssertionParameters[k];
+				if (current.charAt(0) >= '0' && current.charAt(0) <= '9') {
+					var index = parseInt(current);
+					currentAssertionParameters[k] = new PlannerUtility.placeholderToken(index);
+				}
+				else if (globalEntities[currentAssertionParameters[k]]) {
+					currentAssertionParameters[k] = globalEntities[currentAssertionParameters[k]];
+				}
+				else {
+					console.error("Warning: invalid precondition assertion parameter");
+				}
+			}
+		}
+
+		for (var j = 0; j < effects.length; j++) {
+			var currentAssertionParameters = effects[j].parameters;
+			for (var k = 0; k < currentAssertionParameters.length; k++) {
+				var current = currentAssertionParameters[k];
+				if (current.charAt(0) >= '0' && current.charAt(0) <= '9') {
+					var index = parseInt(current);
+					currentAssertionParameters[k] = new PlannerUtility.placeholderToken(index);
+				}
+				else if (globalEntities[currentAssertionParameters[k]]) {
+					currentAssertionParameters[k] = globalEntities[currentAssertionParameters[k]];
+				}
+				else {
+					console.error("Warning: invalid precondition assertion parameter");
+				}
+			}
 		}
 
 		var newObj = {name: name, parameters: parameters, preconditions: preconditions, creates: creates, effects: effects, blockData: blockData};

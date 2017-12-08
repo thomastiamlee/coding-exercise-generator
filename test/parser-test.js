@@ -65,6 +65,8 @@ describe("parser", function() {
 		});
 		it("The mention action should have been read.", function() {
 			var mention = result.getAction("mention");
+			console.log("MENTION");
+			console.log(mention);
 			Assert(mention.name == "mention");
 			Assert(mention.parameters.length == 2);
 			Assert(mention.parameters[0] instanceof PlannerUtility.wildcardToken);
@@ -73,19 +75,19 @@ describe("parser", function() {
 			Assert(mention.preconditions[0].truth == true);
 			Assert(mention.preconditions[0].predicate == "has");
 			Assert(mention.preconditions[0].parameters.length == 2);
-			Assert(mention.preconditions[0].parameters[0] == "0");
-			Assert(mention.preconditions[0].parameters[1] == "1");
+			Assert(mention.preconditions[0].parameters[0].index == 0);
+			Assert(mention.preconditions[0].parameters[1].index == 1);
 			Assert(mention.preconditions[1].truth == false);
 			Assert(mention.preconditions[1].predicate == "visible");
 			Assert(mention.preconditions[1].parameters.length == 2);
-			Assert(mention.preconditions[1].parameters[0] == "0");
-			Assert(mention.preconditions[1].parameters[1] == "1");
+			Assert(mention.preconditions[1].parameters[0].index == 0);
+			Assert(mention.preconditions[1].parameters[1].index == 1);
 			Assert(mention.effects.length == 1);
 			Assert(mention.effects[0].truth == true);
 			Assert(mention.effects[0].predicate == "visible");
 			Assert(mention.effects[0].parameters.length == 2);
-			Assert(mention.effects[0].parameters[0] == "0");
-			Assert(mention.effects[0].parameters[1] == "1");
+			Assert(mention.effects[0].parameters[0].index == 0);
+			Assert(mention.effects[0].parameters[1].index == 1);
 		});
 		it("The eat action should have been read.", function() {
 			var eat = result.getAction("eat");

@@ -299,6 +299,31 @@ describe("planner-utility", function() {
 			Assert(test[1].indexOf(table.getLocalEntity("pet1")) != -1);
 		});
 	});
+	describe("#getAllPossibleActionVariableReplacements()", function() {
+		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
+		var table = new PlannerUtility.memory();
+		table.createLocalEntity([kb.getGlobalEntity("student"), kb.getGlobalEntity("person"), kb.getGlobalEntity("dog"), kb.getGlobalEntity("cat"), kb.getGlobalEntity("pet")]);
+		var feedAction = kb.getAction("feed");
+		var mentionHeightAction = kb.getAction("mentionheight");
+
+		table.assert(new PlannerUtility.assertionQuery(true, "hungry", [table.getLocalEntity("dog1")]));
+		table.assert(new PlannerUtility.assertionQuery(true, "owns", [table.getLocalEntity("student1"), table.getLocalEntity("dog1")]));
+		table.assert(new PlannerUtility.assertionQuery(true, "owns", [table.getLocalEntity("student1"), table.getLocalEntity("cat1")]));
+		var test1 = PlannerUtility.getAllPossibleActionVariableReplacements(kb, table, feedAction);
+		var test2 = PlannerUtility.getAllPossibleActionVariableReplacements(kb, table, mentionHeightAction);
+		it("test1 should have one possibility: feed(student1 dog1).", function() {
+			Assert(test1.length == 1 && test1[0][0] == table.getLocalEntity("student1") && test1[0][1] == table.getLocalEntity("dog1"));
+		});
+		it("test2 should have 3 possibilities: mentionheight(student1), mentionheight(person1), and mentionheight(cat1).", function() {
+			var x = false, y = false, z = false;
+			for (var i = 0; i < test2.length; i++) {
+				if (test2[i][0] == table.getLocalEntity("student1")) x = true;
+				if (test2[i][0] == table.getLocalEntity("person1")) y = true;
+				if (test2[i][0] == table.getLocalEntity("cat1")) z = true;
+			}
+			Assert(test2.length == 3 && x && y && z);
+		});
+	});
 	/*
 	describe("#fetchTypeIndex()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbtest.txt");
@@ -338,32 +363,7 @@ describe("planner-utility", function() {
 
 
 
-	describe("#getAllPossibleActionVariableReplacements()", function() {
-		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
-		var space = ["student", "person", "dog", "cat", "pet"];
-		var table = new PlannerUtility.memory();
-		table.addSpaceFromType(space);
-		var actionList = kb.action_list;
-		var feedAction = actionList[PlannerUtility.fetchActionIndex(actionList, "feed")];
-		var mentionHeightAction = actionList[PlannerUtility.fetchActionIndex(actionList, "mentionheight")];
-		table.addAssertion({ truth: true, predicate: "hungry", parameters: ["dog3"] });
-		table.addAssertion({ truth: true, predicate: "owns", parameters: ["student1", "dog3"] });
-		table.addAssertion({ truth: true, predicate: "owns", parameters: ["student1", "cat4"] });
-		var test1 = PlannerUtility.getAllPossibleActionVariableReplacements(kb, table, feedAction);
-		var test2 = PlannerUtility.getAllPossibleActionVariableReplacements(kb, table, mentionHeightAction);
-		it("test1 should have one possibility: feed(student1 dog3).", function() {
-			Assert(test1.length == 1 && test1[0][0] == "student1" && test1[0][1] == "dog3");
-		});
-		it("test2 should have 2 possibilities: mentionheight(student1), mentionheight(person2), and mentionheight(cat4).", function() {
-			var x = false, y = false, z = false;
-			for (var i = 0; i < test2.length; i++) {
-				if (test2[i][0] == "student1") x = true;
-				if (test2[i][0] == "person2") y = true;
-				if (test2[i][0] == "cat4") z = true;
-			}
-			Assert(test2.length == 3 && x && y && z);
-		});
-	});
+
 	describe("#getAvailableActions()", function() {
 		var kb1 = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space1 = ["student", "student"];
