@@ -326,13 +326,7 @@ function getAllPossibleActionVariableReplacements(kb, table, action) {
 			var params = preconditions[j].parameters;
 			var newParams = [];
 			for (var k = 0; k < params.length; k++) {
-				//var name = replaceParameterName(testMatch, params[k]);
-				if (params[k] instanceof placeholderToken) {
-					newParams.push(testMatch[params[k].index]);
-				}
-				else {
-					newParams.push(params[k]);
-				}
+				newParams.push(replaceSymbolicParameters(testMatch, params[k]));
 			}
 			var testAssertion = new assertionQuery(preconditions[j].truth, preconditions[j].predicate, newParams);
 
@@ -370,24 +364,22 @@ function getAvailableActions(kb, table) {
 	return availableActions;
 }
 
-/* Executes a given action with the given parameters. Updates the assertions in the knowledge base as a result of performing the action. */
-function executeAction(kb, table, action, parameters) {
+function executeAction(kb, table, actionInformation) {
+	var action = actionInformation.action;
+	var parameters = actionInformation.parameters;
 	var effectList = action.effects;
 	for (var i = 0; i < effectList.length; i++) {
 		var current = effectList[i];
 		var truth = current.truth;
 		var predicate = current.predicate;
-		var currentParameters = [].concat(current.parameters);
+		var currentParameters = current.parameters;
 		for (var j = 0; j < currentParameters.length; j++) {
-			currentParameters[j] = replaceParameterName(parameters, currentParameters[j]);
+			currentParameters[j] = replaceSymbolicParameters(parameters, currentParameters[j]);
 		}
-		var newAssertion = {
-			truth: truth,
-			predicate: predicate,
-			parameters: currentParameters
-		}
-		table.addAssertion(newAssertion);
+		var newAssertion = new assertionQuery(truth, predicate, currentParameters);
+		table.assert(newAssertion);
 	}
+	/*
 	var createList = action.creates;
 	for (var i = 0; i < createList.length; i++) {
 		var owner = createList[i].owner;
@@ -395,7 +387,7 @@ function executeAction(kb, table, action, parameters) {
 			var index = parseInt(owner);
 			table.addSpace(createList[i].parent, parameters[index]);
 		}
-	}
+	}*/
 }
 
 function sortTypeList(list) {
@@ -429,16 +421,13 @@ function sortKnowledgeBase(kb) {
 
 /* This function converts a symbol used in an assertion list to the actual
 variable name. */
-function replaceParameterName(parameters, symbol) {
-	if (symbol.owner) {
-		var index = parseInt(symbol.owner);
-		return parameters[index] + "." + symbol.parent;
+function replaceSymbolicParameters(parameters, symbol) {
+	if (symbol instanceof placeholderToken) {
+		return parameters[symbol.index];
 	}
-	else if (symbol.charAt(0) >= '0' && symbol.charAt(0) <= '9') {
-		var index = parseInt(symbol);
-		return parameters[index];
+	else {
+		return symbol;
 	}
-	return symbol;
 }
 
 

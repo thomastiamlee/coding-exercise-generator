@@ -361,22 +361,17 @@ describe("planner-utility", function() {
 			Assert(x1 && x2 && x3);
 		});
 	});
-
-/*
-
-
-
-
-
 	describe("#executeAction()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
-		var space = ["student", "cat"];
 		var table = new PlannerUtility.memory();
-		table.addSpaceFromType(space);
-		var mentionHeightAction = kb.action_list[PlannerUtility.fetchActionIndex(kb.action_list, "mentionheight")];
-		var feedAction = kb.action_list[PlannerUtility.fetchActionIndex(kb.action_list, "feed")];
-		it("height should be visible on student1 only after executing the mentionheight, and the student1.height entity should be added after.", function() {
-			Assert(PlannerUtility.assertionIsTrue(kb, table, {	truth: false, predicate: "visible", parameters: ["student1", "height*"]	}));
+		table.createLocalEntity([kb.getGlobalEntity("student"), kb.getGlobalEntity("cat")]);
+		table.assert(new PlannerUtility.assertionQuery(true, "hungry", [table.getLocalEntity("cat1")]));
+		table.assert(new PlannerUtility.assertionQuery(true, "owns", [table.getLocalEntity("student1"), table.getLocalEntity("cat1")]));
+		var mentionHeightAction = kb.getAction("mentionheight");
+		var feedAction = kb.getAction("feed");
+		/*
+		it("height should be visible on student1 only after executing the mentionheight.", function() {
+			Assert(PlannerUtility.checkAssertion(kb, table, new PlannerUtility.assertionQuery(false, "visible", [table.getLocalEntity("student1"), table.getLocalEntity("height*"]	}));
 			PlannerUtility.executeAction(kb, table, mentionHeightAction, ["student1"]);
 			Assert(PlannerUtility.assertionIsTrue(kb, table, { truth: true, predicate: "visible", parameters: ["student1", "height*"] }));
 			var list = PlannerUtility.getAvailableActions(kb, table);
@@ -389,13 +384,11 @@ describe("planner-utility", function() {
 			Assert(counter == 1);
 			Assert(table.space.length == 3 && table.space[2][0] == "student1.height*");
 		});
+		*/
 		it("pet should not be hungry after applying the feed action", function() {
-			table.addAssertion({ truth: true, predicate: "hungry", parameters: ["cat2"]});
-			table.addAssertion({ truth: true, predicate: "owns", parameters: ["student1", "cat2"]});
-			Assert(PlannerUtility.assertionIsTrue(kb, table, { truth: true, predicate: "hungry", parameters: ["cat2"]}));
-			PlannerUtility.executeAction(kb, table, feedAction, ["student1", "cat2"]);
-			Assert(PlannerUtility.assertionIsTrue(kb, table, { truth: false, predicate: "hungry", parameters: ["cat2"]}));
+			Assert(PlannerUtility.checkAssertion(kb, table, new PlannerUtility.assertionQuery(true, "hungry", [table.getLocalEntity("cat1")])));
+			PlannerUtility.executeAction(kb, table, {action: feedAction, parameters: [table.getLocalEntity("student1"), table.getLocalEntity("cat1")]});
+			Assert(PlannerUtility.checkAssertion(kb, table, new PlannerUtility.assertionQuery(false, "hungry", [table.getLocalEntity("cat1")])));
 		});
 	});
-	*/
 });
