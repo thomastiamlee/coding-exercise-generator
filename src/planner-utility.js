@@ -50,38 +50,6 @@ function entity(name, parents, type, instantiatable = true) {
 			}
 		}
 	}
-	/*
-	function isExtendedFrom(kb, table, offspring, parent) {
-		// Search for all ancestors of the given offspring using BFS
-		var res = [];
-		var stack = [];
-		var temp = [].concat(kb.type_list).concat(table.space);
-		sortTypeList(temp);
-		var offspringIndex = fetchTypeIndex(temp, offspring);
-		if (offspringIndex == -1) {
-			return false;
-		}
-		stack.push(temp[offspringIndex]);
-		temp.splice(offspringIndex, 1);
-		while (stack.length != 0) {
-			var top = stack[0];
-			res.push(top);
-			stack.splice(0, 1);
-			var extendedFrom = top[1];
-			for (var i = 0; i < extendedFrom.length; i++) {
-				var index = fetchTypeIndex(temp, extendedFrom[i]);
-				stack.push(temp[index]);
-				temp.splice(index, 1);
-			}
-		}
-		sortTypeList(res);
-		var index = fetchTypeIndex(res, parent);
-		if (index != -1) {
-			return true;
-		}
-		return false;
-	}
-*/
 	this.isExtendedFrom = function(parent) {
 		var stack = [];
 		var visited = [];
@@ -126,6 +94,19 @@ function knowledgeBase() {
 	this.getGlobalEntity = function(name) {
 		return this.globalEntities[name];
 	}
+
+	this.getGlobalAssertions = function(name) {
+		if (name) {
+			return this.globalAssertions[name];
+		}
+		else {
+			var result = [];
+			for (var prop in this.globalAssertions) {
+				result = result.concat(this.globalAssertions[prop]);
+			}
+			return result;
+		}
+	}
 }
 
 /* Constructor for the memory table, which serves as the main mechanism for remembering
@@ -153,18 +134,35 @@ function memory() {
 					name = globalEntity.name + ctr;
 				}
 				var newEntity = new entity(name, [globalEntity], "local");
-				this.localEntities.push(newEntity);
+				this.localEntities[name] = newEntity;
 			}
 		}
 	}
 
 	this.getLocalEntity = function(name) {
-		for (var i = 0; i < this.localEntities.length; i++) {
-			if (this.localEntities[i].name == name) {
-				return this.localEntities[i];
-			}
+		if (name) {
+			return this.localEntities[name];
 		}
-		return null;
+		else {
+			var res = [];
+			for (var prop in this.localEntities) {
+				res.push(this.localEntities[prop]);
+			}
+			return res;
+		}
+	}
+
+	this.getAssertions = function(name) {
+		if (name) {
+			return this.assertions[name];
+		}
+		else {
+			var res = [];
+			for (var prop in this.assertions) {
+				res = res.concat(this.assertions[prop]);
+			}
+			return res;
+		}
 	}
 
 	this.assert = function(assertionQuery) {
@@ -257,6 +255,37 @@ function memory() {
 		return space == oSpace && assertions == oAssertions;
 	}
 	*/
+}
+
+function checkAssertion(kb, table, assertionQuery) {
+	var truth = assertionQuery.truth;
+	var predicate = assertionQuery.predicate;
+	var parameters = assertionQuery.parameters;
+
+	//var assertionList = kb.getGlobalAssertions(predicate).concat(table.);
+	var queryPredicate = assertion.predicate;
+	var queryParameters = assertion.parameters;
+	for (var i = 0; i < assertionList.length; i++) {
+		var currentAssertion = assertionList[i];
+		var assertionPredicate = currentAssertion.predicate;
+		var assertionParameters = currentAssertion.parameters;
+
+		if (assertionPredicate == queryPredicate && assertionParameters.length == queryParameters.length) {
+			// Check if each parameter matches
+			var assumption = true;
+			for (var j = 0; j < queryParameters.length; j++) {
+				var currentQueryParameter = queryParameters[j];
+				var currentAssertionParameter = assertionParameters[j];
+				if (isExtendedFrom(kb, table, currentQueryParameter, currentAssertionParameter) == false) {
+					assumption = false;
+				}
+			}
+			if (assumption) {
+				if (assertion.truth) return true; return false;
+			}
+		}
+	}
+	if (assertion.truth) return false; return true;
 }
 
 
@@ -365,37 +394,7 @@ function getAllPossibleActionVariableReplacements(kb, table, action) {
 	return res;
 }
 
-/* Checks if an assertion is true, given the assertions in the knowledge
-base.  The format of the assertion parameter is as follows:
-{ truth: <truth value>, predicate: <predicate>, parameters: <array of
-strings> }
-For the parameters, represent instances with their respective identifiers. */
-function assertionIsTrue(kb, table, assertion) {
-	var assertionList = kb.relationship_list.concat(table.assertions);
-	var queryPredicate = assertion.predicate;
-	var queryParameters = assertion.parameters;
-	for (var i = 0; i < assertionList.length; i++) {
-		var currentAssertion = assertionList[i];
-		var assertionPredicate = currentAssertion.predicate;
-		var assertionParameters = currentAssertion.parameters;
 
-		if (assertionPredicate == queryPredicate && assertionParameters.length == queryParameters.length) {
-			// Check if each parameter matches
-			var assumption = true;
-			for (var j = 0; j < queryParameters.length; j++) {
-				var currentQueryParameter = queryParameters[j];
-				var currentAssertionParameter = assertionParameters[j];
-				if (isExtendedFrom(kb, table, currentQueryParameter, currentAssertionParameter) == false) {
-					assumption = false;
-				}
-			}
-			if (assumption) {
-				if (assertion.truth) return true; return false;
-			}
-		}
-	}
-	if (assertion.truth) return false; return true;
-}
 
 /* Gets all the possible combination of space elemets that can be assigned for an action, based on its parameter requirements and
 preconditions. */
@@ -547,4 +546,4 @@ function replaceParameterName(parameters, symbol) {
 }
 
 
-module.exports = {memory, entity, assertion, assertionQuery, knowledgeBase, addType, addAssertion, sortKnowledgeBase, fetchTypeIndex, fetchActionIndex, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, assertionIsTrue, getAvailableActions, executeAction};;
+module.exports = {memory, entity, assertion, assertionQuery, knowledgeBase, addType, addAssertion, sortKnowledgeBase, fetchTypeIndex, fetchActionIndex, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, getAvailableActions, executeAction};;

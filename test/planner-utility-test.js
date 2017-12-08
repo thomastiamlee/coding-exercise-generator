@@ -114,20 +114,20 @@ describe("planner-utility", function() {
 			var parent2 = new PlannerUtility.entity("height", [null], "global");
 			var parent3 = new PlannerUtility.entity("weight", [null], "global");
 			var entity1 = new PlannerUtility.entity("person1", [parent1], "local");
-			var entity2 = new PlannerUtility.entity("height2", [parent2], "local");
-			var entity3 = new PlannerUtility.entity("weight3", [parent3], "local");
+			var entity2 = new PlannerUtility.entity("height1", [parent2], "local");
+			var entity3 = new PlannerUtility.entity("weight1", [parent3], "local");
 			var memory = new PlannerUtility.memory();
-			memory.localEntities.push(entity1);
-			memory.localEntities.push(entity2);
-			memory.localEntities.push(entity3);
+			memory.localEntities["person1"] = entity1;
+			memory.localEntities["height1"] = entity2;
+			memory.localEntities["weight1"] = entity3;
 			it("person1 should be found.", function() {
 				Assert(memory.getLocalEntity("person1") instanceof PlannerUtility.entity);
 			});
-			it("height2 should be found.", function() {
-				Assert(memory.getLocalEntity("height2") instanceof PlannerUtility.entity);
+			it("height1 should be found.", function() {
+				Assert(memory.getLocalEntity("height1") instanceof PlannerUtility.entity);
 			});
-			it("person should not be found", function() {
-				Assert(memory.getLocalEntity("person") == null);
+			it("weight should not be found", function() {
+				Assert(memory.getLocalEntity("weight") == null);
 			})
 		});
 		describe("#createNewLocalEntity()", function() {
@@ -212,7 +212,7 @@ describe("planner-utility", function() {
 			});
 
 		});
-		
+
 		describe("#addSpace()", function() {
 			it("Space entity property should be correctly added.", function() {
 				table = new PlannerUtility.memory();
