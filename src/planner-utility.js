@@ -10,7 +10,7 @@ function entity(name, parents, type, instantiatable = true) {
 	this.name = name;
 	this.parents = parents;
 	this.type = type;
-	
+
 	if (this.type == "global") {
 		this.instantiatable = instantiatable;
 	}
@@ -49,13 +49,19 @@ function entity(name, parents, type, instantiatable = true) {
 				}
 			}
 		}
-		
+
 	}
 }
 
 /* Constructor for an assertion. predicate is a string representing the predicate name. parameters is an
 array of entity objects that represent the parameters to this assertion. */
 function assertion(predicate, parameters) {
+	this.predicate = predicate;
+	this.parameters = parameters;
+}
+
+function assertionQuery(truth, predicate, parameters) {
+	this.truth = truth;
 	this.predicate = predicate;
 	this.parameters = parameters;
 }
@@ -76,7 +82,7 @@ function memory() {
 	this.space = [];
 	this.assertions = [];
 	this.localEntities = [];
-	
+
 	/* Creates a new local entity from a global entity and adds it to memory. The name is automatically
 	assigned to ensure that there are no duplicates. */
 	this.createNewLocalEntity = function(globalEntity) {
@@ -97,7 +103,7 @@ function memory() {
 			var newEntity = new entity(name, [globalEntity], "local");
 		}
 	}
-	
+
 	this.getLocalEntity = function(name) {
 		for (var i = 0; i < this.localEntities.length; i++) {
 			if (this.localEntities[i].name == name) {
@@ -105,7 +111,7 @@ function memory() {
 			}
 		}
 	}
-	
+
 	/* Adds a new space entity in the memory of the given types. space can be a single string
 	representing the type of the new space entity or it can be an array of strings representing multiple
 	types. In this case, the space is automatically assigned a name based on its type. */
@@ -119,7 +125,7 @@ function memory() {
 			this.counter = this.counter + 1;
 		}
 	}
-	
+
 	/* Adds a new space entity in the memory with the given owners and types. space and owners can either
 	be a single element to add or an array of elements. space contains the types of the entities to be added
 	and owners contains the owners associated with thos entities. */
@@ -132,7 +138,7 @@ function memory() {
 			var id = owners[i] + "." + space[i]; this.space.push([id, [space[i]]]);
 		}
 	}
-	
+
 	this.addAssertion = function(assertion) {
 		var truth = assertion.truth;
 		var assertionList = this.assertions;
@@ -162,11 +168,11 @@ function memory() {
 			assertionList.splice(index, 1);
 		}
 	}
-	
+
 	this.cloneMemory = function() {
 		return Clone(this);
 	}
-	
+
 	this.isEquivalent = function(o) {
 		function assertionSort(a, b) {
 			if (a.predicate != b.predicate) {
@@ -181,26 +187,26 @@ function memory() {
 				return aStr < bStr ? -1 : 1;
 			}
 		}
-		
+
 		function spaceSort(a, b) {
 			return a[0] < b[0] ? -1 : 1;
 		}
-		
+
 		var space = Clone(this.space);
 		var oSpace = Clone(o.space);
 		space.sort(spaceSort);
 		oSpace.sort(spaceSort);
-		
+
 		var assertions = Clone(this.assertions);
 		var oAssertions = Clone(o.assertions);
 		assertions.sort(assertionSort);
 		oAssertions.sort(assertionSort);
-		
+
 		space = JSON.stringify(space);
 		oSpace = JSON.stringify(oSpace);
 		assertions = JSON.stringify(assertions);
 		oAssertions = JSON.stringify(oAssertions);
-	
+
 		return space == oSpace && assertions == oAssertions;
 	}
 }
@@ -324,7 +330,7 @@ function assertionIsTrue(kb, table, assertion) {
 		var currentAssertion = assertionList[i];
 		var assertionPredicate = currentAssertion.predicate;
 		var assertionParameters = currentAssertion.parameters;
-		
+
 		if (assertionPredicate == queryPredicate && assertionParameters.length == queryParameters.length) {
 			// Check if each parameter matches
 			var assumption = true;
@@ -415,7 +421,7 @@ function fetchTypeIndex(typeList, name) {
 	// Binary search
 	var low = 0;
 	var hi = typeList.length - 1;
-	
+
 	while (low <= hi) {
 		var mid = Math.floor((low + hi) / 2);
 		if (typeList[mid][0] == name) {
@@ -439,7 +445,7 @@ function fetchActionIndex(actionList, name) {
 	// Binary search
 	var low = 0;
 	var hi = actionList.length - 1;
-	
+
 	while (low <= hi) {
 		var mid = Math.floor((low + hi) / 2);
 		if (actionList[mid].name == name) {
