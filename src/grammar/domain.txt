@@ -5,14 +5,20 @@
 }
 
 start
-	= _ "#global;" _ a:type_list _ "#static;" _ b:type_list _ "#assertions;" _ c:assertion_list _
-	"#actions;" _ d:action_list _
+	= _ "#types;" _ x:type_list "#relationships;" _ y:relationship_list _
+	"#actions;" _ z:action_list _
 	{
+		var primitives = [];
+		for (var i = 0; i < x.length; i++) {
+			if (x[i][0].indexOf("*") != -1) {
+				primitives.push(x[i]);
+			}
+		}
 		return {
-			global_list: a,
-			static_list: b,
-			assertion_list: c,
-			action_list: d
+			type_list: x,
+			relationship_list: y,
+			action_list: z,
+			primitive_list: primitives
 		}
 	}
 	
@@ -57,8 +63,8 @@ type_token
 		}
 	}
 	
-assertion_list
-	= x:assertion_def y:assertion_list _
+relationship_list
+	= x:relationship_def y:relationship_list _
 	{
 		return [x].concat(y);
 	}
@@ -67,7 +73,7 @@ assertion_list
 		return [];
 	}
 		
-assertion_def
+relationship_def
 	= x:predicate_token _ "(" _ y:relationship_parameter_list? _ ")" _ ";" _
 	{
 		if (y == null) y = [];

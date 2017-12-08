@@ -8,7 +8,7 @@ function parseKnowledgeBase(path) {
 	var kb = fs.readFileSync(path, "utf-8");
 	var parser = Peg.generate(grammar, {trace: false});
 	var result = parser.parse(kb);
-	var kb = new PlannerUtility.knowledgeBase();
+	/*var kb = new PlannerUtility.knowledgeBase();
 	var global_list = result.global_list;
 	var static_list = result.static_list;
 	var assertion_list = result.assertion_list;
@@ -26,7 +26,7 @@ function parseKnowledgeBase(path) {
 					found = true;
 					break;
 				}
-			}	
+			}
 		}
 		var newObj = new PlannerUtility.entity(current[0], parents, "global", true);
 		globalEntities.push(newObj);
@@ -44,7 +44,7 @@ function parseKnowledgeBase(path) {
 					found = true;
 					break;
 				}
-			}	
+			}
 		}
 		var newObj = new PlannerUtility.entity(current[0], parents, "global", false);
 		globalStaticEntities.push(newObj);
@@ -54,12 +54,13 @@ function parseKnowledgeBase(path) {
 		var current = assertion_list[i];
 		var predicate = current.predicate;
 	}
-	
+
 	kb.globalEntities = globalEntities;
 	kb.globalStaticEntities = globalStaticEntities;
-		
+
 	//PlannerUtility.sortKnowledgeBase(result);
-	return kb;
+	return kb;*/
+	return result;
 }
 
 module.exports = {parseKnowledgeBase};
