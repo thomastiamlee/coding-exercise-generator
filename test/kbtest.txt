@@ -1,4 +1,4 @@
-#types;
+#global;
 person;
 student->person;
 location;
@@ -6,18 +6,22 @@ restaurant->location;
 object;
 food->object;
 ramen->food;
+nonnegativevalue;
+monetaryvalue->nonnegativevalue;
+distancevalue->nonnegativevalue;
+massvalue->nonnegativevalue;
+height->distancevalue;
+weight->massvalue;
+stringvalue;
+personname->stringvalue;
 
-nonnegativevalue*;
-monetaryvalue*->nonnegativevalue*;
-distancevalue*->nonnegativevalue*;
-massvalue*->nonnegativevalue*;
-height*->distancevalue*;
-weight*->massvalue*;
-stringvalue*;
-personname*->stringvalue*;
+#static;
+distanceunit;
+meters->distanceunit;
+feet->distanceunit;
 
-#relationships;
-has(person name);
+#assertions;
+has(person personname);
 has(person height);
 has(person weight);
 foundin(ramen restaurant);

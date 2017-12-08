@@ -72,7 +72,8 @@ function parseKnowledgeBase(path) {
 		var effects = current.effects;
 		var blockData = current.blockData;
 
-		actions.push(current);
+		var newObj = {name: name, parameters: parameters, preconditions: preconditions, creates: creates, effects: effects, blockData: blockData};
+		actions.push(newObj);
 	}
 
 	kb.globalEntities = globalEntities;
