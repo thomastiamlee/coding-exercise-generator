@@ -410,93 +410,10 @@ function sortTypeList(list) {
 	});
 }
 
-/* Fetches index of a type from the knowledge base, given its
-name. This function assumes that the type list is sorted
-lexicographically. This function returns -1 if the type is
-not found. */
-function fetchTypeIndex(typeList, name) {
-	// Binary search
-	var low = 0;
-	var hi = typeList.length - 1;
-
-	while (low <= hi) {
-		var mid = Math.floor((low + hi) / 2);
-		if (typeList[mid][0] == name) {
-			return mid;
-		}
-		else if (typeList[mid][0] < name) {
-			low = mid + 1;
-		}
-		else {
-			hi = mid - 1;
-		}
-	}
-	return -1;
-}
-
-/* Fetches index of an action from the knowledge base, given its
-name. This function assumes that the action list is sorted
-lexicographically. This function returns -1 if the type is
-not found. */
-function fetchActionIndex(actionList, name) {
-	// Binary search
-	var low = 0;
-	var hi = actionList.length - 1;
-
-	while (low <= hi) {
-		var mid = Math.floor((low + hi) / 2);
-		if (actionList[mid].name == name) {
-			return mid;
-		}
-		else if (actionList[mid].name < name) {
-			low = mid + 1;
-		}
-		else {
-			hi = mid - 1;
-		}
-	}
-	return -1;
-}
-
 function addType(kb, type) {
 	kb.type_list.push(type);
 	sortKnowledgeBase(kb);
 }
-
-/* This function adds a new assertion in the knowledge base. The format
-of the assertion is as follows:
-{ truth: <truth value>, predicate: <predicate>, parameters: <array of
-strings> }
-For the parameters, use the identifier for instances. */
-function addAssertion(kb, assertion) {
-	var truth = assertion.truth;
-	var relationshipList = kb.relationship_list;
-	// Try to find if the assertion already exists
-	var index = -1;
-	for (var i = 0; i < relationshipList.length; i++) {
-		var predicate = relationshipList[i].predicate;
-		if (predicate == assertion.predicate) {
-			var same = true;
-			for (var j = 0; j < assertion.parameters.length; j++) {
-				if (assertion.parameters[j] != relationshipList[i].parameters[j]) {
-					same = false;
-					break;
-				}
-			}
-			if (same) {
-				index = i;
-				break;
-			}
-		}
-	}
-	if (truth && index == -1) {
-		relationshipList.push(assertion);
-	}
-	else if (!truth && index != -1) {
-		relationshipList.splice(index, 1);
-	}
-}
-
 
 /* This function sorts the knowledge base's types and actions
 lexicographically. */
@@ -529,4 +446,4 @@ function replaceParameterName(parameters, symbol) {
 }
 
 
-module.exports = {wildcardToken, memory, entity, assertion, assertionQuery, knowledgeBase, checkAssertion, addType, addAssertion, sortKnowledgeBase, fetchTypeIndex, fetchActionIndex, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, getAvailableActions, executeAction};;
+module.exports = {wildcardToken, memory, entity, assertion, assertionQuery, knowledgeBase, checkAssertion, addType, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, getAvailableActions, executeAction};;
