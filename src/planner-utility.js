@@ -394,35 +394,6 @@ function executeAction(kb, table, actionInformation) {
 	}
 }
 
-function sortTypeList(list) {
-	list.sort(function(a, b) {
-		if (a[0] < b[0]) return -1;
-		else if (a[0] > b[0]) return 1;
-		return 0;
-	});
-}
-
-function addType(kb, type) {
-	kb.type_list.push(type);
-	sortKnowledgeBase(kb);
-}
-
-/* This function sorts the knowledge base's types and actions
-lexicographically. */
-function sortKnowledgeBase(kb) {
-	// Sort types and action lists
-	kb.type_list = kb.type_list.sort(function(a, b) {
-		if (a[0] < b[0]) return -1;
-		else if (a[0] > b[0]) return 1;
-		return 0;
-	});
-	kb.action_list = kb.action_list.sort(function(a, b) {
-		if (a.name < b.name) return -1;
-		else if (a.name > b.name) return 1;
-		return 0;
-	});
-}
-
 /* This function converts a symbol used in an assertion list to the actual
 variable name. */
 function replaceSymbolicParameters(parameters, createParameters, symbol) {
@@ -438,4 +409,4 @@ function replaceSymbolicParameters(parameters, createParameters, symbol) {
 }
 
 
-module.exports = {wildcardToken, placeholderToken, createPlaceholderToken, memory, entity, assertion, assertionQuery, knowledgeBase, checkAssertion, addType, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, getAvailableActions, executeAction};;
+module.exports = {wildcardToken, placeholderToken, createPlaceholderToken, memory, entity, assertion, assertionQuery, knowledgeBase, checkAssertion, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, getAvailableActions, executeAction};;
