@@ -6,23 +6,23 @@ describe("planner-utility", function() {
 	describe("Space entity function", function() {
 		describe("#attachLocalEntity()", function() {
 			it("height2 should be attached to person1", function() {
-				var parent1 = new PlannerUtility.entity("person", [null], "global");
-				var parent2 = new PlannerUtility.entity("height", [null], "global");
+				var parent1 = new PlannerUtility.entity("person", [], "global");
+				var parent2 = new PlannerUtility.entity("height", [], "global");
 				var entity1 = new PlannerUtility.entity("person1", [parent1], "local");
 				var entity2 = new PlannerUtility.entity("height2", [parent2], "local");
 				entity1.attachLocalEntity(entity2, "height");
 				Assert(entity1.attachments.length == 1 && entity1.attachments[0].obj.name == "height2");
 			});
 			it("height should not be attached to person1 because it is in the global space.", function() {
-				var parent1 = new PlannerUtility.entity("person", [null], "global");
+				var parent1 = new PlannerUtility.entity("person", [], "global");
 				var entity1 = new PlannerUtility.entity("person1", [parent1], "local");
 				var entity2 = new PlannerUtility.entity("height", [], "global");
 				entity1.attachLocalEntity(entity2, "height");
 				Assert(entity1.attachments.length == 0);
 			});
 			it("height2 should be replaced with height3", function() {
-				var parent1 = new PlannerUtility.entity("person", [null], "global");
-				var parent2 = new PlannerUtility.entity("height", [null], "global");
+				var parent1 = new PlannerUtility.entity("person", [], "global");
+				var parent2 = new PlannerUtility.entity("height", [], "global");
 				var entity1 = new PlannerUtility.entity("person1", [parent1], "local");
 				var entity2 = new PlannerUtility.entity("height2", [parent2], "local");
 				var entity3 = new PlannerUtility.entity("height3", [parent2], "local");
@@ -33,8 +33,8 @@ describe("planner-utility", function() {
 		});
 		describe("#getAttachedLocalEntity()", function() {
 			it("Finding the height of person1 should return the height2 entity", function() {
-				var parent1 = new PlannerUtility.entity("person", [null], "global");
-				var parent2 = new PlannerUtility.entity("height", [null], "global");
+				var parent1 = new PlannerUtility.entity("person", [], "global");
+				var parent2 = new PlannerUtility.entity("height", [], "global");
 				var entity1 = new PlannerUtility.entity("person1", [parent1], "local");
 				var entity2 = new PlannerUtility.entity("height2", [parent2], "local");
 				entity1.attachLocalEntity(entity2, "height");
@@ -73,6 +73,39 @@ describe("planner-utility", function() {
 				entity1.removeAttachedLocalEntity("height");
 				Assert(entity1.attachments.length == 1 && entity1.attachments[0].name == "weight");
 			});
+		});
+		describe("#isExtendedFrom()", function() {
+			var kb = Parser.parseKnowledgeBase("./test/kbextendtest.txt");
+			var table = new PlannerUtility.memory();
+			var parent1 = kb.getGlobalEntity("student");
+			var parent2 = kb.getGlobalEntity("dog");
+			table.createLocalEntity([parent1, parent2]);
+			var child1 = table.getLocalEntity("student1");
+			var child2 = table.getLocalEntity("dog1");
+			var test1 = kb.getGlobalEntity("student").isExtendedFrom(kb.getGlobalEntity("person"));
+			var test2 = kb.getGlobalEntity("student").isExtendedFrom(kb.getGlobalEntity("student"));
+			var test3 = kb.getGlobalEntity("person").isExtendedFrom(kb.getGlobalEntity("student"));
+			var test4 = kb.getGlobalEntity("spaghetti").isExtendedFrom(kb.getGlobalEntity("object"));
+			var test5 = kb.getGlobalEntity("dog").isExtendedFrom(kb.getGlobalEntity("animal"));
+			var test6 = kb.getGlobalEntity("dog").isExtendedFrom(kb.getGlobalEntity("cat"));
+			var test7 = kb.getGlobalEntity("bulldog").isExtendedFrom(kb.getGlobalEntity("cat"));
+			var test8 = kb.getGlobalEntity("distancevalue").isExtendedFrom(kb.getGlobalEntity("nonnegativevalue"));
+			var test9 = child1.isExtendedFrom(kb.getGlobalEntity("person"));
+			var test10 = child2.isExtendedFrom(kb.getGlobalEntity("person"));
+			var test11 = kb.getGlobalEntity("bulldog").isExtendedFrom(kb.getGlobalEntity("scary"));
+			var test12 = child2.isExtendedFrom(kb.getGlobalEntity("scary"));
+			it ("student is an offspring of the person.", function() { Assert(test1);	});
+			it ("student is an offspring of the student.", function() {	 Assert(test2); });
+			it ("person is not an offspring of the student.", function() { Assert(!test3); });
+			it ("spaghetti is an offspring of the object.", function() { Assert(test4); });
+			it ("dog is an offspring of the animal.", function() { Assert(test5); });
+			it ("dog is not an offspring of the cat.", function() { Assert(!test6); });
+			it ("bulldog is not an offspring of the cat.", function() { Assert(!test7); });
+			it ("distancevalue* is an offspring of the nonnegativevalue*.", function() { Assert(test8); });
+			it ("student1 is an offspring of person.", function() { Assert(test9); });
+			it ("dog1 is not an offspring of person.", function() { Assert(!test10); });
+			it ("bully is an offspring of scary.", function() { Assert(test11); });
+			it ("dog1 is not an offspring of scary.", function() { Assert(!test12); });
 		});
 	});
 	describe("Memory functions", function() {
@@ -280,6 +313,8 @@ describe("planner-utility", function() {
 			Assert(action2.name == "mention" && action2.parameters && action2.preconditions && action2.effects);
 		});
 	});
+	*/
+/*
 	describe("#isExtendedFrom()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbextendtest.txt");
 		var space = ["student", "dog"];
@@ -310,6 +345,7 @@ describe("planner-utility", function() {
 		it ("bully is an offspring of scary.", function() { Assert(test11); });
 		it ("dog2 is not an offspring of scary.", function() { Assert(!test12); });
 	});
+	/*
 	describe("#getAllPossibleParameterMatches()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "person", "dog", "cat", "pet"];

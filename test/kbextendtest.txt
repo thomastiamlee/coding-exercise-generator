@@ -1,6 +1,6 @@
-#types;
+#global;
 scary;
-nonnegativevalue*;
+nonnegativevalue;
 person;
 student->person;
 object;
@@ -10,9 +10,11 @@ spaghetti->pasta;
 animal;
 dog->animal;
 cat->animal;
-bulldog->dog, scary;
-distancevalue*->nonnegativevalue*;
+bulldog->dog,scary;
+distancevalue->nonnegativevalue;
 
-#relationships;
+#static;
+
+#assertions;
 
 #actions;

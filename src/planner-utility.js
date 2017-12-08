@@ -49,7 +49,56 @@ function entity(name, parents, type, instantiatable = true) {
 				}
 			}
 		}
-
+	}
+	/*
+	function isExtendedFrom(kb, table, offspring, parent) {
+		// Search for all ancestors of the given offspring using BFS
+		var res = [];
+		var stack = [];
+		var temp = [].concat(kb.type_list).concat(table.space);
+		sortTypeList(temp);
+		var offspringIndex = fetchTypeIndex(temp, offspring);
+		if (offspringIndex == -1) {
+			return false;
+		}
+		stack.push(temp[offspringIndex]);
+		temp.splice(offspringIndex, 1);
+		while (stack.length != 0) {
+			var top = stack[0];
+			res.push(top);
+			stack.splice(0, 1);
+			var extendedFrom = top[1];
+			for (var i = 0; i < extendedFrom.length; i++) {
+				var index = fetchTypeIndex(temp, extendedFrom[i]);
+				stack.push(temp[index]);
+				temp.splice(index, 1);
+			}
+		}
+		sortTypeList(res);
+		var index = fetchTypeIndex(res, parent);
+		if (index != -1) {
+			return true;
+		}
+		return false;
+	}
+*/
+	this.isExtendedFrom = function(parent) {
+		var stack = [];
+		var visited = [];
+		stack.push(this);
+		visited.push(this);
+		while (stack.length > 0) {
+			var current = stack[0];
+			stack.splice(0, 1);
+			var parents = current.parents;
+			for (var i = 0; i < parents.length; i++) {
+				if (visited.indexOf(parents[i]) == -1) {
+					visited.push(parents[i]);
+					stack.push(parents[i]);
+				}
+			}
+		}
+		return visited.indexOf(parent) != -1;
 	}
 }
 
@@ -73,6 +122,10 @@ function knowledgeBase() {
 	this.globalStaticEntities = [];
 	this.globalAssertions = [];
 	this.actions = [];
+
+	this.getGlobalEntity = function(name) {
+		return this.globalEntities[name];
+	}
 }
 
 /* Constructor for the memory table, which serves as the main mechanism for remembering
@@ -114,9 +167,8 @@ function memory() {
 		return null;
 	}
 
-	this.addAssertion = function(assertion) {
+	this.assert = function(assertionQuery) {
 		var truth = assertion.truth;
-		var assertionList = this.assertions;
 		// Try to find if the assertion already exists
 		var index = -1;
 		for (var i = 0; i < assertionList.length; i++) {
@@ -507,4 +559,4 @@ function replaceParameterName(parameters, symbol) {
 }
 
 
-module.exports = {memory, entity, assertion, knowledgeBase, addType, addAssertion, sortKnowledgeBase, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, assertionIsTrue, getAvailableActions, executeAction};;
+module.exports = {memory, entity, assertion, assertionQuery, knowledgeBase, addType, addAssertion, sortKnowledgeBase, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, assertionIsTrue, getAvailableActions, executeAction};;
