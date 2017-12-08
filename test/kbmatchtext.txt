@@ -1,16 +1,18 @@
-#types;
+#global;
 pet;
 dog->pet;
 cat->pet;
 person;
 student->person;
-nonnegativevalue*;
-distancevalue*->nonnegativevalue*;
-height*->distancevalue*;
+nonnegativevalue;
+distancevalue->nonnegativevalue*;
+height->distancevalue*;
 
-#relationships;
-has(person height*);
-has(cat height*);
+#static;
+
+#assertions;
+has(person height);
+has(cat height);
 canown(person pet);
 bestfriend(person dog);
 
@@ -30,5 +32,5 @@ effects: visible(0 height*);
 name: gettaller;
 parameters: person person;
 preconditions: has(0 height*) has(1 height*);
-creates: ; 
+creates: ;
 effects: ;

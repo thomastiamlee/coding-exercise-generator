@@ -159,6 +159,60 @@ describe("planner-utility", function() {
 			});
 		});
 		/*
+		describe("#assert()", function() {
+			var table = new PlannerUtility.memory();
+
+			var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
+			var table = new PlannerUtility.memory();
+			table.createLocalEntity([kb.getGlobalEntity("student"), kb.getGlobalEntity("person"), kb.getGlobalEntity("dog"), kb.getGlobalEntity("cat"), kb.getGlobalEntity("pet")]);
+			var query1 = new assetionQuery(true, "hungry", table.getLocalEntity("dog1"));
+			table.assert(query1);
+			//table.addAssertion({ truth: true, predicate: "owns", parameters: ["student1", "dog3"]});
+			//table.addAssertion({ truth: true, predicate: "bestfriend", parameters: ["person2", "dog"]});
+			//table.addAssertion({ truth: false, predicate: "bestfriend", parameters: ["person2", "dog"]});
+			var assertionList = table.assertions;
+			it("The relationship hungry(dog3) should have been added", function() {
+				var found = false;
+				for (var i = 0; i < assertionList.length; i++) {
+					var current = assertionList[i];
+					if (current.predicate == "hungry") {
+						if (current.parameters.length == 1 && current.parameters[0] == "dog3") {
+							found = true;
+							break;
+						}
+					}
+				}
+				Assert(found);
+			});
+			it("The relationship owns(student1 dog3) should have been added", function() {
+				var found = false;
+				for (var i = 0; i < assertionList.length; i++) {
+					var current = assertionList[i];
+					if (current.predicate == "owns") {
+						if (current.parameters.length == 2 && current.parameters[0] == "student1" && current.parameters[1] == "dog3") {
+							found = true;
+							break;
+						}
+					}
+				}
+				Assert(found);
+			});
+			it("The relationship bestfriend(person2 dog) should have been removed", function() {
+				var found = false;
+				for (var i = 0; i < assertionList.length; i++) {
+					var current = assertionList[i];
+					if (current.predicate == "bestfriend") {
+						if (current.parameters.length == 2 && current.parameters[0] == "person" && current.parameters[1] == "dog") {
+							found = true;
+							break;
+						}
+					}
+				}
+				Assert(!found);
+			});
+
+		});
+		
 		describe("#addSpace()", function() {
 			it("Space entity property should be correctly added.", function() {
 				table = new PlannerUtility.memory();

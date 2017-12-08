@@ -169,33 +169,53 @@ function memory() {
 
 	this.assert = function(assertionQuery) {
 		var truth = assertion.truth;
-		// Try to find if the assertion already exists
-		var index = -1;
-		for (var i = 0; i < assertionList.length; i++) {
-			var predicate = assertionList[i].predicate;
-			if (predicate == assertion.predicate) {
-				var same = true;
-				for (var j = 0; j < assertion.parameters.length; j++) {
-					if (assertion.parameters[j] != assertionList[i].parameters[j]) {
-						same = false;
+		var predicate = assertion.predicate;
+		var parameters = assertion.parameters;
+
+		if (this.assertions[predicate]) {
+			var list = this.assertions[predicate];
+			if (!truth) {
+				for (var i = 0; i < list.length; i++) {
+					var current = list[i].parameters;
+					var valid = true;
+					for (var j = 0; j < current.length; j++) {
+						if (current[j].isExtendedFrom(parameters[j]) == false) {
+							valid = false;
+							break;
+						}
+					}
+					if (valid) {
+						list.splice(i, 1);
+						i--;
+					}
+				}
+			}
+			if (truth) {
+				var found = false;
+				for (var i = 0; i < list.length; i++) {
+					var current = list[i].parameters;
+					var same = true;
+					for (var j = 0; j < current.length; j++) {
+						if (current[j] != parameters[j]) {
+							same = false;
+						}
+					}
+					if (same) {
+						found = true;
 						break;
 					}
 				}
-				if (same) {
-					index = i;
-					break;
+				if (!found) {
+					list.push(new assertion(predicate, parameters));
 				}
 			}
 		}
-		if (truth && index == -1) {
-			delete assertion.truth;
-			assertionList.push(assertion);
-		}
-		else if (!truth && index != -1) {
-			assertionList.splice(index, 1);
+		else if (truth) {
+			this.assertions[predicate] = [new assertion(predicate, parameters)];
 		}
 	}
 
+	/*
 	this.cloneMemory = function() {
 		return Clone(this);
 	}
@@ -236,6 +256,7 @@ function memory() {
 
 		return space == oSpace && assertions == oAssertions;
 	}
+	*/
 }
 
 
@@ -399,39 +420,6 @@ function getAllPossibleParameterMatches(kb, table, action) {
 	return res;
 }
 
-/* Returns if a the given offspring is extended from a given
-parent, based on the types defined in the knowledge base. */
-function isExtendedFrom(kb, table, offspring, parent) {
-	// Search for all ancestors of the given offspring using BFS
-	var res = [];
-	var stack = [];
-	var temp = [].concat(kb.type_list).concat(table.space);
-	sortTypeList(temp);
-	var offspringIndex = fetchTypeIndex(temp, offspring);
-	if (offspringIndex == -1) {
-		return false;
-	}
-	stack.push(temp[offspringIndex]);
-	temp.splice(offspringIndex, 1);
-	while (stack.length != 0) {
-		var top = stack[0];
-		res.push(top);
-		stack.splice(0, 1);
-		var extendedFrom = top[1];
-		for (var i = 0; i < extendedFrom.length; i++) {
-			var index = fetchTypeIndex(temp, extendedFrom[i]);
-			stack.push(temp[index]);
-			temp.splice(index, 1);
-		}
-	}
-	sortTypeList(res);
-	var index = fetchTypeIndex(res, parent);
-	if (index != -1) {
-		return true;
-	}
-	return false;
-}
-
 function sortTypeList(list) {
 	list.sort(function(a, b) {
 		if (a[0] < b[0]) return -1;
@@ -559,4 +547,4 @@ function replaceParameterName(parameters, symbol) {
 }
 
 
-module.exports = {memory, entity, assertion, assertionQuery, knowledgeBase, addType, addAssertion, sortKnowledgeBase, fetchTypeIndex, fetchActionIndex, isExtendedFrom, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, assertionIsTrue, getAvailableActions, executeAction};;
+module.exports = {memory, entity, assertion, assertionQuery, knowledgeBase, addType, addAssertion, sortKnowledgeBase, fetchTypeIndex, fetchActionIndex, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, assertionIsTrue, getAvailableActions, executeAction};;
