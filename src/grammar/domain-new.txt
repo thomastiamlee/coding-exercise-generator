@@ -15,7 +15,7 @@ start
 			action_list: d
 		}
 	}
-	
+
 type_list
 	= x:type_def y:type_list _
 	{
@@ -25,7 +25,7 @@ type_list
 	{
 		return [];
 	}
-	
+
 type_def
 	= x:type_token _ ";" _
 	{
@@ -35,7 +35,7 @@ type_def
 	{
 		return [x, y];
 	}
-	
+
 parent_list
 	= x:type_token _ "," _ y:type_token _
 	{
@@ -45,7 +45,7 @@ parent_list
 	{
 		return [x];
 	}
-	
+
 type_token
 	= x:([a-zA-Z]+)y:([*]?)
 	{
@@ -56,7 +56,7 @@ type_token
 			return x.join("") + "*";
 		}
 	}
-	
+
 assertion_list
 	= x:assertion_def y:assertion_list _
 	{
@@ -66,7 +66,7 @@ assertion_list
 	{
 		return [];
 	}
-		
+
 assertion_def
 	= x:predicate_token _ "(" _ y:relationship_parameter_list? _ ")" _ ";" _
 	{
@@ -77,25 +77,25 @@ assertion_def
 		}
 		return res;
 	}
-	
+
 predicate_token
 	= x:[a-zA-Z]+
 	{
 		return x.join("");
 	}
-	
+
 relationship_parameter_list
 	= x:type_token __ y:relationship_parameter_list _
 	{
 		return [x].concat(y);
 	}
-	/ x:type_token	
+	/ x:type_token
 	{
 		return [x];
 	}
-	
+
 action_list
-	= "name:" _ a:action_name_token _ ";" _ "parameters:" _ b:action_parameter_list? _ ";" _ "preconditions:" _ c:action_condition_list? _ ";" _  "creates:" _ d:create_list? _ ";" _ "effects:" _ e:action_condition_list? _ ";" _ f:("~" block_codes "~")? _ g:action_list 
+	= "name:" _ a:action_name_token _ ";" _ "parameters:" _ b:action_parameter_list? _ ";" _ "preconditions:" _ c:action_condition_list? _ ";" _  "creates:" _ d:create_list? _ ";" _ "effects:" _ e:action_condition_list? _ ";" _ f:("~" block_codes "~")? _ g:action_list
 	{
 		if (b == null) {
 			b = [];
@@ -112,7 +112,7 @@ action_list
 		if (f != null) {
 			f = f[1].trim();
 		}
-		
+
 		return [{
 			name: a,
 			parameters: b,
@@ -126,7 +126,7 @@ action_list
 	{
 		return [];
 	}
-	
+
 action_name_token
 	= x:[a-zA-Z ]+
 	{
@@ -150,7 +150,7 @@ action_parameter_list
 	{
 		return [x];
 	}
-	
+
 wildcard_token
 	= x:"*"
 	{
@@ -202,19 +202,11 @@ assertion_parameter_list
 	{
 		return [x].concat(y);
 	}
-	/ x:assertion_variable_property_token __ y:assertion_parameter_list
-	{
-		return [x].concat(y);
-	}
 	/ x:type_token
 	{
 		return [x];
 	}
 	/ x:assertion_variable_token
-	{
-		return [x];
-	}
-	/ x:assertion_variable_property_token
 	{
 		return [x];
 	}
@@ -224,23 +216,29 @@ assertion_variable_token
 	{
 		return x.join("");
 	}
-	
+
 create_list
-	= x:assertion_variable_property_token __ y:create_list
+	= x:create_token __ y:create_list
 	{
 		return [x].concat(y);
 	}
-	/ x:assertion_variable_property_token _
+	/ x:create_token _
 	{
 		return [x];
 	}
 
-assertion_variable_property_token
-	= x:assertion_variable_parent _ "<" _ y:type_token
+create_token
+	= x:assertion_variable_token _ "/" _ y:type_token
 	{
 		return {
 			owner: x,
 			parent: y
+		}
+	}
+	/ x:type_token
+	{
+		return {
+			parent: x
 		}
 	}
 
@@ -253,14 +251,14 @@ assertion_variable_parent
 	{
 		return x;
 	}
-	
+
 block_codes
 	= x:[^~]*
 	{
 		return x.join("");
 	}
-	
-	
+
+
 _
 	= [ \t\r\n]*
 

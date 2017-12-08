@@ -24,32 +24,27 @@ function entity(name, parents, type, instantiatable = true) {
 		this.attachments = [];
 		this.dataType = null;
 		this.value = null;
-		this.attachLocalEntity = function(other, name) {
+		this.attachLocalEntity = function(other) {
 			if (other.type == "local") {
 				var found = false;
 				for (var i = 0; i < this.attachments.length; i++) {
-					if (this.attachments[i].name == name) {
-						this.attachments[i].obj = other;
+					if (this.attachments[i] == other) {
+						this.attachments[i] = other;
 						found = true;
 						break;
 					}
 				}
 				if (!found) {
-					this.attachments.push({name: name, obj: other});
+					this.attachments.push(other);
 				}
 			}
 		}
-		this.getAttachedLocalEntity = function(name) {
-			for (var i = 0; i < this.attachments.length; i++) {
-				if (this.attachments[i].name == name) {
-					return this.attachments[i].obj;
-				}
-			}
-			return null;
+		this.getAttachedLocalEntities = function() {
+			return this.attachments;
 		}
-		this.removeAttachedLocalEntity = function(name) {
+		this.removeAttachedLocalEntity = function(other) {
 			for (var i = 0; i < this.attachments.length; i++) {
-				if (this.attachments[i].name == name) {
+				if (this.attachments[i] == other) {
 					this.attachments.splice(i, 1);
 					break;
 				}
@@ -379,15 +374,18 @@ function executeAction(kb, table, actionInformation) {
 		var newAssertion = new assertionQuery(truth, predicate, currentParameters);
 		table.assert(newAssertion);
 	}
-	/*
+
 	var createList = action.creates;
 	for (var i = 0; i < createList.length; i++) {
-		var owner = createList[i].owner;
-		if (owner.charAt(0) >= '0' && owner.charAt(0) <= '9') {
-			var index = parseInt(owner);
-			table.addSpace(createList[i].parent, parameters[index]);
+		var parent = createList[i].parent;
+		table.createLocalEntity(parent);
+
+		if (createList[i].owner) {
+			var owner = parameters[createList[i].owner.index];
+			owner.attachLocalEntity(table)
 		}
-	}*/
+
+	}
 }
 
 function sortTypeList(list) {

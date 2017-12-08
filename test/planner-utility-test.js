@@ -10,8 +10,8 @@ describe("planner-utility", function() {
 				var parent2 = new PlannerUtility.entity("height", [], "global");
 				var entity1 = new PlannerUtility.entity("person1", [parent1], "local");
 				var entity2 = new PlannerUtility.entity("height2", [parent2], "local");
-				entity1.attachLocalEntity(entity2, "height");
-				Assert(entity1.attachments.length == 1 && entity1.attachments[0].obj.name == "height2");
+				entity1.attachLocalEntity(entity2);
+				Assert(entity1.attachments.length == 1 && entity1.attachments[0] == entity2);
 			});
 			it("height should not be attached to person1 because it is in the global space.", function() {
 				var parent1 = new PlannerUtility.entity("person", [], "global");
@@ -20,35 +20,15 @@ describe("planner-utility", function() {
 				entity1.attachLocalEntity(entity2, "height");
 				Assert(entity1.attachments.length == 0);
 			});
-			it("height2 should be replaced with height3", function() {
+			it("height2 and height3 should be attached to person1", function() {
 				var parent1 = new PlannerUtility.entity("person", [], "global");
 				var parent2 = new PlannerUtility.entity("height", [], "global");
 				var entity1 = new PlannerUtility.entity("person1", [parent1], "local");
 				var entity2 = new PlannerUtility.entity("height2", [parent2], "local");
 				var entity3 = new PlannerUtility.entity("height3", [parent2], "local");
-				entity1.attachLocalEntity(entity2, "height");
-				entity1.attachLocalEntity(entity3, "height");
-				Assert(entity1.attachments.length == 1 && entity1.attachments[0].obj.name == "height3");
-			});
-		});
-		describe("#getAttachedLocalEntity()", function() {
-			it("Finding the height of person1 should return the height2 entity", function() {
-				var parent1 = new PlannerUtility.entity("person", [], "global");
-				var parent2 = new PlannerUtility.entity("height", [], "global");
-				var entity1 = new PlannerUtility.entity("person1", [parent1], "local");
-				var entity2 = new PlannerUtility.entity("height2", [parent2], "local");
-				entity1.attachLocalEntity(entity2, "height");
-				Assert(entity1.getAttachedLocalEntity("height").name == "height2");
-			});
-			it("Finding the height of person1 should return the height3 entity", function() {
-				var parent1 = new PlannerUtility.entity("person", [null], "global");
-				var parent2 = new PlannerUtility.entity("height", [null], "global");
-				var entity1 = new PlannerUtility.entity("person1", [parent1], "local");
-				var entity2 = new PlannerUtility.entity("height2", [parent2], "local");
-				var entity3 = new PlannerUtility.entity("height3", [parent2], "local");
-				entity1.attachLocalEntity(entity2, "height");
-				entity1.attachLocalEntity(entity3, "height");
-				Assert(entity1.getAttachedLocalEntity("height").name == "height3");
+				entity1.attachLocalEntity(entity2);
+				entity1.attachLocalEntity(entity3);
+				Assert(entity1.attachments.length == 2 && entity1.attachments[0] == entity2 && entity1.attachments[1] == entity3);
 			});
 		});
 		describe("#removeAttachedLocalEntity()", function() {
@@ -57,8 +37,8 @@ describe("planner-utility", function() {
 				var parent2 = new PlannerUtility.entity("height", [null], "global");
 				var entity1 = new PlannerUtility.entity("person1", [parent1], "local");
 				var entity2 = new PlannerUtility.entity("height2", [parent2], "local");
-				entity1.attachLocalEntity(entity2, "height");
-				entity1.removeAttachedLocalEntity("height");
+				entity1.attachLocalEntity(entity2);
+				entity1.removeAttachedLocalEntity(entity2);
 				Assert(entity1.attachments.length == 0);
 			});
 			it("The height entity should be removed.", function() {
@@ -68,10 +48,10 @@ describe("planner-utility", function() {
 				var entity1 = new PlannerUtility.entity("person1", [parent1], "local");
 				var entity2 = new PlannerUtility.entity("height2", [parent2], "local");
 				var entity3 = new PlannerUtility.entity("weight3", [parent3], "local");
-				entity1.attachLocalEntity(entity2, "height");
-				entity1.attachLocalEntity(entity3, "weight");
-				entity1.removeAttachedLocalEntity("height");
-				Assert(entity1.attachments.length == 1 && entity1.attachments[0].name == "weight");
+				entity1.attachLocalEntity(entity2);
+				entity1.attachLocalEntity(entity3);
+				entity1.removeAttachedLocalEntity(entity2);
+				Assert(entity1.attachments.length == 1 && entity1.attachments[0] == entity3);
 			});
 		});
 		describe("#isExtendedFrom()", function() {

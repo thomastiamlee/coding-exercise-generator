@@ -121,6 +121,19 @@ function parseKnowledgeBase(path) {
 			}
 		}
 
+		for (var j = 0; j < creates.length; j++) {
+			if (creates[j].owner) {
+				var index = parseInt(creates[j].owner);
+				creates[j].owner = new PlannerUtility.placeholderToken(index);
+			}
+			if (globalEntities[creates[j].parent]) {
+				creates[j].parent = globalEntities[creates[j].parent];
+			}
+			else if (globalStaticEntities[creates[j].parent]) {
+				creates[j].parent = globalStaticEntities[creates[i].parent];
+			}
+		}
+
 		var newObj = {name: name, parameters: parameters, preconditions: preconditions, creates: creates, effects: effects, blockData: blockData};
 		if (!actions[name]) {
 			actions[name] = [];
