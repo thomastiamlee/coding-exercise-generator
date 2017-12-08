@@ -333,6 +333,38 @@ describe("planner-utility", function() {
 		});
 		*/
 	});
+	describe("#checkAssertion()", function() {
+		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
+		var table = new PlannerUtility.memory();
+		table.createLocalEntity([kb.getGlobalEntity("student"), kb.getGlobalEntity("person"), kb.getGlobalEntity("dog"), kb.getGlobalEntity("cat"), kb.getGlobalEntity("pet")]);
+		var assertion1 = new PlannerUtility.assertionQuery(true, "has", [kb.getGlobalEntity("person"), kb.getGlobalEntity("height")]);
+		var test1 = PlannerUtility.checkAssertion(kb, table, assertion1);
+		var assertion2 = new PlannerUtility.assertionQuery(true, "has", [kb.getGlobalEntity("student"), kb.getGlobalEntity("height")]);
+		var test2 = PlannerUtility.checkAssertion(kb, table, assertion2);
+		var assertion3 = new PlannerUtility.assertionQuery(false, "has", [kb.getGlobalEntity("person"), kb.getGlobalEntity("height")]);
+		var test3 = PlannerUtility.checkAssertion(kb, table, assertion3);
+		var assertion4 = new PlannerUtility.assertionQuery(false, "has", [kb.getGlobalEntity("student"), kb.getGlobalEntity("height")]);
+		var test4 = PlannerUtility.checkAssertion(kb, table, assertion4);
+		var assertion5 = new PlannerUtility.assertionQuery(true, "has", [table.getLocalEntity("student1"), kb.getGlobalEntity("height")]);
+		var test5 = PlannerUtility.checkAssertion(kb, table, assertion5);
+		var assertion6 = new PlannerUtility.assertionQuery(true, "canown", [table.getLocalEntity("person1"), table.getLocalEntity("pet1")]);
+		var test6 = PlannerUtility.checkAssertion(kb, table, assertion6);
+		var assertion7 = new PlannerUtility.assertionQuery(true, "has", [table.getLocalEntity("person1"), kb.getGlobalEntity("height")]);
+		var test7 = PlannerUtility.checkAssertion(kb, table, assertion3);
+		var assertion8 = new PlannerUtility.assertionQuery(false, "bestfriend", [table.getLocalEntity("student1"), table.getLocalEntity("dog1")]);
+		var test8 = PlannerUtility.checkAssertion(kb, table, assertion8);
+		var assertion9 = new PlannerUtility.assertionQuery(true, "hungry", [table.getLocalEntity("dog1")]);
+		var test9 = PlannerUtility.checkAssertion(kb, table, assertion3);
+		it("has(person height) should be true.", function() { Assert(test1); });
+		it("has(student height*) should be true.", function() { Assert(test2); });
+		it("!has(person height*) should be false.", function() { Assert(!test3); });
+		it("!has(student height*) should be false.", function() { Assert(!test4); });
+		it("has(student1 height*) should be true.", function() { Assert(test5); });
+		it("canown(person2 pet5) should be true.", function() { Assert(test6); });
+		it("has(pet5 height*) should be false.", function() { Assert(!test7); });
+		it("!bestfriend(student1 dog3) should be false.", function() { Assert(!test8); });
+		it("hungry(dog3) should be false.", function() { Assert(!test9); });
+	});
 	/*
 	describe("#fetchTypeIndex()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbtest.txt");
@@ -428,39 +460,7 @@ describe("planner-utility", function() {
 			Assert(cond1 && cond2);
 		});
 	});
-	describe("#assertionIsTrue()", function() {
-		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
-		var space = ["student", "person", "dog", "cat", "pet"];
-		var table = new PlannerUtility.memory();
-		table.addSpaceFromType(space);
-		var assertion1 = { truth: true, predicate: "has", parameters: ["person", "height*"] };
-		var test1 = PlannerUtility.assertionIsTrue(kb, table, assertion1);
-		var assertion2 = { truth: true, predicate: "has", parameters: ["student", "height*"] };
-		var test2 = PlannerUtility.assertionIsTrue(kb, table, assertion2);
-		var assertion3 = { truth: false, predicate: "has", parameters: ["person", "height*"] };
-		var test3 = PlannerUtility.assertionIsTrue(kb, table, assertion3);
-		var assertion4 = { truth: false, predicate: "has", parameters: ["student", "height*"] };
-		var test4 = PlannerUtility.assertionIsTrue(kb, table, assertion4);
-		var assertion5 = { truth: true, predicate: "has", parameters: ["student1", "height*"] };
-		var test5 = PlannerUtility.assertionIsTrue(kb, table, assertion5);
-		var assertion6 = { truth: true, predicate: "canown", parameters: ["person2", "pet5"] };
-		var test6 = PlannerUtility.assertionIsTrue(kb, table, assertion6);
-		var assertion7 = { truth: true, predicate: "has", parameters: ["pet5", "height*"] };
-		var test7 = PlannerUtility.assertionIsTrue(kb, table, assertion7);
-		var assertion8 = { truth: false, predicate: "bestfriend", parameters: ["student1", "dog3"] };
-		var test8 = PlannerUtility.assertionIsTrue(kb, table, assertion8);
-		var assertion9 = { truth: true, predicate: "hungry", parameters: ["dog3"] };
-		var test9 = PlannerUtility.assertionIsTrue(kb, table, assertion9);
-		it("has(person height*) should be true.", function() { Assert(test1); });
-		it("has(student height*) should be true.", function() { Assert(test2); });
-		it("!has(person height*) should be false.", function() { Assert(!test3); });
-		it("!has(student height*) should be false.", function() { Assert(!test4); });
-		it("has(student1 height*) should be true.", function() { Assert(test5); });
-		it("canown(person2 pet5) should be true.", function() { Assert(test6); });
-		it("has(pet5 height*) should be false.", function() { Assert(!test7); });
-		it("!bestfriend(student1 dog3) should be false.", function() { Assert(!test8); });
-		it("hungry(dog3) should be false.", function() { Assert(!test9); });
-	});
+
 	describe("#getAllPossibleActionVariableReplacements()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var space = ["student", "person", "dog", "cat", "pet"];

@@ -261,33 +261,29 @@ function checkAssertion(kb, table, assertionQuery) {
 	var truth = assertionQuery.truth;
 	var predicate = assertionQuery.predicate;
 	var parameters = assertionQuery.parameters;
+	console.log("checking assertion");
+	console.log(assertionQuery);
 
-	//var assertionList = kb.getGlobalAssertions(predicate).concat(table.);
-	var queryPredicate = assertion.predicate;
-	var queryParameters = assertion.parameters;
+	var assertionList = kb.getGlobalAssertions(predicate).concat(table.getAssertions(predicate));
+
 	for (var i = 0; i < assertionList.length; i++) {
 		var currentAssertion = assertionList[i];
-		var assertionPredicate = currentAssertion.predicate;
 		var assertionParameters = currentAssertion.parameters;
-
-		if (assertionPredicate == queryPredicate && assertionParameters.length == queryParameters.length) {
-			// Check if each parameter matches
+		if (assertionParameters.length == parameters.length) {
 			var assumption = true;
-			for (var j = 0; j < queryParameters.length; j++) {
-				var currentQueryParameter = queryParameters[j];
-				var currentAssertionParameter = assertionParameters[j];
-				if (isExtendedFrom(kb, table, currentQueryParameter, currentAssertionParameter) == false) {
+			for (var j = 0; j < parameters.length; j++) {
+				if (parameters[j].isExtendedFrom(assertionParameters[j]) == false) {
 					assumption = false;
+					break;
 				}
 			}
 			if (assumption) {
-				if (assertion.truth) return true; return false;
+				return truth;
 			}
 		}
 	}
-	if (assertion.truth) return false; return true;
+	return !truth;
 }
-
 
 /* Executes a given action with the given parameters. Updates the assertions in the knowledge base as a result of performing the action. */
 function executeAction(kb, table, action, parameters) {
@@ -546,4 +542,4 @@ function replaceParameterName(parameters, symbol) {
 }
 
 
-module.exports = {memory, entity, assertion, assertionQuery, knowledgeBase, addType, addAssertion, sortKnowledgeBase, fetchTypeIndex, fetchActionIndex, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, getAvailableActions, executeAction};;
+module.exports = {memory, entity, assertion, assertionQuery, knowledgeBase, checkAssertion, addType, addAssertion, sortKnowledgeBase, fetchTypeIndex, fetchActionIndex, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, getAvailableActions, executeAction};;
