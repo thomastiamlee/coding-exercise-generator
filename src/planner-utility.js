@@ -1,6 +1,8 @@
 const Parser = require("./parser");
 const Clone = require("clone");
 
+function wildcardToken() {}
+
 /* Constructor for a space entity. name is the unique identifier for this space entity. parents is an
 array containing the list of strings representing the names of the parents of this entity. type is either
 "local" or "global", representing if this entity exists in the global (knowledge base) or local space (memory).
@@ -92,7 +94,29 @@ function knowledgeBase() {
 	this.actions = [];
 
 	this.getGlobalEntity = function(name) {
-		return this.globalEntities[name];
+		if (name) {
+			return this.globalEntities[name];
+		}
+		else {
+			var res = []
+			for (var prop in this.globalEntities) {
+				res.push(this.globalEntities[prop]);
+			}
+			return res;
+		}
+	}
+
+	this.getGlobalStaticEntity = function(name) {
+		if (name) {
+			return this.globalStaticEntities[name];
+		}
+		else {
+			var res = []
+			for (var prop in this.globalStaticEntities) {
+				res.push(this.globalStaticEntities[prop]);
+			}
+			return res;
+		}
 	}
 
 	this.getGlobalAssertions = function(name) {
@@ -105,6 +129,19 @@ function knowledgeBase() {
 				result = result.concat(this.globalAssertions[prop]);
 			}
 			return result;
+		}
+	}
+
+	this.getAction = function(name, variant = 0) {
+		if (name) {
+			return this.actions[name][variant];
+		}
+		else {
+			var res = [];
+			for (var prop in this.actions) {
+				res = res.concat(this.actions[prop]);
+			}
+			return res;
 		}
 	}
 }
@@ -215,49 +252,6 @@ function memory() {
 			this.assertions[predicate] = [new assertion(predicate, parameters)];
 		}
 	}
-
-	/*
-	this.cloneMemory = function() {
-		return Clone(this);
-	}
-
-	this.isEquivalent = function(o) {
-		function assertionSort(a, b) {
-			if (a.predicate != b.predicate) {
-				return a.predicate < b.predicate ? -1 : 1;
-			}
-			else if (a.truth != b.truth) {
-				return a.truth ? -1 : 1;
-			}
-			else {
-				var aStr = a.parameters.join(",");
-				var bStr = b.parameters.join(",");
-				return aStr < bStr ? -1 : 1;
-			}
-		}
-
-		function spaceSort(a, b) {
-			return a[0] < b[0] ? -1 : 1;
-		}
-
-		var space = Clone(this.space);
-		var oSpace = Clone(o.space);
-		space.sort(spaceSort);
-		oSpace.sort(spaceSort);
-
-		var assertions = Clone(this.assertions);
-		var oAssertions = Clone(o.assertions);
-		assertions.sort(assertionSort);
-		oAssertions.sort(assertionSort);
-
-		space = JSON.stringify(space);
-		oSpace = JSON.stringify(oSpace);
-		assertions = JSON.stringify(assertions);
-		oAssertions = JSON.stringify(oAssertions);
-
-		return space == oSpace && assertions == oAssertions;
-	}
-	*/
 }
 
 function checkAssertion(kb, table, assertionQuery) {
@@ -282,6 +276,25 @@ function checkAssertion(kb, table, assertionQuery) {
 		}
 	}
 	return !truth;
+}
+
+function getAllPossibleParameterMatches(kb, table, action) {
+	var parameters = action.parameters;
+	var res = [];
+	var candidates = table.getLocalEntity().concat(kb.getGlobalStaticEntity());
+	for (var i = 0; i < parameters.length; i++) {
+		var requirement = parameters[i];
+		res.push([]);
+		for (var j = 0; j < candidates.length; j++) {
+			if (requirement instanceof wildcardToken) { // wildcard
+				res[i].push(candidates[j]);
+			}
+			else if (candidates[j].isExtendedFrom(requirement)) {
+				res[i].push(candidates[j]);
+			}
+		}
+	}
+	return res;
 }
 
 /* Executes a given action with the given parameters. Updates the assertions in the knowledge base as a result of performing the action. */
@@ -384,31 +397,6 @@ function getAllPossibleActionVariableReplacements(kb, table, action) {
 		}
 		if (valid) {
 			res.push(testMatch);
-		}
-	}
-	return res;
-}
-
-
-
-/* Gets all the possible combination of space elemets that can be assigned for an action, based on its parameter requirements and
-preconditions. */
-function getAllPossibleParameterMatches(kb, table, action) {
-	var parameters = action.parameters;
-	// For each parameter, identify all table elements that match the criteria
-	var res = [];
-	var candidates = table.space.concat(kb.primitive_list);
-	for (var i = 0; i < parameters.length; i++) {
-		var typeRequirement = parameters[i];
-		res.push([]);
-		for (var j = 0; j < candidates.length; j++) {
-			var type = candidates[j][0];
-			if (typeRequirement == "*") { // wildcard
-				res[i].push(candidates[j][0]);
-			}
-			else if (isExtendedFrom(kb, table, type, typeRequirement)) {
-				res[i].push(candidates[j][0]);
-			}
 		}
 	}
 	return res;
@@ -541,4 +529,4 @@ function replaceParameterName(parameters, symbol) {
 }
 
 
-module.exports = {memory, entity, assertion, assertionQuery, knowledgeBase, checkAssertion, addType, addAssertion, sortKnowledgeBase, fetchTypeIndex, fetchActionIndex, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, getAvailableActions, executeAction};;
+module.exports = {wildcardToken, memory, entity, assertion, assertionQuery, knowledgeBase, checkAssertion, addType, addAssertion, sortKnowledgeBase, fetchTypeIndex, fetchActionIndex, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, getAvailableActions, executeAction};;

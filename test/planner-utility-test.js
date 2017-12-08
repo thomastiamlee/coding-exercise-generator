@@ -183,34 +183,6 @@ describe("planner-utility", function() {
 				var query = new PlannerUtility.assertionQuery(true, "favorite", [table.getLocalEntity("person1"), table.getLocalEntity("dog1")]);
 				Assert(!PlannerUtility.checkAssertion(kb, table, query));
 			});
-			/*
-			it("The relationship owns(student1 dog3) should have been added", function() {
-				var found = false;
-				for (var i = 0; i < assertionList.length; i++) {
-					var current = assertionList[i];
-					if (current.predicate == "owns") {
-						if (current.parameters.length == 2 && current.parameters[0] == "student1" && current.parameters[1] == "dog3") {
-							found = true;
-							break;
-						}
-					}
-				}
-				Assert(found);
-			});
-			it("The relationship bestfriend(person2 dog) should have been removed", function() {
-				var found = false;
-				for (var i = 0; i < assertionList.length; i++) {
-					var current = assertionList[i];
-					if (current.predicate == "bestfriend") {
-						if (current.parameters.length == 2 && current.parameters[0] == "person" && current.parameters[1] == "dog") {
-							found = true;
-							break;
-						}
-					}
-				}
-				Assert(!found);
-			});
-*/
 		});
 /*
 		describe("#addSpace()", function() {
@@ -275,62 +247,6 @@ describe("planner-utility", function() {
 				Assert(!found);
 			});
 		});
-		describe("#cloneMemory()", function() {
-			it("Space entity should be cloned.", function() {
-				var table1 = new PlannerUtility.memory();
-				table1.addSpaceFromType("person");
-				var table2 = table1.cloneMemory();
-				Assert(table2.space.length == 1 && table2.space[0][0] == "person1");
-			});
-			it("Assertion should be cloned.", function() {
-				var table1 = new PlannerUtility.memory();
-				table1.addAssertion({truth: true, predicate: "has", parameters: ["person", "name"]});
-				var table2 = table1.cloneMemory();
-				Assert(table2.assertions.length == 1 && table2.assertions[0].predicate == "has");
-			});
-			it("Cloned memory's space should not affect the original memory object.", function() {
-				var table1 = new PlannerUtility.memory();
-				table1.addSpaceFromType("person");
-				var table2 = table1.cloneMemory();
-				table2.addSpaceFromType("student");
-				Assert(table1.space.length == 1);
-				Assert(table2.space.length == 2);
-			});
-			it("Cloned memory's assertions should not affect the original memory object.", function() {
-				var table1 = new PlannerUtility.memory();
-				table1.addAssertion({truth: true, predicate: "has", parameters: ["person", "name"]});
-				var table2 = table1.cloneMemory();
-				table1.addAssertion({truth: false, predicate: "has", parameters: ["person", "name"]});
-				Assert(table1.assertions.length == 0);
-				Assert(table2.assertions.length == 1);
-			});
-		});
-		describe("#isEquivalent()", function() {
-			it("Test case 1", function() {
-				var table1 = new PlannerUtility.memory();
-				table1.addSpaceFromType("person");
-				var table2 = table1.cloneMemory();
-				Assert(table1.isEquivalent(table2));
-			});
-			it("Test case 2", function() {
-				var table1 = new PlannerUtility.memory();
-				table1.addSpaceFromType(["person", "student"]);
-				var table2 = new PlannerUtility.memory();
-				table2.addSpaceFromType(["person", "student"]);
-				Assert(table1.isEquivalent(table2));
-				table2.addAssertion({truth: true, predicate: "has", parameters: ["person", "name"]});
-				Assert(!table1.isEquivalent(table2));
-			});
-			it("Test case 3", function() {
-				var table1 = new PlannerUtility.memory();
-				table1.addAssertion({truth: true, predicate: "has", parameters: ["person", "name"]});
-				table1.addAssertion({truth: true, predicate: "has", parameters: ["person", "height"]});
-				var table2 = new PlannerUtility.memory();
-				table2.addAssertion({truth: true, predicate: "has", parameters: ["person", "height"]});
-				table2.addAssertion({truth: true, predicate: "has", parameters: ["person", "name"]});
-				Assert(table1.isEquivalent(table2));
-			});
-		});
 		*/
 	});
 	describe("#checkAssertion()", function() {
@@ -364,6 +280,24 @@ describe("planner-utility", function() {
 		it("has(pet5 height*) should be false.", function() { Assert(!test7); });
 		it("!bestfriend(student1 dog3) should be false.", function() { Assert(!test8); });
 		it("hungry(dog3) should be false.", function() { Assert(!test9); });
+	});
+	describe("#getAllPossibleParameterMatches()", function() {
+		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
+		var table = new PlannerUtility.memory();
+		table.createLocalEntity([kb.getGlobalEntity("student"), kb.getGlobalEntity("person"), kb.getGlobalEntity("dog"), kb.getGlobalEntity("cat"), kb.getGlobalEntity("pet")]);
+		var feedAction = kb.getAction("feed");
+		var test = PlannerUtility.getAllPossibleParameterMatches(kb, table, feedAction);
+		it("In the feed action, student1 and person1 should match the person parameter.", function() {
+			Assert(test[0].length == 2);
+			Assert(test[0].indexOf(table.getLocalEntity("person1")) != -1);
+			Assert(test[0].indexOf(table.getLocalEntity("student1")) != -1);
+		});
+		it("In the feed action, dog1, cat1 and pet1 should match the pet parameter.", function() {
+			Assert(test[1].length == 3);
+			Assert(test[1].indexOf(table.getLocalEntity("dog1")) != -1);
+			Assert(test[1].indexOf(table.getLocalEntity("cat1")) != -1);
+			Assert(test[1].indexOf(table.getLocalEntity("pet1")) != -1);
+		});
 	});
 	/*
 	describe("#fetchTypeIndex()", function() {
@@ -401,65 +335,8 @@ describe("planner-utility", function() {
 	});
 	*/
 /*
-	describe("#isExtendedFrom()", function() {
-		var kb = Parser.parseKnowledgeBase("./test/kbextendtest.txt");
-		var space = ["student", "dog"];
-		var table = new PlannerUtility.memory();
-		table.addSpaceFromType(space);
-		var test1 = PlannerUtility.isExtendedFrom(kb, table, "student", "person");
-		var test2 = PlannerUtility.isExtendedFrom(kb, table, "student", "student");
-		var test3 = PlannerUtility.isExtendedFrom(kb, table, "person", "student");
-		var test4 = PlannerUtility.isExtendedFrom(kb, table, "spaghetti", "object");
-		var test5 = PlannerUtility.isExtendedFrom(kb, table, "dog", "animal");
-		var test6 = PlannerUtility.isExtendedFrom(kb, table, "dog", "cat");
-		var test7 = PlannerUtility.isExtendedFrom(kb, table, "bulldog", "cat");
-		var test8 = PlannerUtility.isExtendedFrom(kb, table, "distancevalue*", "nonnegativevalue*");
-		var test9 = PlannerUtility.isExtendedFrom(kb, table, "student1", "person");
-		var test10 = PlannerUtility.isExtendedFrom(kb, table, "dog2", "person");
-		var test11 = PlannerUtility.isExtendedFrom(kb, table, "bulldog", "scary");
-		var test12 = PlannerUtility.isExtendedFrom(kb, table, "dog2", "scary");
-		it ("student is an offspring of the person.", function() { Assert(test1);	});
-		it ("student is an offspring of the student.", function() {	 Assert(test2); });
-		it ("person is not an offspring of the student.", function() { Assert(!test3); });
-		it ("spaghetti is an offspring of the object.", function() { Assert(test4); });
-		it ("dog is an offspring of the animal.", function() { Assert(test5); });
-		it ("dog is not an offspring of the cat.", function() { Assert(!test6); });
-		it ("bulldog is not an offspring of the cat.", function() { Assert(!test7); });
-		it ("distancevalue* is an offspring of the nonnegativevalue*.", function() { Assert(test8); });
-		it ("student1 is an offspring of person.", function() { Assert(test9); });
-		it ("dog2 is not an offspring of person.", function() { Assert(!test10); });
-		it ("bully is an offspring of scary.", function() { Assert(test11); });
-		it ("dog2 is not an offspring of scary.", function() { Assert(!test12); });
-	});
-	/*
-	describe("#getAllPossibleParameterMatches()", function() {
-		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
-		var space = ["student", "person", "dog", "cat", "pet"];
-		var table = new PlannerUtility.memory();
-		table.addSpaceFromType(space);
-		var actionList = kb.action_list;
-		var feedAction = actionList[PlannerUtility.fetchActionIndex(actionList, "feed")];
-		var test1 = PlannerUtility.getAllPossibleParameterMatches(kb, table, feedAction);
-		it("In the feed action, student1 and person2 should match the person parameter.", function() {
-			Assert(test1[0].length == 2);
-			var cond1 = false, cond2 = false;
-			for (var i = 0; i < test1[0].length; i++) {
-				if (test1[0][i] == "person2") cond1 = true;
-				else if (test1[0][i] == "student1") cond2 = true;
-			}
-			Assert(cond1 && cond2);
-		});
-		it("In the feed action, dog3, cat4 and pet5 should match the pet parameter.", function() {
-			Assert(test1[1].length == 3);
-			var cond1 = false, cond2 = false, cond3 = false;
-			for (var i = 0; i < test1[1].length; i++) {
-				if (test1[1][i] == "dog3") cond1 = true;
-				else if (test1[1][i] == "cat4") cond2 = true;
-				else if (test1[1][i] == "pet5") cond2 = true;
-			}
-			Assert(cond1 && cond2);
-		});
-	});
+
+
 
 	describe("#getAllPossibleActionVariableReplacements()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");

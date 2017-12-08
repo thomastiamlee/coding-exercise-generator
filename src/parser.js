@@ -43,7 +43,7 @@ function parseKnowledgeBase(path) {
 		var newObj = new PlannerUtility.entity(current[0], parents, "global", false);
 		globalStaticEntities[current[0]] = newObj;
 	}
-	var globalAssertions = [];
+	var globalAssertions = {};
 	for (var i = 0; i < assertion_list.length; i++) {
 		var current = assertion_list[i];
 		var predicate = current.predicate;
@@ -62,7 +62,7 @@ function parseKnowledgeBase(path) {
 		}
 		globalAssertions[predicate].push(newObj);
 	}
-	var actions = [];
+	var actions = {};
 	for (var i = 0; i < action_list.length; i++) {
 		var current = action_list[i];
 		var name = current.name;
@@ -72,8 +72,23 @@ function parseKnowledgeBase(path) {
 		var effects = current.effects;
 		var blockData = current.blockData;
 
+		for (var j = 0; j < parameters.length; j++) {
+			if (parameters[j] == "*") {
+				parameters[j] = new PlannerUtility.wildcardToken();
+			}
+			else if (globalEntities[parameters[j]]) {
+				parameters[j] = globalEntities[parameters[j]];
+			}
+			else if (globalStaticEntities[parameters[j]]) {
+				parameters[j] = globalStaticEntities[parameters[j]];
+			}
+		}
+
 		var newObj = {name: name, parameters: parameters, preconditions: preconditions, creates: creates, effects: effects, blockData: blockData};
-		actions.push(newObj);
+		if (!actions[name]) {
+			actions[name] = [];
+		}
+		actions[name].push(newObj);
 	}
 
 	kb.globalEntities = globalEntities;
