@@ -291,7 +291,8 @@ describe("planner-utility", function() {
 			Assert(PlannerUtility.checkAssertion(kb, table, new PlannerUtility.assertionQuery(true, "visible", [table.getLocalEntity("student1"), kb.getGlobalStaticEntity("height")])));
 			var newPerson = table.getLocalEntity("student2");
 			Assert(newPerson);
-			Assert(table.getLocalEntity("student1").getAttachedLocalEntities().indexOf(newPerson) != -1)
+			Assert(table.getLocalEntity("student1").getAttachedLocalEntities().indexOf(newPerson) != -1);
+			Assert(PlannerUtility.checkAssertion(kb, table, new PlannerUtility.assertionQuery(true, "owns", [table.getLocalEntity("student1"), table.getLocalEntity("student2")])));
 		});
 		it("pet should not be hungry after applying the feed action", function() {
 			Assert(PlannerUtility.checkAssertion(kb, table, new PlannerUtility.assertionQuery(true, "hungry", [table.getLocalEntity("cat1")])));

@@ -7,6 +7,10 @@ function placeholderToken(index) {
 	this.index = index;
 }
 
+function createPlaceholderToken(index) {
+	this.index = index;
+}
+
 /* Constructor for a space entity. name is the unique identifier for this space entity. parents is an
 array containing the list of strings representing the names of the parents of this entity. type is either
 "local" or "global", representing if this entity exists in the global (knowledge base) or local space (memory).
@@ -324,7 +328,7 @@ function getAllPossibleActionVariableReplacements(kb, table, action) {
 			var params = preconditions[j].parameters;
 			var newParams = [];
 			for (var k = 0; k < params.length; k++) {
-				newParams.push(replaceSymbolicParameters(testMatch, params[k]));
+				newParams.push(replaceSymbolicParameters(testMatch, [], params[k]));
 			}
 			var testAssertion = new assertionQuery(preconditions[j].truth, preconditions[j].predicate, newParams);
 
@@ -366,19 +370,8 @@ function executeAction(kb, table, actionInformation) {
 	var action = actionInformation.action;
 	var parameters = actionInformation.parameters;
 	var effectList = action.effects;
-	for (var i = 0; i < effectList.length; i++) {
-		var current = effectList[i];
-		var truth = current.truth;
-		var predicate = current.predicate;
-		var currentParameters = current.parameters;
-		for (var j = 0; j < currentParameters.length; j++) {
-			currentParameters[j] = replaceSymbolicParameters(parameters, currentParameters[j]);
-		}
-		var newAssertion = new assertionQuery(truth, predicate, currentParameters);
-		table.assert(newAssertion);
-	}
-
 	var createList = action.creates;
+	var createParameters = [];
 	for (var i = 0; i < createList.length; i++) {
 		var parent = createList[i].parent;
 		var res = table.createLocalEntity(parent);
@@ -386,6 +379,18 @@ function executeAction(kb, table, actionInformation) {
 			var owner = parameters[createList[i].owner.index];
 			owner.attachLocalEntity(res[0]);
 		}
+		createParameters.push(res[0]);
+	}
+	for (var i = 0; i < effectList.length; i++) {
+		var current = effectList[i];
+		var truth = current.truth;
+		var predicate = current.predicate;
+		var currentParameters = current.parameters;
+		for (var j = 0; j < currentParameters.length; j++) {
+			currentParameters[j] = replaceSymbolicParameters(parameters, createParameters, currentParameters[j]);
+		}
+		var newAssertion = new assertionQuery(truth, predicate, currentParameters);
+		table.assert(newAssertion);
 	}
 }
 
@@ -420,8 +425,11 @@ function sortKnowledgeBase(kb) {
 
 /* This function converts a symbol used in an assertion list to the actual
 variable name. */
-function replaceSymbolicParameters(parameters, symbol) {
-	if (symbol instanceof placeholderToken) {
+function replaceSymbolicParameters(parameters, createParameters, symbol) {
+	if (symbol instanceof createPlaceholderToken) {
+		return createParameters[symbol.index];
+	}
+	else if (symbol instanceof placeholderToken) {
 		return parameters[symbol.index];
 	}
 	else {
@@ -430,4 +438,4 @@ function replaceSymbolicParameters(parameters, symbol) {
 }
 
 
-module.exports = {wildcardToken, placeholderToken, memory, entity, assertion, assertionQuery, knowledgeBase, checkAssertion, addType, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, getAvailableActions, executeAction};;
+module.exports = {wildcardToken, placeholderToken, createPlaceholderToken, memory, entity, assertion, assertionQuery, knowledgeBase, checkAssertion, addType, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, getAvailableActions, executeAction};;

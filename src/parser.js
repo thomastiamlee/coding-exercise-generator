@@ -111,7 +111,11 @@ function parseKnowledgeBase(path) {
 			var currentAssertionParameters = effects[j].parameters;
 			for (var k = 0; k < currentAssertionParameters.length; k++) {
 				var current = currentAssertionParameters[k];
-				if (current.charAt(0) >= '0' && current.charAt(0) <= '9') {
+				if (current.charAt(0) == '+') {
+					var index = parseInt(current.substring(1));
+					currentAssertionParameters[k] = new PlannerUtility.createPlaceholderToken(index);
+				}
+				else if (current.charAt(0) >= '0' && current.charAt(0) <= '9') {
 					var index = parseInt(current);
 					currentAssertionParameters[k] = new PlannerUtility.placeholderToken(index);
 				}

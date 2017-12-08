@@ -216,6 +216,10 @@ assertion_variable_token
 	{
 		return x.join("");
 	}
+	/ x:("+"[0-9]+)
+	{
+		return x.join("");
+	}
 
 create_list
 	= x:create_token __ y:create_list
