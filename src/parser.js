@@ -98,6 +98,9 @@ function parseKnowledgeBase(path) {
 				else if (globalEntities[currentAssertionParameters[k]]) {
 					currentAssertionParameters[k] = globalEntities[currentAssertionParameters[k]];
 				}
+				else if (globalStaticEntities[currentAssertionParameters[k]]) {
+					currentAssertionParameters[k] = globalStaticEntities[currentAssertionParameters[k]];
+				}
 				else {
 					console.error("Warning: invalid precondition assertion parameter");
 				}
@@ -115,6 +118,9 @@ function parseKnowledgeBase(path) {
 				else if (globalEntities[currentAssertionParameters[k]]) {
 					currentAssertionParameters[k] = globalEntities[currentAssertionParameters[k]];
 				}
+				else if (globalStaticEntities[currentAssertionParameters[k]]) {
+					currentAssertionParameters[k] = globalStaticEntities[currentAssertionParameters[k]];
+				}
 				else {
 					console.error("Warning: invalid precondition assertion parameter");
 				}
@@ -130,7 +136,7 @@ function parseKnowledgeBase(path) {
 				creates[j].parent = globalEntities[creates[j].parent];
 			}
 			else if (globalStaticEntities[creates[j].parent]) {
-				creates[j].parent = globalStaticEntities[creates[i].parent];
+				creates[j].parent = globalStaticEntities[creates[j].parent];
 			}
 		}
 

@@ -164,88 +164,24 @@ describe("planner-utility", function() {
 				Assert(!PlannerUtility.checkAssertion(kb, table, query));
 			});
 		});
-/*
-		describe("#addSpace()", function() {
-			it("Space entity property should be correctly added.", function() {
-				table = new PlannerUtility.memory();
-				table.addSpace("height*", "person1");
-				Assert(table.space.length == 1 && table.space[0][0] == "person1.height*" && table.space[0][1].length == 1 && table.space[0][1][0] == "height*");
-			});
-			it("It should be possible to add space entities in an array", function() {
-				table = new PlannerUtility.memory();
-				table.addSpace(["height*", "weight*"], ["person1", "person1"]);
-				Assert(table.space.length == 2 && table.space[0][0] == "person1.height*" && table.space[0][1].length == 1 && table.space[0][1][0] == "height*" && table.space[1][0] == "person1.weight*" && table.space[1][1].length == 1 && table.space[1][1][0] == "weight*");
-			});
-		});
-		describe("#addAssertion()", function() {
-			var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
-			var space = ["student", "person", "dog", "cat", "pet"];
-			var table = new PlannerUtility.memory();
-			table.addSpaceFromType(space);
-			table.addAssertion({ truth: true, predicate: "hungry", parameters: ["dog3"]});
-			table.addAssertion({ truth: true, predicate: "owns", parameters: ["student1", "dog3"]});
-			table.addAssertion({ truth: true, predicate: "bestfriend", parameters: ["person2", "dog"]});
-			table.addAssertion({ truth: false, predicate: "bestfriend", parameters: ["person2", "dog"]});
-			var assertionList = table.assertions;
-			it("The relationship hungry(dog3) should have been added", function() {
-				var found = false;
-				for (var i = 0; i < assertionList.length; i++) {
-					var current = assertionList[i];
-					if (current.predicate == "hungry") {
-						if (current.parameters.length == 1 && current.parameters[0] == "dog3") {
-							found = true;
-							break;
-						}
-					}
-				}
-				Assert(found);
-			});
-			it("The relationship owns(student1 dog3) should have been added", function() {
-				var found = false;
-				for (var i = 0; i < assertionList.length; i++) {
-					var current = assertionList[i];
-					if (current.predicate == "owns") {
-						if (current.parameters.length == 2 && current.parameters[0] == "student1" && current.parameters[1] == "dog3") {
-							found = true;
-							break;
-						}
-					}
-				}
-				Assert(found);
-			});
-			it("The relationship bestfriend(person2 dog) should have been removed", function() {
-				var found = false;
-				for (var i = 0; i < assertionList.length; i++) {
-					var current = assertionList[i];
-					if (current.predicate == "bestfriend") {
-						if (current.parameters.length == 2 && current.parameters[0] == "person" && current.parameters[1] == "dog") {
-							found = true;
-							break;
-						}
-					}
-				}
-				Assert(!found);
-			});
-		});
-		*/
 	});
 	describe("#checkAssertion()", function() {
 		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
 		var table = new PlannerUtility.memory();
 		table.createLocalEntity([kb.getGlobalEntity("student"), kb.getGlobalEntity("person"), kb.getGlobalEntity("dog"), kb.getGlobalEntity("cat"), kb.getGlobalEntity("pet")]);
-		var assertion1 = new PlannerUtility.assertionQuery(true, "has", [kb.getGlobalEntity("person"), kb.getGlobalEntity("height")]);
+		var assertion1 = new PlannerUtility.assertionQuery(true, "has", [kb.getGlobalEntity("person"), kb.getGlobalStaticEntity("height")]);
 		var test1 = PlannerUtility.checkAssertion(kb, table, assertion1);
-		var assertion2 = new PlannerUtility.assertionQuery(true, "has", [kb.getGlobalEntity("student"), kb.getGlobalEntity("height")]);
+		var assertion2 = new PlannerUtility.assertionQuery(true, "has", [kb.getGlobalEntity("student"), kb.getGlobalStaticEntity("height")]);
 		var test2 = PlannerUtility.checkAssertion(kb, table, assertion2);
-		var assertion3 = new PlannerUtility.assertionQuery(false, "has", [kb.getGlobalEntity("person"), kb.getGlobalEntity("height")]);
+		var assertion3 = new PlannerUtility.assertionQuery(false, "has", [kb.getGlobalEntity("person"), kb.getGlobalStaticEntity("height")]);
 		var test3 = PlannerUtility.checkAssertion(kb, table, assertion3);
-		var assertion4 = new PlannerUtility.assertionQuery(false, "has", [kb.getGlobalEntity("student"), kb.getGlobalEntity("height")]);
+		var assertion4 = new PlannerUtility.assertionQuery(false, "has", [kb.getGlobalEntity("student"), kb.getGlobalStaticEntity("height")]);
 		var test4 = PlannerUtility.checkAssertion(kb, table, assertion4);
-		var assertion5 = new PlannerUtility.assertionQuery(true, "has", [table.getLocalEntity("student1"), kb.getGlobalEntity("height")]);
+		var assertion5 = new PlannerUtility.assertionQuery(true, "has", [table.getLocalEntity("student1"), kb.getGlobalStaticEntity("height")]);
 		var test5 = PlannerUtility.checkAssertion(kb, table, assertion5);
 		var assertion6 = new PlannerUtility.assertionQuery(true, "canown", [table.getLocalEntity("person1"), table.getLocalEntity("pet1")]);
 		var test6 = PlannerUtility.checkAssertion(kb, table, assertion6);
-		var assertion7 = new PlannerUtility.assertionQuery(true, "has", [table.getLocalEntity("person1"), kb.getGlobalEntity("height")]);
+		var assertion7 = new PlannerUtility.assertionQuery(true, "has", [table.getLocalEntity("person1"), kb.getGlobalStaticEntity("height")]);
 		var test7 = PlannerUtility.checkAssertion(kb, table, assertion3);
 		var assertion8 = new PlannerUtility.assertionQuery(false, "bestfriend", [table.getLocalEntity("student1"), table.getLocalEntity("dog1")]);
 		var test8 = PlannerUtility.checkAssertion(kb, table, assertion8);
@@ -349,22 +285,14 @@ describe("planner-utility", function() {
 		table.assert(new PlannerUtility.assertionQuery(true, "owns", [table.getLocalEntity("student1"), table.getLocalEntity("cat1")]));
 		var mentionHeightAction = kb.getAction("mentionheight");
 		var feedAction = kb.getAction("feed");
-		/*
-		it("height should be visible on student1 only after executing the mentionheight.", function() {
-			Assert(PlannerUtility.checkAssertion(kb, table, new PlannerUtility.assertionQuery(false, "visible", [table.getLocalEntity("student1"), table.getLocalEntity("height*"]	}));
-			PlannerUtility.executeAction(kb, table, mentionHeightAction, ["student1"]);
-			Assert(PlannerUtility.assertionIsTrue(kb, table, { truth: true, predicate: "visible", parameters: ["student1", "height*"] }));
-			var list = PlannerUtility.getAvailableActions(kb, table);
-			var counter = 0;
-			for (var i = 0; i < list.length; i++) {
-				if (list[i].action.name == "mentionheight") {
-					counter++;
-				}
-			}
-			Assert(counter == 1);
-			Assert(table.space.length == 3 && table.space[2][0] == "student1.height*");
+		it("height should be visible on student1 only after executing the mentionheight, and a new height object should be created that is attached to student1", function() {
+			Assert(PlannerUtility.checkAssertion(kb, table, new PlannerUtility.assertionQuery(false, "visible", [table.getLocalEntity("student1"), kb.getGlobalStaticEntity("height")])));
+			PlannerUtility.executeAction(kb, table, {action: mentionHeightAction, parameters: [table.getLocalEntity("student1")]});
+			Assert(PlannerUtility.checkAssertion(kb, table, new PlannerUtility.assertionQuery(true, "visible", [table.getLocalEntity("student1"), kb.getGlobalStaticEntity("height")])));
+			var newPerson = table.getLocalEntity("student2");
+			Assert(newPerson);
+			Assert(table.getLocalEntity("student1").getAttachedLocalEntities().indexOf(newPerson) != -1)
 		});
-		*/
 		it("pet should not be hungry after applying the feed action", function() {
 			Assert(PlannerUtility.checkAssertion(kb, table, new PlannerUtility.assertionQuery(true, "hungry", [table.getLocalEntity("cat1")])));
 			PlannerUtility.executeAction(kb, table, {action: feedAction, parameters: [table.getLocalEntity("student1"), table.getLocalEntity("cat1")]});

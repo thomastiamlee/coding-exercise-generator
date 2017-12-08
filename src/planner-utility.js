@@ -156,6 +156,7 @@ function memory() {
 	/* Creates a new local entity from a global entity and adds it to memory. The name is automatically
 	assigned to ensure that there are no duplicates. */
 	this.createLocalEntity = function(globalEntities) {
+		var res = [];
 		if (globalEntities instanceof Array == false) {
 			globalEntities = [globalEntities];
 		}
@@ -171,8 +172,10 @@ function memory() {
 				}
 				var newEntity = new entity(name, [globalEntity], "local");
 				this.localEntities[name] = newEntity;
+				res.push(newEntity);
 			}
 		}
+		return res;
 	}
 
 	this.getLocalEntity = function(name) {
@@ -378,13 +381,11 @@ function executeAction(kb, table, actionInformation) {
 	var createList = action.creates;
 	for (var i = 0; i < createList.length; i++) {
 		var parent = createList[i].parent;
-		table.createLocalEntity(parent);
-
+		var res = table.createLocalEntity(parent);
 		if (createList[i].owner) {
 			var owner = parameters[createList[i].owner.index];
-			owner.attachLocalEntity(table)
+			owner.attachLocalEntity(res[0]);
 		}
-
 	}
 }
 
