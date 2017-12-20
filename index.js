@@ -5,21 +5,12 @@ const Parser = require("./src/parser");
 const Planner = require("./src/planner-simple");
 const VisualizationServer = require("./src/visualization-server");
 const ExerciseBuilder = require("./src/exercise-builder");
+const PlannerUtility = require("./src/planner-utility");
+const ExperimentServer = require("./experiment/server");
 
-/*
-var kb = Parser.parseKnowledgeBase("./src/kb/test-space.txt");
-var res = Planner.planExercise(kb, ["person"]);
-console.log(res);
-//console.log(res.plan);
-//var exercise = ExerciseBuilder.buildExerciseFromActions(res.plan, res.table);
-//console.log(exercise.head);
+/*var kb = Parser.parseKnowledgeBase("./src/kb/revised-space.txt");
+var table = new PlannerUtility.memory();
+table.createLocalEntity(kb.getGlobalEntity("person"));
+Planner.planExercise(kb, table);*/
 
-
-//console.log("AAA");
-//console.log(exercise.head.getAllSolutionSuccessors().length);
-// console.log(Reader.convertToFlowchartDefinition(exercise));
-//console.log(res.table.assertions);
-*/
-//VisualizationServer.start();
-
-console.log(Parser.parseKnowledgeBase("./src/kb/revised-space.txt"));
+ExperimentServer.start();

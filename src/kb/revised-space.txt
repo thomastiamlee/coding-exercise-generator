@@ -1,7 +1,8 @@
 #global;
 person;
 student->person;
-height;
+distancevalue;
+height->distancevalue;
 weight;
 
 #static;
@@ -15,7 +16,26 @@ canhave(person weight);
 
 #actions;
 name: mentionheightinmeters;
-parameters: person height;
-preconditions: canhave(0 1) !hasproperty(0 1);
+parameters: person;
+preconditions: !hasproperty(0 height);
+creates: 0/height;
+effects: hasproperty(0 height) in(+0 meters);
+
+name: mentionheightinfeet;
+parameters: person;
+preconditions: !hasproperty(0 height);
+creates: 0/height;
+effects: hasproperty(0 height) in(+0 feet);
+
+name: convertfeettometers;
+parameters: distancevalue;
+preconditions: in(0 feet) !in(0 meters);
 creates: ;
-effects: hasproperty(0 1);
+effects: in(0 meters) !in(0 feet);
+
+name: mentionweightinkilograms;
+parameters: person;
+preconditions: !hasproperty(0 weight);
+creates: 0/weight;
+effects: hasproperty(0 weight) in(+0 kilograms)
+
