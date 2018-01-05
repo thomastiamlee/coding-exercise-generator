@@ -8,9 +8,9 @@ const ExerciseBuilder = require("./src/exercise-builder");
 const PlannerUtility = require("./src/planner-utility");
 const ExperimentServer = require("./experiment/server");
 
-/*var kb = Parser.parseKnowledgeBase("./src/kb/revised-space.txt");
+var kb = Parser.parseKnowledgeBase("./src/kb/revised-space.txt");
 var table = new PlannerUtility.memory();
 table.createLocalEntity(kb.getGlobalEntity("person"));
-Planner.planExercise(kb, table);*/
+Planner.planExercise(kb, table);
 
-ExperimentServer.start();
+// ExperimentServer.start();

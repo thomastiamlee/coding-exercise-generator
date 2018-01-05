@@ -4,6 +4,7 @@ student->person;
 distancevalue;
 height->distancevalue;
 weight;
+bmi;
 
 #static;
 meters;
@@ -19,23 +20,34 @@ name: mentionheightinmeters;
 parameters: person;
 preconditions: !hasproperty(0 height);
 creates: 0/height;
-effects: hasproperty(0 height) in(+0 meters);
+effects: hasproperty(0 height) in(+0 meters) visiblein(+0 meters);
 
 name: mentionheightinfeet;
 parameters: person;
 preconditions: !hasproperty(0 height);
 creates: 0/height;
-effects: hasproperty(0 height) in(+0 feet);
+effects: hasproperty(0 height) in(+0 feet) visiblein(+0 feet);
 
 name: convertfeettometers;
 parameters: distancevalue;
-preconditions: in(0 feet) !in(0 meters);
+preconditions: !visiblein(0 meters) in(0 feet) !in(0 meters);
 creates: ;
 effects: in(0 meters) !in(0 feet);
+
+name: convertmeterstofeet;
+parameters: distancevalue;
+preconditions: !visiblein(0 feet) in(0 meters) !in(0 feet);
+creates: ;
+effects: in(0 feet) !in(0 meters);
 
 name: mentionweightinkilograms;
 parameters: person;
 preconditions: !hasproperty(0 weight);
 creates: 0/weight;
-effects: hasproperty(0 weight) in(+0 kilograms)
+effects: hasproperty(0 weight) in(+0 kilograms);
 
+name: computebmi;
+parameters: person weight height;
+preconditions: !hasproperty(0 bmi) hasproperty(0 1) hasproperty(0 2) in(1 kilograms) in(2 meters);
+creates: 0/bmi;
+effects: hasproperty(0 bmi);
