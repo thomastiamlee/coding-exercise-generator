@@ -1,141 +1,117 @@
 const Component = require("./component");
 
 function buildExerciseFromActions(plan, table) {
-	var res = {};
-	var lastHead = null;
+	var res = [];
 	var head = null;
-	var symbolMappings = [];
-	// Add the space entities as variables
-	var space = table.space;
-	for (var i = 0; i < space.length; i++) {
-		if (space[i][0].charAt(space[i][0].length - 1) == '*') {
-			symbolMappings.push({name: space[i][0], obj: new Component.variable("number")})
-		}
+	var currentTail = null; // The node where the next action will be connected to
+	var symbolMappings = [];	
+	// Add the local entities as variables
+	var localEntities = table.getLocalEntity();
+	for (var i = 0; i < localEntities.length; i++) {
+		symbolMappings.push({name: localEntities[i].name, obj: new Component.variable("number")});
 	}
-	// Loop through all actions
+	// Loop through all the actions
 	for (var i = 0; i < plan.length; i++) {
-		var currentAction = plan[i];
-		if (currentAction.action.blockData) {
-			var parameters = currentAction.parameters;
-			var blockData = currentAction.action.blockData.split("\r\n");
-			var current = 0;
-			current++;
-			var line = blockData[current];
-			// Read the variables
-			while (line.trim() != "%NODES") {
-				var variableData = line.split("-");
-				var name = variableData[0];
-				var dataType = variableData[1];
-				if (getOperandFromSymbol(name, symbolMappings) == null) {
-					var newObj = {name: name, obj: new Component.variable("number")};
-					symbolMappings.push(newObj);
-				}
-				current++;
-				line = blockData[current];
+		// Add action result
+		symbolMappings.push({name: "action_result_" + i, obj: new Component.variable("number")});
+		var currentStep = plan[i];
+		currentStep.number = i;
+		var currentAction = currentStep.action;
+		if (currentAction.blockData == null) continue;
+		var terminalNodes = [];
+		var blockData = currentAction.blockData.split("\r\n");
+		// Get the number of variables
+		var numVariables = parseInt(blockData[0]);
+		// Read the variables
+		for (var j = 0; j < numVariables; j++) {
+			var variableData = blockData[1 + j].split("-");
+			var name = "t_" + variableData[0];
+			var type = variableData[1];
+			var obj = getOperandFromSymbol(name, symbolMappings);
+			if (obj != null) {
+				symbolMappings.splice(symbolMappings.indexOf(obj), 1);
 			}
-			current++;
-			// Read the nodes
-			var nodes = [];
-			var localHead = null;
-			var localTail = null;
-			var line = blockData[current];
-			while (line != "%RESULTS") {
-				var isTerminal = false;
-				if (line.charAt(0) == '@') {
-					isTerminal = true;
-					line = line.substring(1);
+			symbolMappings.push({name: name, obj: new Component.variable(type)});
+		}
+		// Get the terminal nodes
+		var terminalNodeData = blockData[numVariables + 1];
+		for (var j = 0; j < terminalNodeData.length; j++) {
+			terminalNodes.push(parseInt(terminalNodeData[j]));
+		}
+		// Read the nodes
+		var current = numVariables + 2;
+		var nodeList = [];
+		while (current < blockData.length) {
+			var currentBlock = blockData[current].split(",");
+			var type = currentBlock[0];
+			if (type == "a") {
+				var operand1 = convertOperandStringToObject(currentBlock[1], currentStep, symbolMappings);
+				var variableOutput = convertOperandStringToObject(currentBlock[2], currentStep, symbolMappings);
+				var successor = [];
+				if (currentBlock[3]) {
+					successor = [parseInt(currentBlock[3])];
 				}
-				lineData = line.split(",");
-				var type = lineData[0];
-				var newObj = {};
-				if (type == 'o') {
-					var operand1 = convertOperandStringToObject(lineData[1], parameters, symbolMappings);
-					var operand2 = convertOperandStringToObject(lineData[2], parameters, symbolMappings);
-					var variableOutput = convertOperandStringToObject(lineData[3], parameters, symbolMappings);
-					var operator = lineData[4];
-					var successor = [];
-					if (!isTerminal) {
-						successor = [lineData[5]];
-					}
-					var newNode = new Component.node(Component.NODE_TYPE_OPERATION);
-					newNode.attachInputOperand(operand1, 0);
-					newNode.attachInputOperand(operand2, 1);
-					newNode.setVariableOutput(variableOutput);
-					newNode.setOperator(operator);
-					
-					newObj = {node: newNode, successor: successor};
-					nodes.push(newObj);
-				}
-				else if (type == 'c') {
-					var operand1 = convertOperandStringToObject(lineData[1], parameters, symbolMappings);
-					var operand2 = convertOperandStringToObject(lineData[2], parameters, symbolMappings);
-					var operator = lineData[3];
-					var successor = [];
-					if (!isTerminal) {
-						successor = [lineData[4], lineData[5]];
-					}
-					var newNode = new Component.node(Component.NODE_TYPE_CONDITION);
-					newNode.attachInputOperand(operand1, 0);
-					newNode.attachInputOperand(operand2, 1);
-					newNode.setOperator(operator);
-					
-					newObj = {node: newNode, successor: successor};
-					nodes.push(newObj);
-					
-				}				
-				if (localHead == null) {
-					localHead = newObj.node;
-				}
-				if (isTerminal) {
-					localTail = newObj.node;
-				}
-				current++;
-				line = blockData[current];
+				var newNode = new Component.node(Component.NODE_TYPE_ASSIGNMENT);
+				newNode.attachInputOperand(operand1, 0);
+				newNode.setVariableOutput(variableOutput);
+				newObj = {node: newNode, successor: successor};
+				nodeList.push(newObj);
 			}
-						
-			// Connect the nodes
-			for (var j = 0; j < nodes.length; j++) {
-				var node = nodes[j].node;
-				var successors = nodes[j].successor;
-				for (var k = 0; k < successors.length; k++) {
-					if (successors[k] != null) {
-						node.attachNode(nodes[successors[k]].node, k);
-					}
+			else if (type == "o") {
+				var operand1 = convertOperandStringToObject(currentBlock[1], currentStep, symbolMappings);
+				var operand2 = convertOperandStringToObject(currentBlock[2], currentStep, symbolMappings);
+				var variableOutput = convertOperandStringToObject(currentBlock[3], currentStep, symbolMappings);
+				var operator = currentBlock[4];
+				var successor = [];
+				if (currentBlock[5]) {
+					successor = [parseInt(currentBlock[5])];
 				}
-			}
-			
-			// Read the results
-			current++;
-			while (current < blockData.length) {
-				var line = blockData[current];
-				var lineData = line.split(",");
-				var name = "a" + i + "_" + lineData[0];
-				symbolMappings.push({name: name, obj: new Component.variable("number")})
-				var variableOutput = convertOperandStringToObject("[" + name + "]", parameters, symbolMappings);
-				var operand1 = convertOperandStringToObject(lineData[1], parameters, symbolMappings);
-				var operand2 = convertOperandStringToObject("(number-0)", parameters, symbolMappings);
 				var newNode = new Component.node(Component.NODE_TYPE_OPERATION);
 				newNode.attachInputOperand(operand1, 0);
 				newNode.attachInputOperand(operand2, 1);
 				newNode.setVariableOutput(variableOutput);
-				newNode.setOperator("+");
-				newObj = {node: newNode, successor: []};
-				nodes.push(newObj);
-				localTail.attachNode(newNode, 0);
-				localTail = newNode;
-				current++;
+				newNode.setOperator(operator);
+				newObj = {node: newNode, successor: successor};
+				nodeList.push(newObj);
 			}
-			
-			if (lastHead == null) {
-				head = localHead;
-				lastHead = localTail;
+			else if (type == "c") {
+				var operand1 = convertOperandStringToObject(currentBlock[1], currentStep, symbolMappings);
+				var operand2 = convertOperandStringToObject(currentBlock[2], currentStep, symbolMappings);
+				var operator = currentBlock[3];
+				var successor = [];
+				if (currentBlock[4]) {
+					successor = [parseInt(currentBlock[4]), parseInt(currentBlock[5])];
+				}
+				var newNode = new Component.node(Component.NODE_TYPE_CONDITION);
+				newNode.attachInputOperand(operand1, 0);
+				newNode.attachInputOperand(operand2, 1);
+				newNode.setOperator(operator);
+				newObj = {node: newNode, successor: successor};
+				nodeList.push(newObj);
 			}
-			else {
-				lastHead.attachNode(localHead, 0);
-				lastHead = localTail;
+			current++;
+		}
+		// Connect the nodes
+		for (var j = 0; j < nodeList.length; j++) {
+			var current = nodeList[j];
+			if (current.successor.length > 0) {
+				for (var k = 0; k < current.successor.length; k++) {
+					current.node.attachNode(nodeList[current.successor[k]].node, k);
+				}
 			}
 		}
+		// Add the the main exercise
+		
+		var actionHead = nodeList[0].node;
+		if (currentTail == null) {
+			head = actionHead;
+		}
+		else {
+			currentTail.attachNode(actionHead, 0);
+		}
+		currentTail = nodeList[terminalNodes[0]].node;
 	}
+	var res = {};
 	res.head = head;
 	res.symbols = symbolMappings;
 	return res;
@@ -158,10 +134,13 @@ function getOperandFromSymbol(name, symbolMappings) {
 /0<height/ will be converted to the corresponding
 variable from the memory table.
 This function assumes that all symbolMappings have been read already. */
-function convertOperandStringToObject(operandString, parameters, symbolMappings) {
+function convertOperandStringToObject(operandString, step, symbolMappings) {
+	var parameters = step.parameters;
+	var create = step.createParameters;
+	var stepNumber = step.number;
 	// Variable case
 	if (operandString.charAt(0) == '[') {
-		return getOperandFromSymbol(operandString.substring(1, operandString.length - 1), symbolMappings);
+		return getOperandFromSymbol("t_" + operandString.substring(1, operandString.length - 1), symbolMappings);
 	}
 	// Constant case
 	else if (operandString.charAt(0) == '(') {
@@ -178,16 +157,19 @@ function convertOperandStringToObject(operandString, parameters, symbolMappings)
 			return new Component.operand(dataType, val);
 		}
 	}
-	else if (operandString.charAt(0) == '/') {
+	else if (operandString.charAt(0) == '{') {
 		var data = operandString.substring(1, operandString.length - 1);
-		if (data.indexOf("<") != -1) {
-			var index = parseInt(data.split("<")[0]);
-			var name = parameters[index] + "." + data.split("<")[1];
-			return getOperandFromSymbol(name, symbolMappings);			
+		if (data == "action_result") {
+			return getOperandFromSymbol("action_result_" + stepNumber, symbolMappings);
+		}
+		else if (data.charAt(0) == "+") {
+			var index = parseInt(data.substring(1));
+			var name = create[index].name;
+			return getOperandFromSymbol(name, symbolMappings);
 		}
 		else {
 			var index = parseInt(data);
-			var name = parameters[index];
+			var name = parameters[index].name;
 			return getOperandFromSymbol(name, symbolMappings);
 		}
 	}

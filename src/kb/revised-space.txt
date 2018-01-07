@@ -57,9 +57,6 @@ parameters: person;
 preconditions: !hasproperty(0 weight);
 creates: 0/weight;
 effects: hasproperty(0 weight) in(+0 kilograms);
-~
-blockcodes	
-~
 
 name: computebmi;
 parameters: person weight height;
@@ -71,6 +68,6 @@ effects: hasproperty(0 bmi);
 squared-number
 2
 o,{2},{2},[squared],*,1
-o,{1},[squared],{+0}/,2
+o,{1},[squared],{+0},/,2
 a,{+0},{action_result}
 ~

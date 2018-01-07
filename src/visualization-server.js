@@ -9,6 +9,7 @@ const fs = require("fs");
 const Parser = require("./parser");
 const ExerciseBuilder = require("./exercise-builder");
 const Planner = require("./planner-simple");
+const PlannerUtility = require("./planner-utility");
 
 function start() {
 	// Create a server with a host and port
@@ -64,15 +65,19 @@ function start() {
 			method: "GET",
 			path: "/generatetest",
 			handler: function(request, reply) {
-				var kb = Parser.parseKnowledgeBase("./src/kb/test-space.txt");
-				var res = Planner.planExercise(kb, ["person", "cat"]);
+				var kb = Parser.parseKnowledgeBase("./src/kb/revised-space.txt");
+				var table = new PlannerUtility.memory();
+				table.createLocalEntity(kb.getGlobalEntity("person"));
+				var actionList = Planner.planExercise(kb, table);
 				var text = "";
-				for (var i = 0; i < res.plan.length; i++) {
-					text += res.plan[i].action.name + " ";
-					text += res.plan[i].parameters.join(", ") + "\n";
-					
+				for (var i = 0; i < actionList.length; i++) {
+					text += actionList[i].action.name + " ";
+					for (var j = 0; j < actionList[i].parameters.length; j++) {
+						text += actionList[i].parameters[j].name + " ";
+					}
+					text += "\n";
 				}
-				var exercise = ExerciseBuilder.buildExerciseFromActions(res.plan, res.table);
+				var exercise = ExerciseBuilder.buildExerciseFromActions(actionList, table);
 				var flowchart = Reader.convertToFlowchartDefinition(exercise);
 				return reply.view("generation-test.html", {text: text, flowchart: flowchart});
 			}

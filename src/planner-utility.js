@@ -153,7 +153,6 @@ function knowledgeBase() {
 information during the planning process. */
 function memory() {
 	this.counter = 1;
-	this.space = [];
 	this.assertions = [];
 	this.localEntities = [];
 
@@ -392,6 +391,7 @@ function executeAction(kb, table, actionInformation) {
 		var newAssertion = new assertionQuery(truth, predicate, currentParameters);
 		table.assert(newAssertion);
 	}
+	actionInformation.createParameters = createParameters;
 }
 
 /* This function converts a symbol used in an assertion list to the actual
