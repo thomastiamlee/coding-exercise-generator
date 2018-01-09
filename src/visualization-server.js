@@ -65,7 +65,7 @@ function start() {
 			method: "GET",
 			path: "/generatetest",
 			handler: function(request, reply) {
-				var kb = Parser.parseKnowledgeBase("./src/kb/revised-space.txt");
+				var kb = Parser.parseKnowledgeBase("./src/kb/revised-space");
 				var table = new PlannerUtility.memory();
 				table.createLocalEntity(kb.getGlobalEntity("person"));
 				var actionList = Planner.planExercise(kb, table);

@@ -3,13 +3,15 @@ person;
 student->person;
 distancevalue;
 height->distancevalue;
-weight;
+massvalue;
+weight->massvalue;
 bmi;
 
 #static;
 meters;
 feet;
 kilograms;
+pounds;
 
 #assertions;
 canhave(person height);
@@ -32,7 +34,7 @@ name: convertfeettometers;
 parameters: distancevalue;
 preconditions: !visiblein(0 meters) in(0 feet) !in(0 meters);
 creates: ;
-effects: in(0 meters) !in(0 feet);
+effects: in(0 meters) !in(0 feet) visiblein(0 meters);
 ~
 0
 1
@@ -44,7 +46,7 @@ name: convertmeterstofeet;
 parameters: distancevalue;
 preconditions: !visiblein(0 feet) in(0 meters) !in(0 feet);
 creates: ;
-effects: in(0 feet) !in(0 meters);
+effects: in(0 feet) !in(0 meters) visiblein(0 feet);
 ~
 0
 1
@@ -57,6 +59,24 @@ parameters: person;
 preconditions: !hasproperty(0 weight);
 creates: 0/weight;
 effects: hasproperty(0 weight) in(+0 kilograms);
+
+name: mentionweightinpounds;
+parameters: person;
+preconditions: !hasproperty(0 weight);
+creates: 0/weight;
+effects: hasproperty(0 weight) in(+0 pounds);
+
+name: convertpoundstokilograms;
+parameters: massvalue;
+preconditions: !visiblein(0 kilograms) in(0 pounds) !in(0 kilograms);
+creates: ;
+effects: in(0 kilograms) !in(0 pounds) visiblein(0 pounds);
+~
+0
+1
+o,{0},(number-0.4536),{0},*,1
+a,{0},{action_result}	
+~
 
 name: computebmi;
 parameters: person weight height;

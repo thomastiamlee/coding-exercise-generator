@@ -1,0 +1,20 @@
+#global;
+person;
+student->person;
+distancevalue;
+height->distancevalue;
+massvalue;
+weight->massvalue;
+bmi;
+
+#static;
+meters;
+feet;
+kilograms;
+pounds;
+
+#assertions;
+canhave(person height);
+canhave(person weight);
+
+#actions;

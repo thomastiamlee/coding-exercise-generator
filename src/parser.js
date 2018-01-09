@@ -6,8 +6,18 @@ const PlannerUtility = require("./planner-utility");
 
 /* Parses the knowledge base and returns a JavaScript object containing all its rules. */
 function parseKnowledgeBase(path) {
+	if (fs.lstatSync(path).isDirectory()) {
+		var kb = fs.readFileSync(path + "/base.txt", "utf-8");
+		fs.readdirSync(path).forEach(file => {
+			if (file.toString() != "base.txt") {
+				kb += "\n" + fs.readFileSync(path + "/" + file.toString(), "utf-8");
+			}
+		});
+	}
+	else {
+		var kb = fs.readFileSync(path, "utf-8");
+	}
 	var grammar = fs.readFileSync("./src/grammar/domain-new.txt", "utf-8");
-	var kb = fs.readFileSync(path, "utf-8");
 	var parser = Peg.generate(grammar, {trace: false});
 	var result = parser.parse(kb);
 	var kb = new PlannerUtility.knowledgeBase();

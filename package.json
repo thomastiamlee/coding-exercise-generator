@@ -21,7 +21,7 @@
     "hapi": "^16.5.2",
     "inert": "^4.2.1",
     "mocha": "^4.0.1",
-    "nodemon": "^1.12.1",
+    "nodemon": "^1.14.9",
     "nunjucks-hapi": "^2.1.0",
     "pegjs": "^0.10.0",
     "vision": "^4.1.1"
