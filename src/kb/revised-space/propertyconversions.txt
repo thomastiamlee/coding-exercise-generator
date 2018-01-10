@@ -1,0 +1,51 @@
+name: convertfeettometers;
+parameters: distancevalue;
+preconditions: !visiblein(0 meters) in(0 feet) !in(0 meters);
+creates: ;
+effects: in(0 meters) !in(0 feet) visiblein(0 meters);
+~
+0
+1
+o,{0},(number-0.3048),{0},*,1
+a,{0},{action_result}
+~
+
+name: convertmeterstofeet;
+parameters: distancevalue;
+preconditions: !visiblein(0 feet) in(0 meters) !in(0 feet);
+creates: ;
+effects: in(0 feet) !in(0 meters) visiblein(0 feet);
+~
+0
+1
+o,{0},(number-0.3281),{0},*,1
+a,{0},{action_result}	
+~
+
+
+name: convertpoundstokilograms;
+parameters: massvalue;
+preconditions: !visiblein(0 kilograms) in(0 pounds) !in(0 kilograms);
+creates: ;
+effects: in(0 kilograms) !in(0 pounds) visiblein(0 pounds);
+~
+0
+1
+o,{0},(number-0.4536),{0},*,1
+a,{0},{action_result}	
+~
+
+name: convertcelsiustofahrenheit;
+parameters: temperaturevalue;
+preconditions: !visiblein(0 fahrenheit) in(0 celsius) !in(0 fahrenheit);
+creates: ;
+effects: in(0 fahrenheit) !in(0 celsius) visiblein(0 fahrenheit);
+~
+1
+temp-number
+3
+o,{0},(number-9),[temp],*,1
+o,[temp],(number-5),[temp],/,2
+o,[temp],(number-32),{0},+,3,
+a,{0},{action_result}
+~

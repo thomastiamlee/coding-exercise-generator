@@ -21,4 +21,13 @@ var exercise = ExerciseBuilder.buildExerciseFromActions(actionList, table);
 var flowchart = Reader.convertToFlowchartDefinition(exercise);
 console.log(flowchart);
 */
-VisualizationServer.start();
+
+var kb = Parser.parseKnowledgeBase("./src/kb/revised-space");
+var table = new PlannerUtility.memory();
+table.createLocalEntity([kb.getGlobalEntity("person"), kb.getGlobalEntity("person"), kb.getGlobalEntity("person")]);
+
+var result = PlannerUtility.matchParametersWithLocalEntities(kb.getAction("computebmi"), table);
+console.log(result);
+
+
+//VisualizationServer.start();

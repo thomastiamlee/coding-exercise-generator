@@ -1,0 +1,13 @@
+name: computebmi;
+parameters: person weight height;
+preconditions: !hasproperty(0 bmi) hasproperty(0 1) hasproperty(0 2) in(1 kilograms) in(2 meters);
+creates: 0/bmi;
+effects: hasproperty(0 bmi);
+~
+1
+squared-number
+2
+o,{2},{2},[squared],*,1
+o,{1},[squared],{+0},/,2
+a,{+0},{action_result}
+~

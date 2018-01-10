@@ -1,10 +1,12 @@
 #global;
 person;
+location;
 student->person;
 distancevalue;
 height->distancevalue;
 massvalue;
 weight->massvalue;
+temperaturevalue;
 bmi;
 
 #static;
@@ -12,9 +14,12 @@ meters;
 feet;
 kilograms;
 pounds;
+celsius;
+fahrenheit;
 
 #assertions;
 canhave(person height);
 canhave(person weight);
+canhave(location temperature);
 
 #actions;

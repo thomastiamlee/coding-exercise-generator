@@ -394,6 +394,31 @@ function executeAction(kb, table, actionInformation) {
 	actionInformation.createParameters = createParameters;
 }
 
+function matchParametersWithLocalEntities(action, table) {
+	var localEntities = table.getLocalEntity();
+	var parameters = action.parameters;
+	var result = [];
+	
+	for (var i = 0; i < parameters.length; i++) {
+		var potential = [];
+		for (var j = 0; j < localEntities.length; j++) {
+			if (localEntities[j].isExtendedFrom(parameters[i])) {
+				potential.push(localEntities[j]);
+			}
+		}
+		if (potential.length == 0) {
+			var newEntity = table.createLocalEntity(parameters[i])[0];
+			result.push(newEntity);
+		}
+		else {
+			var index = Math.floor(Math.random() * potential.length);
+			result.push(potential[index]);
+		}
+	}
+	
+	return result;
+}
+
 /* This function converts a symbol used in an assertion list to the actual
 variable name. */
 function replaceSymbolicParameters(parameters, createParameters, symbol) {
@@ -408,5 +433,4 @@ function replaceSymbolicParameters(parameters, createParameters, symbol) {
 	}
 }
 
-
-module.exports = {wildcardToken, placeholderToken, createPlaceholderToken, memory, entity, assertion, assertionQuery, knowledgeBase, checkAssertion, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, getAvailableActions, executeAction};;
+module.exports = {wildcardToken, placeholderToken, createPlaceholderToken, memory, entity, assertion, assertionQuery, knowledgeBase, checkAssertion, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, getAvailableActions, executeAction, matchParametersWithLocalEntities};
