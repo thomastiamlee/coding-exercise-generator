@@ -384,11 +384,13 @@ function executeAction(kb, table, actionInformation) {
 		var current = effectList[i];
 		var truth = current.truth;
 		var predicate = current.predicate;
-		var currentParameters = current.parameters;
+		var currentParameters = [].concat(current.parameters);
 		for (var j = 0; j < currentParameters.length; j++) {
 			currentParameters[j] = replaceSymbolicParameters(parameters, createParameters, currentParameters[j]);
 		}
 		var newAssertion = new assertionQuery(truth, predicate, currentParameters);
+		console.log("Adding assertion:");
+		console.log(newAssertion);
 		table.assert(newAssertion);
 	}
 	actionInformation.createParameters = createParameters;
