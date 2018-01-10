@@ -389,8 +389,6 @@ function executeAction(kb, table, actionInformation) {
 			currentParameters[j] = replaceSymbolicParameters(parameters, createParameters, currentParameters[j]);
 		}
 		var newAssertion = new assertionQuery(truth, predicate, currentParameters);
-		console.log("Adding assertion:");
-		console.log(newAssertion);
 		table.assert(newAssertion);
 	}
 	actionInformation.createParameters = createParameters;
