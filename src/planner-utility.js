@@ -394,6 +394,12 @@ function executeAction(kb, table, actionInformation) {
 	actionInformation.createParameters = createParameters;
 }
 
+function canExecuteAction(kb, table, action) {
+	var possible = getAllPossibleActionVariableReplacements(kb, table, action);
+	if (possible.length == 0) return false;
+	return true;
+}
+
 function matchParametersWithLocalEntities(action, table) {
 	var localEntities = table.getLocalEntity();
 	var parameters = action.parameters;
@@ -433,4 +439,4 @@ function replaceSymbolicParameters(parameters, createParameters, symbol) {
 	}
 }
 
-module.exports = {wildcardToken, placeholderToken, createPlaceholderToken, memory, entity, assertion, assertionQuery, knowledgeBase, checkAssertion, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, getAvailableActions, executeAction, matchParametersWithLocalEntities};
+module.exports = {wildcardToken, placeholderToken, createPlaceholderToken, memory, entity, assertion, assertionQuery, knowledgeBase, checkAssertion, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, getAvailableActions, executeAction, matchParametersWithLocalEntities, canExecuteAction};
