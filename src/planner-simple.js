@@ -13,7 +13,13 @@ function planExercise(kb, table) {
 		}
 		var chosen = choices[Math.floor(Math.random() * choices.length)];
 		actionList.push(chosen);
+		console.log(chosen.action.name);
+		
 		PlannerUtility.executeAction(kb, table, chosen);
+		if (PlannerUtility.isComputedAction(chosen.action)) {
+			console.log("ended");
+			break;
+		}
 	}
 	return actionList;
 }
