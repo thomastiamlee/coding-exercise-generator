@@ -12,8 +12,6 @@ function planExercise(kb, table) {
 			break;
 		}
 		var chosen = choices[Math.floor(Math.random() * choices.length)];
-		// console.log("Chosen: ");
-		// console.log(chosen.action);
 		actionList.push(chosen);
 		PlannerUtility.executeAction(kb, table, chosen);
 	}

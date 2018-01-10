@@ -1,4 +1,4 @@
-name: convertfeettometers;
+name: convertfeettometers*;
 parameters: distancevalue;
 preconditions: !visiblein(0 meters) in(0 feet) !in(0 meters);
 creates: ;
@@ -10,7 +10,7 @@ o,{0},(number-0.3048),{0},*,1
 a,{0},{action_result}
 ~
 
-name: convertmeterstofeet;
+name: convertmeterstofeet*;
 parameters: distancevalue;
 preconditions: !visiblein(0 feet) in(0 meters) !in(0 feet);
 creates: ;
@@ -23,7 +23,7 @@ a,{0},{action_result}
 ~
 
 
-name: convertpoundstokilograms;
+name: convertpoundstokilograms*;
 parameters: massvalue;
 preconditions: !visiblein(0 kilograms) in(0 pounds) !in(0 kilograms);
 creates: ;
@@ -35,7 +35,7 @@ o,{0},(number-0.4536),{0},*,1
 a,{0},{action_result}	
 ~
 
-name: convertcelsiustofahrenheit;
+name: convertcelsiustofahrenheit*;
 parameters: temperaturevalue;
 preconditions: !visiblein(0 fahrenheit) in(0 celsius) !in(0 fahrenheit);
 creates: ;

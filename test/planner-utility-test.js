@@ -300,21 +300,4 @@ describe("planner-utility", function() {
 			Assert(PlannerUtility.checkAssertion(kb, table, new PlannerUtility.assertionQuery(false, "hungry", [table.getLocalEntity("cat1")])));
 		});
 	});
-	describe("#canExecuteAction()", function() {
-		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
-		var table = new PlannerUtility.memory();
-		table.createLocalEntity([kb.getGlobalEntity("student"), kb.getGlobalEntity("cat")]);
-		table.assert(new PlannerUtility.assertionQuery(true, "hungry", [table.getLocalEntity("cat1")]));
-		table.assert(new PlannerUtility.assertionQuery(true, "owns", [table.getLocalEntity("student1"), table.getLocalEntity("cat1")]));
-		
-		it("the feed action should be possible to execute.", function() {
-			Assert(PlannerUtility.canExecuteAction(kb, table, kb.getAction("feed")));
-		});
-		it("the mentionheight action should be possible to execute.", function() {
-			Assert(PlannerUtility.canExecuteAction(kb, table, kb.getAction("mentionheight")));
-		});
-		it("the gettaller action should not be possible to execue.", function() {
-			Assert(PlannerUtility.canExecuteAction(kb, table, kb.getAction("gettaller")) == false);
-		});
-	});
 });
