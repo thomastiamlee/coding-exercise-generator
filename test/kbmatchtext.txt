@@ -23,13 +23,13 @@ preconditions: owns(0 1) hungry(1);
 creates: ;
 effects: !hungry(1);
 
-name: mentionheight;
+name: mentionheight*;
 parameters: *;
 preconditions: has(0 height) !visible(0 height);
 creates: 0/student;
 effects: visible(0 height) owns(0 +0);
 
-name: gettaller;
+name: gettaller*;
 parameters: person person;
 preconditions: has(0 height) has(1 height);
 creates: ;

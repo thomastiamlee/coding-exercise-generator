@@ -394,6 +394,10 @@ function executeAction(kb, table, actionInformation) {
 	actionInformation.createParameters = createParameters;
 }
 
+function isComputedAction(action) {
+	return action.isComputed;
+}
+
 /* This function converts a symbol used in an assertion list to the actual
 variable name. */
 function replaceSymbolicParameters(parameters, createParameters, symbol) {
@@ -408,4 +412,4 @@ function replaceSymbolicParameters(parameters, createParameters, symbol) {
 	}
 }
 
-module.exports = {wildcardToken, placeholderToken, createPlaceholderToken, memory, entity, assertion, assertionQuery, knowledgeBase, checkAssertion, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, getAvailableActions, executeAction};
+module.exports = {wildcardToken, placeholderToken, createPlaceholderToken, memory, entity, assertion, assertionQuery, knowledgeBase, checkAssertion, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, getAvailableActions, executeAction, isComputedAction};

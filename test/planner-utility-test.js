@@ -300,4 +300,16 @@ describe("planner-utility", function() {
 			Assert(PlannerUtility.checkAssertion(kb, table, new PlannerUtility.assertionQuery(false, "hungry", [table.getLocalEntity("cat1")])));
 		});
 	});
+	describe("#isComputedAction()", function() {
+		var kb = Parser.parseKnowledgeBase("./test/kbmatchtext.txt");
+		it("feed should not be a computed action", function() {
+			Assert(PlannerUtility.isComputedAction(kb.getAction("feed")) == false);
+		});
+		it("gettaller should be a computed action", function() {
+			Assert(PlannerUtility.isComputedAction(kb.getAction("gettaller")));
+		});
+		it("mentionheight should be a computed action", function() {
+			Assert(PlannerUtility.isComputedAction(kb.getAction("mentionheight")));
+		});
+	});
 });

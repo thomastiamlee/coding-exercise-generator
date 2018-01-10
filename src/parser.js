@@ -81,6 +81,7 @@ function parseKnowledgeBase(path) {
 		var creates = current.creates;
 		var effects = current.effects;
 		var blockData = current.blockData;
+		var isComputed = current.isComputed;
 
 		for (var j = 0; j < parameters.length; j++) {
 			if (parameters[j] == "*") {
@@ -154,7 +155,7 @@ function parseKnowledgeBase(path) {
 			}
 		}
 
-		var newObj = {name: name, parameters: parameters, preconditions: preconditions, creates: creates, effects: effects, blockData: blockData};
+		var newObj = {name: name, parameters: parameters, preconditions: preconditions, creates: creates, effects: effects, blockData: blockData, isComputed: isComputed};
 		if (!actions[name]) {
 			actions[name] = [];
 		}
