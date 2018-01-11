@@ -412,4 +412,4 @@ function replaceSymbolicParameters(parameters, createParameters, symbol) {
 	}
 }
 
-module.exports = {wildcardToken, placeholderToken, createPlaceholderToken, memory, entity, assertion, assertionQuery, knowledgeBase, checkAssertion, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, getAvailableActions, executeAction, isComputedAction};
+module.exports = {wildcardToken, placeholderToken, createPlaceholderToken, replaceSymbolicParameters, memory, entity, assertion, assertionQuery, knowledgeBase, checkAssertion, getAllPossibleParameterMatches, getAllPossibleActionVariableReplacements, getAvailableActions, executeAction, isComputedAction};
