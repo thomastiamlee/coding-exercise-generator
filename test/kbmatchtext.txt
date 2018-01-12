@@ -18,18 +18,21 @@ bestfriend(person dog);
 
 #actions;
 name: feed;
+initialize: ;
 parameters: person pet;
 preconditions: owns(0 1) hungry(1);
 creates: ;
 effects: !hungry(1);
 
 name: mentionheight*;
+initialize: ;
 parameters: *;
 preconditions: has(0 height) !visible(0 height);
 creates: 0/student;
 effects: visible(0 height) owns(0 +0);
 
 name: gettaller*;
+initialize: ;
 parameters: person person;
 preconditions: has(0 height) has(1 height);
 creates: ;

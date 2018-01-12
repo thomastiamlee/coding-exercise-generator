@@ -28,12 +28,14 @@ foundin(ramen restaurant);
 
 #actions;
 name: mention;
+initialize: ;
 parameters: * *;
 preconditions: has(0 1) !visible(0 1);
 creates: ;
 effects: visible(0 1);
 
 name: eat;
+initialize: ;
 parameters: person food;
 preconditions: ;
 creates: ;

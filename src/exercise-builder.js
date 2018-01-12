@@ -2,6 +2,7 @@ const Component = require("./component");
 
 function buildExerciseFromActions(plan, table) {
 	var res = [];
+	var inputVariables = [];
 	var head = null;
 	var currentTail = null; // The node where the next action will be connected to
 	var symbolMappings = [];	
@@ -24,7 +25,9 @@ function buildExerciseFromActions(plan, table) {
 			var index = allAliases.indexOf(alias);
 			count[index]++;
 			current[j].alias = alias + count[index];
-			symbolMappings.push({name: current[j].alias, obj: new Component.variable(current[j].type)});
+			var newVariable = new Component.variable(current[j].type);
+			inputVariables.push(newVariable);
+			symbolMappings.push({name: current[j].alias, obj: newVariable});
 		}
 	}
 	// Loop through all the actions
@@ -131,6 +134,7 @@ function buildExerciseFromActions(plan, table) {
 	var res = {};
 	res.head = head;
 	res.symbols = symbolMappings;
+	res.inputVariables = inputVariables;
 	return res;
 }
 
