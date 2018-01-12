@@ -95,7 +95,7 @@ relationship_parameter_list
 	}
 
 action_list
-	= "name:" _ a:action_name_token z:"*"? _ ";" _ "parameters:" _ b:action_parameter_list? _ ";" _ "preconditions:" _ c:action_condition_list? _ ";" _  "creates:" _ d:create_list? _ ";" _ "effects:" _ e:action_condition_list? _ ";" _ f:("~" block_codes "~")? _ g:action_list
+	= "name:" _ a:action_name_token z:"*"? _ ";" _ "initialize:" _ as:initialize_list? _ ";" _ "parameters:" _ b:action_parameter_list? _ ";" _ "preconditions:" _ c:action_condition_list? _ ";" _  "creates:" _ d:create_list? _ ";" _ "effects:" _ e:action_condition_list? _ ";" _ f:("~" block_codes "~")? _ g:action_list
 	{
 		if (b == null) {
 			b = [];
@@ -116,9 +116,13 @@ action_list
 		if (z == null) {
 			isComputed = false;
 		}
+		if (as == null) {
+			as = [];
+		}
 
 		return [{
 			name: a,
+			initialize: as,
 			parameters: b,
 			preconditions: c,
 			creates: d,
@@ -267,6 +271,33 @@ block_codes
 		return x.join("");
 	}
 
+initialize_list
+	= x:initialize_token _ y:initialize_list
+	{
+		return [x].concat(y);
+	}
+	/ x:initialize_token _
+	{
+		return [x];
+	}
+
+initialize_token
+	= x:data_type "[" y:initialize_alias "]"
+	{
+		return {type: x, alias: y};
+	}
+
+data_type
+	= x:"number"
+	{
+		return "number";
+	}
+
+initialize_alias
+	= x:[a-zA-Z]+
+	{
+		return x.join("");
+	}
 
 _
 	= [ \t\r\n]*

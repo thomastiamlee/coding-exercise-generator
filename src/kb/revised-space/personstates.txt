@@ -1,10 +1,12 @@
 name: gethungry;
+initialize: ;
 parameters: person;
 preconditions: !hungry(0);
 creates: ;
 effects: hungry(0);
 
 name: getlonely;
+initialize: ;
 parameters: person;
 preconditions: !lonely(0);
 creates: ;

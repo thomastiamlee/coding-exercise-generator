@@ -1,23 +1,47 @@
 name: mentionheightinmeters;
+initialize: number[height];
 parameters: person;
 preconditions: !hasproperty(0 height);
 creates: 0/height;
 effects: hasproperty(0 height) in(+0 meters) visiblein(+0 meters);
+~
+0
+0
+a,{-0},{+0}
+~
 
 name: mentionheightinfeet;
+initialize: number[height];
 parameters: person;
 preconditions: !hasproperty(0 height);
 creates: 0/height;
 effects: hasproperty(0 height) in(+0 feet) visiblein(+0 feet);
+~
+0
+0
+a,{-0},{+0}
+~
 
 name: mentionweightinkilograms;
+initialize: number[weight];
 parameters: person;
 preconditions: !hasproperty(0 weight);
 creates: 0/weight;
 effects: hasproperty(0 weight) in(+0 kilograms);
+~
+0
+0
+a,{-0},{+0}
+~
 
 name: mentionweightinpounds;
+initialize: number[weight];
 parameters: person;
 preconditions: !hasproperty(0 weight);
 creates: 0/weight;
 effects: hasproperty(0 weight) in(+0 pounds);
+~
+0
+0
+a,{-0},{+0}
+~

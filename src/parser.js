@@ -76,6 +76,7 @@ function parseKnowledgeBase(path) {
 	for (var i = 0; i < action_list.length; i++) {
 		var current = action_list[i];
 		var name = current.name;
+		var initialize = current.initialize;
 		var parameters = current.parameters;
 		var preconditions = current.preconditions;
 		var creates = current.creates;
@@ -155,7 +156,7 @@ function parseKnowledgeBase(path) {
 			}
 		}
 
-		var newObj = {name: name, parameters: parameters, preconditions: preconditions, creates: creates, effects: effects, blockData: blockData, isComputed: isComputed};
+		var newObj = {name: name, initialize: initialize, parameters: parameters, preconditions: preconditions, creates: creates, effects: effects, blockData: blockData, isComputed: isComputed};
 		if (!actions[name]) {
 			actions[name] = [];
 		}

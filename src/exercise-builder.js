@@ -8,7 +8,24 @@ function buildExerciseFromActions(plan, table) {
 	// Add the local entities as variables
 	var localEntities = table.getLocalEntity();
 	for (var i = 0; i < localEntities.length; i++) {
-		symbolMappings.push({name: localEntities[i].name, obj: new Component.variable("number")});
+		symbolMappings.push({name: "e_" + localEntities[i].name, obj: new Component.variable("number")});
+	}
+	// Add all the initialization variables
+	var allAliases = [];
+	var count = [];
+	for (var i = 0; i < plan.length; i++) {
+		var current = plan[i].action.initialize;
+		for (var j = 0; j < current.length; j++) {
+			var alias = current[j].alias;
+			if (allAliases.indexOf(alias) == -1) {
+				allAliases.push(alias);
+				count.push(0);
+			}
+			var index = allAliases.indexOf(alias);
+			count[index]++;
+			current[j].alias = alias + count[index];
+			symbolMappings.push({name: current[j].alias, obj: new Component.variable(current[j].type)});
+		}
 	}
 	// Loop through all the actions
 	for (var i = 0; i < plan.length; i++) {
@@ -165,12 +182,17 @@ function convertOperandStringToObject(operandString, step, symbolMappings) {
 		else if (data.charAt(0) == "+") {
 			var index = parseInt(data.substring(1));
 			var name = create[index].name;
-			return getOperandFromSymbol(name, symbolMappings);
+			return getOperandFromSymbol("e_" + name, symbolMappings);
+		}
+		else if (data.charAt(0) == "-") {
+			var index = parseInt(data.substring(1));
+			var alias = step.action.initialize[index].alias;
+			return getOperandFromSymbol(alias, symbolMappings);	
 		}
 		else {
 			var index = parseInt(data);
 			var name = parameters[index].name;
-			return getOperandFromSymbol(name, symbolMappings);
+			return getOperandFromSymbol("e_" + name, symbolMappings);
 		}
 	}
 }
