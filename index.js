@@ -8,6 +8,8 @@ const ExerciseBuilder = require("./src/exercise-builder");
 const PlannerUtility = require("./src/planner-utility");
 const ExperimentServer = require("./experiment/server");
 const TextGenerator = require("./src/text-generator");
+const Generator = require("./src/generator");
+const TestCaseGenerator = require("./src/test-case-generator");
 
 //var kb = Parser.parseKnowledgeBase("./src/kb/experiment-space");
 //var table = new PlannerUtility.memory();
@@ -15,6 +17,9 @@ const TextGenerator = require("./src/text-generator");
 //var plan = Planner.planExercise(kb, table);
 //var text = TextGenerator.loadTemplates();
 
-VisualizationServer.start();
+var exercise = Generator.generateBasicExercise({complexity: 3});
+TestCaseGenerator.generateTestCases(exercise, 10);
+
+//VisualizationServer.start();
 
 //ExperimentServer.start();

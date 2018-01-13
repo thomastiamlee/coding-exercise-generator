@@ -321,6 +321,7 @@ function placeholder(index) {
 
 /* Returns an operand object representing the value of a given variable */
 function getValueFromMemory(memory, variable) {
+	
 	for (var i = 0; i < memory.length; i++) {
 		if (memory[i].variable === variable) {
 			return new operand(variable.type, memory[i].value);
