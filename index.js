@@ -9,12 +9,12 @@ const PlannerUtility = require("./src/planner-utility");
 const ExperimentServer = require("./experiment/server");
 const TextGenerator = require("./src/text-generator");
 
-var kb = Parser.parseKnowledgeBase("./src/kb/experiment-space");
-var table = new PlannerUtility.memory();
-table.createLocalEntity([kb.getGlobalEntity("person"), kb.getGlobalEntity("person")]);
-var plan = Planner.planExercise(kb, table);
-var text = TextGenerator.loadTemplates();
+//var kb = Parser.parseKnowledgeBase("./src/kb/experiment-space");
+//var table = new PlannerUtility.memory();
+//table.createLocalEntity([kb.getGlobalEntity("person"), kb.getGlobalEntity("person")]);
+//var plan = Planner.planExercise(kb, table);
+//var text = TextGenerator.loadTemplates();
 
-//VisualizationServer.start();
+VisualizationServer.start();
 
 //ExperimentServer.start();

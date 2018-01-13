@@ -31,13 +31,13 @@ greater
 
 less
 -if [0] is smaller than [1], (0) otherwise (1)
--if the value of [0] is less than [0], (0) otherwise (1)
+-if the value of [0] is less than [1], (0) otherwise (1)
 
 greaterequal
 -if [0] is greater than or equal to [1], (0) otherwise (1)
 
 lessequal
--if [0] is less then or equal to [1], (0) otherwise (1)
+-if [0] is less than or equal to [1], (0) otherwise (1)
 
 return
 -return [0].
