@@ -150,6 +150,12 @@ input.test-panel-input {
 	margin-left: 10px;
 }
 
+#test-spinner {
+	width: 24px;
+	position: relative;
+	top: 5px;
+}
+
 .fixed-code {
 	font-family: Courier new;
 	font-size: 11pt;

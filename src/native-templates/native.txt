@@ -1,0 +1,43 @@
+addition
+-add [0] and [1]. store the result in [o]. (0)
+-get the total of [0] and [1]. store the result in [o]. (0)
+
+subtraction
+-subtract [1] from [0]. store the result in [o]. (0)
+-perform [0] minus [1]. store the result in [o]. (0)
+
+multiplication
+-multiply [0] and [1]. store the result in [o]. (0)
+-get the product of [0] and [1]. store the result in [o]. (0)
+
+division
+-divide [0] by [1] and ignore the remainder. store the result in [o]. (0)
+
+modulo
+-get the remainder when [0] is divided by [1]. store the result in [o]. (0)
+-perform [0] modulo [1]. store the result in [o]. (0)
+
+equal
+-if [0] is equal to [1], (0) otherwise, (1)
+-if [0] and [1] have the same value, (0) otherwise (1)
+
+notequal
+-if [0] is not equal to [1], (0) otherwise (1)
+-if [0] and [1] have different values, (0) otherwise (1)
+
+greater
+-if [0] is larger than [1], (0) otherwise (1)
+-if the value of [0] is bigger than [1], (0) otherwise (1)
+
+less
+-if [0] is smaller than [1], (0) otherwise (1)
+-if the value of [0] is less than [0], (0) otherwise (1)
+
+greaterequal
+-if [0] is greater than or equal to [1], (0) otherwise (1)
+
+lessequal
+-if [0] is less then or equal to [1], (0) otherwise (1)
+
+return
+-return [0].
