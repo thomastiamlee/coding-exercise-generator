@@ -191,9 +191,24 @@ function node(type) {
 			}
 		}
 	}
+	
+	/* Gets all the children from this node, including this node, following the normal path, following in-order traversal. */
+	this.getAllChildrenSuccessors = function(added) {
+		if (!added) {
+			added = [];
+		}
+		var target = this;
+		added.push(target);
+		for (var i = 0; i < target.getSuccessorCount(); i++) {
+			if (target.successors[i] != null) {
+				target.successors[i].getAllChildrenSuccessors(added);
+			}
+		}
+		return added;
+	}
 
 	/* Gets all the children from this node, including this node, following the solution path, following in-order traversal. */
-	this.getAllSolutionSuccessors = function(added) {
+	this.getAllChildrenSolutionSuccessors = function(added) {
 		if (!added) {
 			added = [];
 		}
@@ -205,13 +220,13 @@ function node(type) {
 		var res = [target];
 		if (target.type == NODE_TYPE_OPERATION || target.type == NODE_TYPE_ASSIGNMENT) {
 			var first = target.solutionSuccessors[0];
-			if (first != null && added.indexOf(first) == -1) res = res.concat(first.getAllSolutionSuccessors(added));
+			if (first != null && added.indexOf(first) == -1) res = res.concat(first.getAllChildrenSolutionSuccessors(added));
 		}
 		else if (target.type == NODE_TYPE_CONDITION) {
 			var first = target.solutionSuccessors[0];
-			if (first != null && added.indexOf(first) == -1) res = res.concat(first.getAllSolutionSuccessors(added));
+			if (first != null && added.indexOf(first) == -1) res = res.concat(first.getAllChildrenSolutionSuccessors(added));
 			var second = target.solutionSuccessors[1];
-			if (second != null && added.indexOf(second) == -1) res = res.concat(second.getAllSolutionSuccessors(added));
+			if (second != null && added.indexOf(second) == -1) res = res.concat(second.getAllChildrenSolutionSuccessors(added));
 		}
 		return res;
 	}

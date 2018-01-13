@@ -87,7 +87,8 @@ function generateBasicExercise(options) {
 			var current = nodes[i].node;
 			var candidates = [];
 			for (var j = 0; j < critical.length; j++) {
-				
+				var freeIndices = critical[j].getFreeInputOperandIndices();
+				if (freeIndices.length == 0) continue;
 			}
 		}
 	}
