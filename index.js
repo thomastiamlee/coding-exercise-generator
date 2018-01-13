@@ -12,6 +12,6 @@ const ExperimentServer = require("./experiment/server");
 //var table = new PlannerUtility.memory();
 //table.createLocalEntity([kb.getGlobalEntity("person"), kb.getGlobalEntity("person")]);
 //var plan = Planner.planExercise(kb, table);
-VisualizationServer.start();
+//VisualizationServer.start();
 
-//ExperimentServer.start();
+ExperimentServer.start();

@@ -4,8 +4,23 @@
 		<link rel="stylesheet" href="resource/css/normalize.css" />
 		<link rel="stylesheet" href="resource/css/skeleton.css" />
 		<link rel="stylesheet" href="resource/css/experiment.css" />
+		<script defer src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
 	</head>
 	<body>
+		<div id="overlay"></div>
+		<div id="fake-overlay">
+			<div id="overlay-panel">
+				<div id="loading-panel" class="overlay-panel-content">
+					<img id="loading-icon" src="resource/img/ellipsis.gif" />
+					<p id="loading-text">Thinking of an exercise for you...</p>
+				</div>
+				<div id="notification-panel" class="overlay-panel-content">
+					<i id="notification-icon" class="far fa-circle"></i>
+					<p id="notification-text">Your code passed the test cases. Nice work!</p>
+					<a id="notification-button">Proceed</a>
+				</div>
+			</div>
+		</div>
 		<div class="container" id="main-container">
 			<div class="row">
 				<div class="twelve columns">
@@ -18,14 +33,50 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="eight columns">
-					<p>Editor</p>
+				<div class="six columns">
+					<p class="fixed-code">int func(int I1, int I2, int I3) {</p>
+					<div id="editor"></div>
+					<p class="fixed-code">}</p>
 				</div>
-				<div class="four columns">
-					<a>Run Code</a>
-					<a>Submit</a>
+				<div class="six columns">
+				
+				</div>
+			</div>
+			<div class="row">
+				<div class="six columns">
+					<div id="test-panel">
+						<div class="test-panel-group">
+							<label class="test-panel-label">I1</label>
+							<input class="test-panel-input" type="text" />
+						</div>
+						<div class="test-panel-group">
+							<label class="test-panel-label">I2</label>
+							<input class="test-panel-input" type="text" />
+						</div>
+						<div class="test-panel-group">
+							<label class="test-panel-label">I3</label>
+							<input class="test-panel-input" type="text" />
+						</div>
+						<br />
+						<a id="test-button">Test</a>
+						<p id="test-result-text">Result: <span id="result">10</span></p>
+					</div>	
+					<a id="submit-button">Submit</a>
+				</div>
+				</div>
+				<div class="six columns">
+				
 				</div>
 			</div>
 		</div>
+		
+		<!-- Base scripts -->
+		<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+		<script src="resource/js/ace/ace.js"></script>
+		<script>
+			var editor = ace.edit("editor");
+			editor.setTheme("ace/theme/chrome");
+			editor.getSession().setMode("ace/mode/java");
+		</script>
 	</body>
 </html>

@@ -33,7 +33,7 @@ function start() {
 			path: "/resource/{file*}",
 			handler: {
 				directory: {
-					path: "./src/resources/"
+					path: "./experiment/resources/"
 				}
 			}
 		});
