@@ -104,21 +104,31 @@ function generateBasicExercise(options) {
 			symbolMappings.push({name: "X" + variableCounter, obj: variable});
 			variableCounter--;
 			current.setVariableOutput(variable);
-			var candidates = [];
-			for (var j = 0; j < critical.length; j++) {
-				var freeIndices = critical[j].getFreeInputOperandIndices();
-				if (freeIndices.length == 0) continue;
-				var children = current.getAllChildrenSuccessors();
-				if (children.indexOf(critical[j]) == -1) continue;
-				candidates.push(critical[j]);
+			var attachedCount = 0;
+			while (true) {
+				var candidates = [];
+				for (var j = 0; j < critical.length; j++) {
+					var freeIndices = critical[j].getFreeInputOperandIndices();
+					if (freeIndices.length == 0) continue;
+					var children = current.getAllChildrenSuccessors();
+					if (children.indexOf(critical[j]) == -1) continue;
+					candidates.push(critical[j]);
+				}
+				if (candidates.length == 0 && attachedCount == 0) {
+					return null;
+				}
+				else if (candidates.length == 0) {
+					break;
+				}
+				var selected = candidates[Math.floor(Math.random() * candidates.length)];
+				var freeIndices = selected.getFreeInputOperandIndices();
+				var targetIndex = freeIndices[Math.floor(Math.random() * freeIndices.length)];
+				selected.attachInputOperand(variable, targetIndex);
+				attachedCount++;
+				if (Math.random() >= 0.5) {
+					break;
+				}
 			}
-			if (candidates.length == 0) {
-				return null;
-			}
-			var selected = candidates[Math.floor(Math.random() * candidates.length)];
-			var freeIndices = selected.getFreeInputOperandIndices();
-			var targetIndex = freeIndices[Math.floor(Math.random() * freeIndices.length)];
-			selected.attachInputOperand(variable, targetIndex);
 			critical.push(current);
 			nodes.splice(0, 1);
 		}
