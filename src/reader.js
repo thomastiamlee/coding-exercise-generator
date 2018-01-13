@@ -173,13 +173,15 @@ function buildBlockFromInformation(name, storage) {
 		var res = new Component.node(Component.NODE_TYPE_BLOCK_OPERATION);
 		res.setInternalHead(nodes[0].node);
 		res.setInternalTerminalNodes(internalTerminalNodes);
+		res.inputOperandsSize = target.blockInputInformation.length;
 		return res;
 	}
 	else if (target.type == "c") {
 		var res = new Component.node(Component.NODE_TYPE_BLOCK_CONDITION);
 		res.setInternalHead(nodes[0].node);
 		res.setInternalTerminalNodes(internalTerminalNodes);
-		res;
+		res.inputOperandsSize = target.blockInputInformation.length;
+		return res;
 	}
 }
 

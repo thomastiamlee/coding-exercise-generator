@@ -11,6 +11,20 @@ function node(type) {
 	this.inputOperandRestrictions = []; // the restrictions to the input operands
 	this.successors = []; // the succeeding nodes after the current node
 	this.solutionSuccessors = []; // the succeeding nodes after the current node, used in the solution
+	this.inputOperandsSize = -1;
+	
+	if (type == NODE_TYPE_OPERATION) {
+		this.inputOperandsSize = 2;
+	}
+	else if (type == NODE_TYPE_CONDITION) {
+		this.inputOperandsSize = 2;
+	}
+	else if (type == NODE_TYPE_ASSIGNMENT) {
+		this.inputOperandsSize = 1;
+	}
+	else if (type == NODE_TYPE_RETURN) {
+		this.inputOperandsSize = 1;
+	}
 
 	if (type == NODE_TYPE_OPERATION || type == NODE_TYPE_BLOCK_OPERATION || type == NODE_TYPE_ASSIGNMENT) {
 		this.variableOutput = null;
@@ -240,6 +254,17 @@ function node(type) {
 			return res;
 		}
 		return [];
+	}
+	
+	this.getFreeInputOperandIndices = function() {
+		var res = [];
+		var count = this.inputOperandsSize;
+		for (var i = 0; i < count; i++) {
+			if (this.inputOperands[i] == null) {
+				res.push(i);
+			}
+		}
+		return res;
 	}
 }
 

@@ -61,6 +61,37 @@ function generateBasicExercise(options) {
 		return {head: head, nodes: nodes};
 	}
 	
+	function assignParameters(head, nodes) {
+		// Sort the nodes in decreasing order of depth
+		for (var i = 0; i < nodes.length; i++) {
+			for (var j = i + 1; j < nodes.length; j++) {
+				if (nodes[i].depth < nodes[j].depth) {
+					var temp = nodes[i];
+					nodes[i] = nodes[j];
+					nodes[j] = temp;
+				}
+			}
+		}
+		// Initialize critical nodes
+		var critical = [];
+		for (var i = 0; i < nodes.length; i++) {
+			var current = nodes[i].node;
+			if (current.type == Component.NODE_TYPE_CONDITION || current.type == Component.NODE_TYPE_BLOCK_CONDITION || current.type == Component.NODE_TYPE_RETURN) {
+				critical.push(current);
+				nodes.splice(i, 1);
+				i--;
+			}
+		}
+		// Loop through each node and make it critical
+		for (var i = 0; i < nodes.length; i++) {
+			var current = nodes[i].node;
+			var candidates = [];
+			for (var j = 0; j < critical.length; j++) {
+				
+			}
+		}
+	}
+	
 	var structure = generateStructure(complexity);
 	return {head: structure.head, symbols: [], inputVariables: []};
 }

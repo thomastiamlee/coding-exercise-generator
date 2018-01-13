@@ -725,4 +725,48 @@ describe("node", function() {
 			Assert(res.length == 0);
 		});
 	});
+	
+	describe("#getFreeInputOperandIndices", function() {
+		var o1 = new Component.variable("number");
+		var o2 = new Component.variable("number");
+		var o3 = new Component.variable("number");
+		it("Operation node tests.", function() {
+			var n1 = new Component.node(Component.NODE_TYPE_OPERATION);
+			var res = n1.getFreeInputOperandIndices();
+			Assert(res.length == 2 && res.indexOf(0) != -1 && res.indexOf(1) != -1);
+			n1.attachInputOperand(o1, 0);
+			var res = n1.getFreeInputOperandIndices();
+			Assert(res.length == 1 && res.indexOf(1) != -1);
+			n1.attachInputOperand(o2, 1);
+			var res = n1.getFreeInputOperandIndices();
+			Assert(res.length == 0);
+		});
+		it("Condition node tests.", function() {
+			var n1 = new Component.node(Component.NODE_TYPE_CONDITION);
+			var res = n1.getFreeInputOperandIndices();
+			Assert(res.length == 2 && res.indexOf(0) != -1 && res.indexOf(1) != -1);
+			n1.attachInputOperand(o1, 1);
+			var res = n1.getFreeInputOperandIndices();
+			Assert(res.length == 1 && res.indexOf(0) != -1);
+			n1.attachInputOperand(o2, 0);
+			var res = n1.getFreeInputOperandIndices();
+			Assert(res.length == 0);
+		});
+		it("Return node tests.", function() {
+			var n1 = new Component.node(Component.NODE_TYPE_RETURN);
+			var res = n1.getFreeInputOperandIndices();
+			Assert(res.length == 1 && res.indexOf(0) != -1);
+			n1.attachInputOperand(o3, 0);
+			var res = n1.getFreeInputOperandIndices();
+			Assert(res.length == 0);
+		});
+		it("Assignment node tests.", function() {
+			var n1 = new Component.node(Component.NODE_TYPE_ASSIGNMENT);
+			var res = n1.getFreeInputOperandIndices();
+			Assert(res.length == 1 && res.indexOf(0) != -1);
+			n1.attachInputOperand(o3, 0);
+			var res = n1.getFreeInputOperandIndices();
+			Assert(res.length == 0);
+		});
+	});
 });
