@@ -1,0 +1,52 @@
+{
+	function log(message) {
+		console.log(message);
+	}
+}
+
+start
+	= x:item_list
+	{
+		return x;
+	}
+
+item_list
+	= x:item [\r\n]+ y:item_list
+	{
+		return [x].concat(y);
+	}
+	/ x:item
+	{
+		return [x];
+	}
+	
+item
+	= x:heading_token [\r\n]+ y:template_list
+	{
+		return {
+			heading: x,
+			templates: y
+		}
+	}
+
+heading_token
+	= x:[a-z]+
+	{
+		return x.join("");
+	}
+
+template_list
+	= x:template [\r\n]+ y:template_list
+	{
+		return [x].concat(y);
+	}
+	/ x:template
+	{
+		return [x];
+	}
+
+template
+	= "-" x:[\[\]\(\)a-z0-9., ]+
+	{
+		return x.join("");
+	}

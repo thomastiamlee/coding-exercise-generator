@@ -7,11 +7,14 @@ const VisualizationServer = require("./src/visualization-server");
 const ExerciseBuilder = require("./src/exercise-builder");
 const PlannerUtility = require("./src/planner-utility");
 const ExperimentServer = require("./experiment/server");
+const TextGenerator = require("./src/text-generator");
 
 var kb = Parser.parseKnowledgeBase("./src/kb/experiment-space");
 var table = new PlannerUtility.memory();
 table.createLocalEntity([kb.getGlobalEntity("person"), kb.getGlobalEntity("person")]);
 var plan = Planner.planExercise(kb, table);
-VisualizationServer.start();
+var text = TextGenerator.loadTemplates();
+
+//VisualizationServer.start();
 
 //ExperimentServer.start();
