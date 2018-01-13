@@ -531,4 +531,103 @@ describe("node", function() {
 			Assert(passed);
 		});
 	});
+	
+	describe("#getSuccessorCount()", function() {
+		it("A new operation node should have no successors attached.", function() {
+			var n1 = new Component.node(Component.NODE_TYPE_OPERATION);
+			Assert(n1.getSuccessorCount() == 0);
+		});
+		it("An operation node attached to something should have one successor attached.", function() {
+			var n1 = new Component.node(Component.NODE_TYPE_OPERATION);
+			var n2 = new Component.node(Component.NODE_TYPE_CONDITION);
+			n1.attachNode(n2, 0);
+			Assert(n1.getSuccessorCount() == 1);
+		});
+		it("A new condition node should have no successors attached.", function() {
+			var n1 = new Component.node(Component.NODE_TYPE_CONDITION);
+			Assert(n1.getSuccessorCount() == 0);
+		});
+		it("A condition node with one node attached should have one successor attached (true branch).", function() {
+			var n1 = new Component.node(Component.NODE_TYPE_CONDITION);
+			var n2 = new Component.node(Component.NODE_TYPE_OPERATION);
+			n1.attachNode(n2, 0);
+			Assert(n1.getSuccessorCount() == 1);
+		});
+		it("A condition node with one node attached should have one successor attached (false branch).", function() {
+			var n1 = new Component.node(Component.NODE_TYPE_CONDITION);
+			var n2 = new Component.node(Component.NODE_TYPE_OPERATION);
+			n1.attachNode(n2, 1);
+			Assert(n1.getSuccessorCount() == 1);
+		});
+		it("A condition node with two nodes attached should have two successors attached.", function() {
+			var n1 = new Component.node(Component.NODE_TYPE_CONDITION);
+			var n2 = new Component.node(Component.NODE_TYPE_OPERATION);
+			var n3 = new Component.node(Component.NODE_TYPE_OPERATION);
+			n1.attachNode(n2, 1);
+			n1.attachNode(n3, 0);
+			Assert(n1.getSuccessorCount() == 2);
+		});
+		it("A return node should have no successors attached.", function() {
+			var n1 = new Component.node(Component.NODE_TYPE_RETURN);
+			Assert(n1.getSuccessorCount() == 0);
+		});
+		it("Block case.", function() {
+			var n1 = new Component.node(Component.NODE_TYPE_OPERATION);
+			var n2 = new Component.node(Component.NODE_TYPE_CONDITION);
+			var n3 = new Component.node(Component.NODE_TYPE_BLOCK_OPERATION);
+			var n4 = new Component.node(Component.NODE_TYPE_BLOCK_CONDITION);
+			var n5 = new Component.node(Component.NODE_TYPE_OPERATION);
+			var n6 = new Component.node(Component.NODE_TYPE_CONDITION);
+			var n7 = new Component.node(Component.NODE_TYPE_OPERATION);
+			var n8 = new Component.node(Component.NODE_TYPE_OPERATION);
+			var n9 = new Component.node(Component.NODE_TYPE_RETURN);
+			var n10 = new Component.node(Component.NODE_TYPE_RETURN);
+			n5.attachNode(n6, 0);
+			n7.attachNode(n8, 0);
+			n3.setInternalHead(n7);
+			n3.setInternalTerminalNodes([n8]);
+			n4.setInternalHead(n5);
+			n4.setInternalTerminalNodes([n6]);
+			Assert(n1.getSuccessorCount() == 0);
+			n1.attachNode(n2, 0);
+			Assert(n1.getSuccessorCount() == 1);
+			Assert(n3.getSuccessorCount() == 0);
+			n2.attachNode(n3, 0);
+			n3.attachNode(n9, 0);
+			Assert(n2.getSuccessorCount() == 1);
+			Assert(n3.getSuccessorCount() == 1);
+			n2.attachNode(n4, 1);
+			Assert(n2.getSuccessorCount() == 2);
+			Assert(n4.getSuccessorCount() == 0);
+			n4.attachNode(n9, 0);
+			Assert(n4.getSuccessorCount() == 1);
+			n4.attachNode(n10, 1);
+			Assert(n4.getSuccessorCount() == 2);
+			Assert(n9.getSuccessorCount() == 0);
+			Assert(n10.getSuccessorCount() == 0);
+		});
+	});
+	
+	describe("#getMaximumSuccessors()", function() {
+		var n1 = new Component.node(Component.NODE_TYPE_OPERATION);
+		var n2 = new Component.node(Component.NODE_TYPE_CONDITION);
+		var n3 = new Component.node(Component.NODE_TYPE_BLOCK_OPERATION);
+		var n4 = new Component.node(Component.NODE_TYPE_BLOCK_CONDITION);
+		var n5 = new Component.node(Component.NODE_TYPE_RETURN);
+		it("An operation node should have a maximum of 1 successors.", function() {
+			Assert(n1.getMaximumSuccessors() == 1);
+		});
+		it("A condition node should have a maximum of 2 successors.", function() {
+			Assert(n2.getMaximumSuccessors() == 2);
+		});
+		it("An block operation node should have a maximum of 1 successors.", function() {
+			Assert(n3.getMaximumSuccessors() == 1);
+		});
+		it("A block condition node should have a maximum of 2 successors.", function() {
+			Assert(n4.getMaximumSuccessors() == 2);
+		});
+		it("An return node should have a maximum of 0 successors.", function() {
+			Assert(n5.getMaximumSuccessors() == 0);
+		});
+	});
 });

@@ -59,7 +59,6 @@ function node(type) {
 			this.internalHead.replaceAllPlaceholders(operand, index);
 		}
 	}
-
 	this.replaceAllPlaceholders = function(operand, index, visited) {
 		if (!visited) { // Prevent checked nodes from being checked again
 			visited = [];
@@ -201,6 +200,31 @@ function node(type) {
 			if (second != null && added.indexOf(second) == -1) res = res.concat(second.getAllSolutionSuccessors(added));
 		}
 		return res;
+	}
+	
+	this.getSuccessorCount = function() {
+		if (this.type == NODE_TYPE_OPERATION || this.type == NODE_TYPE_BLOCK_OPERATION) {
+			var total = 0;
+			if (this.successors[0] != null)	total++;
+			return total;
+		}
+		else if (this.type == NODE_TYPE_CONDITION || this.type == NODE_TYPE_BLOCK_CONDITION) {
+			var total = 0;
+			if (this.successors[0] != null)	total++;
+			if (this.successors[1] != null)	total++;
+			return total;
+		}
+		return 0;
+	}
+	
+	this.getMaximumSuccessors = function() {
+		if (this.type == NODE_TYPE_OPERATION || this.type == NODE_TYPE_BLOCK_OPERATION) {
+			return 1;
+		}
+		else if (this.type == NODE_TYPE_CONDITION || this.type == NODE_TYPE_BLOCK_CONDITION) {
+			return 2;
+		}
+		return 0;
 	}
 }
 
