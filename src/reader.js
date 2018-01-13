@@ -376,7 +376,7 @@ function convertToFlowchartDefinition(exercise) {
 	var nodeInformation = "";
 	var nodeConnections = "";
 
-	var nodeList = head.getAllSolutionSuccessors();
+	var nodeList = head.getAllChildrenSolutionSuccessors();
 	for (var i = 0; i < nodeList.length; i++) {
 		var currentNode = nodeList[i];
 		var letter = "N" + (i + 1);
