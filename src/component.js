@@ -226,6 +226,21 @@ function node(type) {
 		}
 		return 0;
 	}
+	
+	this.getFreeSuccessorIndices = function() {
+		if (this.type == NODE_TYPE_OPERATION || this.type == NODE_TYPE_BLOCK_OPERATION) {
+			var res = [];
+			if (this.successors[0] == null) res.push(0);
+			return res;
+		}
+		else if (this.type == NODE_TYPE_CONDITION || this.type == NODE_TYPE_BLOCK_CONDITION) {
+			var res = [];
+			if (this.successors[0] == null) res.push(0);
+			if (this.successors[1] == null) res.push(1);
+			return res;
+		}
+		return [];
+	}
 }
 
 function operand(type, value) {

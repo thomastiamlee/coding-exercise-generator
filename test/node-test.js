@@ -630,4 +630,99 @@ describe("node", function() {
 			Assert(n5.getMaximumSuccessors() == 0);
 		});
 	});
+	
+	describe("#getFreeSuccessorIndices()", function() {
+		it("A new operation node should have 0 as the free slot.", function() {
+			var n1 = new Component.node(Component.NODE_TYPE_OPERATION);
+			var res = n1.getFreeSuccessorIndices();
+			console.log(res);
+			Assert(res.length == 1 && res.indexOf(0) != -1);
+		});
+		it("An operation node attached to something should have no free slots.", function() {
+			var n1 = new Component.node(Component.NODE_TYPE_OPERATION);
+			var n2 = new Component.node(Component.NODE_TYPE_CONDITION);
+			n1.attachNode(n2, 0);
+			var res = n1.getFreeSuccessorIndices();
+			Assert(res.length == 0);
+		});
+		it("A new condition node should have 0 and 1 as the free slots.", function() {
+			var n1 = new Component.node(Component.NODE_TYPE_CONDITION);
+			var res = n1.getFreeSuccessorIndices();
+			Assert(res.length == 2 && res.indexOf(0) != -1 && res.indexOf(1) != -1);
+		});
+		it("A condition node with one node attached should have 1 as the free slot (true branch).", function() {
+			var n1 = new Component.node(Component.NODE_TYPE_CONDITION);
+			var n2 = new Component.node(Component.NODE_TYPE_OPERATION);
+			n1.attachNode(n2, 0);
+			var res = n1.getFreeSuccessorIndices();
+			Assert(res.length == 1 && res.indexOf(1) != -1);
+		});
+		it("A condition node with one node attached should have 0 as the free branch (false branch).", function() {
+			var n1 = new Component.node(Component.NODE_TYPE_CONDITION);
+			var n2 = new Component.node(Component.NODE_TYPE_OPERATION);
+			n1.attachNode(n2, 1);
+			var res = n1.getFreeSuccessorIndices();
+			Assert(res.length == 1 && res.indexOf(0) != -1);
+		});
+		it("A condition node with two nodes attached should have no free slots.", function() {
+			var n1 = new Component.node(Component.NODE_TYPE_CONDITION);
+			var n2 = new Component.node(Component.NODE_TYPE_OPERATION);
+			var n3 = new Component.node(Component.NODE_TYPE_OPERATION);
+			n1.attachNode(n2, 1);
+			n1.attachNode(n3, 0);
+			var res = n1.getFreeSuccessorIndices();
+			Assert(res.length == 0);
+		});
+		it("A return node should have no free slots.", function() {
+			var n1 = new Component.node(Component.NODE_TYPE_RETURN);
+			var res = n1.getFreeSuccessorIndices();
+			Assert(res.length == 0);
+		});
+		it("Block case.", function() {
+			var n1 = new Component.node(Component.NODE_TYPE_OPERATION);
+			var n2 = new Component.node(Component.NODE_TYPE_CONDITION);
+			var n3 = new Component.node(Component.NODE_TYPE_BLOCK_OPERATION);
+			var n4 = new Component.node(Component.NODE_TYPE_BLOCK_CONDITION);
+			var n5 = new Component.node(Component.NODE_TYPE_OPERATION);
+			var n6 = new Component.node(Component.NODE_TYPE_CONDITION);
+			var n7 = new Component.node(Component.NODE_TYPE_OPERATION);
+			var n8 = new Component.node(Component.NODE_TYPE_OPERATION);
+			var n9 = new Component.node(Component.NODE_TYPE_RETURN);
+			var n10 = new Component.node(Component.NODE_TYPE_RETURN);
+			n5.attachNode(n6, 0);
+			n7.attachNode(n8, 0);
+			n3.setInternalHead(n7);
+			n3.setInternalTerminalNodes([n8]);
+			n4.setInternalHead(n5);
+			n4.setInternalTerminalNodes([n6]);
+			var res = n1.getFreeSuccessorIndices();
+			Assert(res.length == 1 && res.indexOf(0) != -1);
+			n1.attachNode(n2, 0);
+			var res = n1.getFreeSuccessorIndices();
+			Assert(res.length == 0);
+			var res = n3.getFreeSuccessorIndices();
+			Assert(res.length == 1 && res.indexOf(0) != -1);
+			n2.attachNode(n3, 0);
+			n3.attachNode(n9, 0);
+			var res = n2.getFreeSuccessorIndices();
+			Assert(res.length == 1 && res.indexOf(1) != -1);
+			var res = n3.getFreeSuccessorIndices();
+			Assert(res.length == 0);
+			n2.attachNode(n4, 1);
+			var res = n2.getFreeSuccessorIndices();
+			Assert(res.length == 0);
+			var res = n4.getFreeSuccessorIndices();
+			Assert(res.length == 2 && res.indexOf(0) != -1 && res.indexOf(1) != -1);
+			n4.attachNode(n9, 0);
+			var res = n4.getFreeSuccessorIndices();
+			Assert(res.length == 1 && res.indexOf(1) != -1);
+			n4.attachNode(n10, 1);
+			var res = n4.getFreeSuccessorIndices();
+			Assert(res.length == 0);
+			var res = n9.getFreeSuccessorIndices();
+			Assert(res.length == 0);
+			var res = n10.getFreeSuccessorIndices();
+			Assert(res.length == 0);
+		});
+	});
 });
