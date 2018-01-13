@@ -10,6 +10,7 @@ const Parser = require("./parser");
 const ExerciseBuilder = require("./exercise-builder");
 const Planner = require("./planner-simple");
 const PlannerUtility = require("./planner-utility");
+const Generator = require("./generator");
 
 function start() {
 	// Create a server with a host and port
@@ -80,6 +81,16 @@ function start() {
 				var exercise = ExerciseBuilder.buildExerciseFromActions(actionList, table);
 				var flowchart = Reader.convertToFlowchartDefinition(exercise);
 				return reply.view("generation-test.html", {text: text, flowchart: flowchart});
+			}
+		});
+		
+		server.route({
+			method: "GET",
+			path: "/generatetest2",
+			handler: function(request, reply) {
+				var exercise = Generator.generateBasicExercise({complexity: 8});
+				var flowchart = Reader.convertToFlowchartDefinition(exercise);
+				return reply.view("generation-test.html", {text: "Haha", flowchart: flowchart});
 			}
 		});
 		
