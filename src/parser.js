@@ -9,7 +9,7 @@ function parseKnowledgeBase(path) {
 	if (fs.lstatSync(path).isDirectory()) {
 		var kb = fs.readFileSync(path + "/base.txt", "utf-8");
 		fs.readdirSync(path).forEach(file => {
-			if (file.toString() != "base.txt") {
+			if (file.toString() != "base.txt" && file.toString() != "templates.txt") {
 				kb += "\n" + fs.readFileSync(path + "/" + file.toString(), "utf-8");
 			}
 		});

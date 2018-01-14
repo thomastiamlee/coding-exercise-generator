@@ -11,15 +11,17 @@ const TextGenerator = require("./src/text-generator");
 const Generator = require("./src/generator");
 const TestCaseGenerator = require("./src/test-case-generator");
 
-//var kb = Parser.parseKnowledgeBase("./src/kb/experiment-space");
+//var kb = Parser.parseKnowledgeBase("./src/kb/revised-space");
 //var table = new PlannerUtility.memory();
 //table.createLocalEntity([kb.getGlobalEntity("person"), kb.getGlobalEntity("person")]);
 //var plan = Planner.planExercise(kb, table);
+//console.log(plan);
+
 //var text = TextGenerator.loadTemplates();
 
-var exercise = Generator.generateBasicExercise({complexity: 3});
-TestCaseGenerator.generateTestCases(exercise, 10);
+//var exercise = Generator.generateBasicExercise({complexity: 3});
+//TestCaseGenerator.generateTestCases(exercise, 10);
 
-//VisualizationServer.start();
+VisualizationServer.start();
 
 //ExperimentServer.start();

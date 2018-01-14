@@ -135,16 +135,19 @@ function generateBasicExercise(options) {
 		// Fill all nodes without variables as input operands with input variables
 		var allNodes = head.getAllChildrenSuccessors();
 		var inputCounter = 1;
+		var variable = new Component.variable("integer");
 		for (var i = 0; i < allNodes.length; i++) {
 			var current = allNodes[i];
 			var freeIndices = current.getFreeInputOperandIndices();
 			if (freeIndices.length == current.inputOperandsSize) {
-				var variable = new Component.variable("integer");
 				symbolMappings.push({name: "I" + inputCounter, obj: variable});
-				inputCounter++;
 				var targetIndex = freeIndices[Math.floor(Math.random() * freeIndices.length)];
 				current.attachInputOperand(variable, targetIndex);
-				inputVariables.push(variable);
+				if (inputVariables.indexOf(variable) == -1) inputVariables.push(variable);
+			}
+			if (Math.random() >= 0.75) {
+				inputCounter++;
+				variable = new Component.variable("integer");
 			}
 		}
 		// Fill all remaining slots with random constant integers

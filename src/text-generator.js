@@ -12,6 +12,16 @@ function loadNativeTemplates() {
 	return result;
 }
 
+function loadPlannerTemplates(path) {
+	if (fs.lstatSync(path).isDirectory()) {
+		var data = fs.readFileSync(path + "/templates.txt", "utf-8");
+	}
+	else {
+		var data = fs.readFileSync(path, "utf-8");
+	}
+	
+}
+
 function convertExerciseToNativeText(node, symbolMappings, templates) {
 	if (!templates) {
 		templates = loadNativeTemplates();

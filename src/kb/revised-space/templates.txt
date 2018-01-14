@@ -1,0 +1,40 @@
+mentionheightinmeters
+-the height of [0] is [*0] meters.
+-[0] is [*0] meters tall.
+
+mentionheightinfeet
+-the height of [0] is [*0] feet.
+-[0] is [*0] feet tall.
+
+mentionweightinkilograms
+-the weight of [0] is [*0] kilograms.
+-[0] weighs [*0] kilograms. 
+
+mentionweightinpounds
+-the weight of [0] is [*0] pounds.
+-[0] weighs [*0] pounds. 
+
+computebmi
+-compute the body mass index of [0].
+
+convertfeettometers
+-convert [0] to meters.
+-get the equivalent value of [0] in meters.
+
+convertmeterstofeet
+-convert [0] to feet.
+-get the equivalent value of [0] in feet.
+
+convertkilogramstopounds
+-convert [0] to pounds.
+-get the equivalent value of [0] in pounds.
+
+convertcelsiustofahrenheit
+-convert [0] to fahrenheit.
+
+gethungry
+-[0] was hungry.
+
+getlonely
+-[0] was lonely.
+-[0] was sad.
