@@ -19,7 +19,10 @@ function loadPlannerTemplates(path) {
 	else {
 		var data = fs.readFileSync(path, "utf-8");
 	}
-	
+	var grammar = fs.readFileSync(templateGrammarPath, "utf-8");
+	var parser = Peg.generate(grammar, {trace: false});
+	var result = parser.parse(data);
+	return result;
 }
 
 function convertExerciseToNativeText(node, symbolMappings, templates) {
@@ -46,6 +49,21 @@ function convertExerciseToNativeText(node, symbolMappings, templates) {
 		text = text.replace("[0]", getSymbolFromOperand(node.inputOperands[0], symbolMappings));
 	}
 	return text;
+}
+
+function convertPlanToText(plan, pathOrTemplates) {
+	if (typeof pathOrTemplates == "string") {
+		templates = loadPlannerTemplates(pathOrTemplates);
+	}
+	else {
+		templates = pathOrTemplates;
+	}
+	for (var i = 0; i < plan.length; i++) {
+		var step = plan[i];
+		var actionName = step.action.name;
+		var template = getRandomTemplateText(templates, actionName);
+		console.log(template);
+	}
 }
 
 function getRandomTemplateText(templates, key) {
@@ -88,4 +106,4 @@ function getSymbolFromOperand(operand, symbolMappings) {
 	return null;
 }
 
-module.exports = {convertExerciseToNativeText};
+module.exports = {convertExerciseToNativeText, convertPlanToText};
