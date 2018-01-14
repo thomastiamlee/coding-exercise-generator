@@ -1,9 +1,9 @@
 name: computebmi*;
 initialize: ;
 parameters: person weight height;
-preconditions: !hasproperty(0 bmi) hasproperty(0 1) hasproperty(0 2) in(1 kilograms) in(2 meters);
+preconditions: !hasproperty(0 bmi) owns(0 1) owns(0 2) in(1 kilograms) in(2 meters);
 creates: 0/bmi;
-effects: hasproperty(0 bmi);
+effects: hasproperty(0 bmi) owns(0 +0);
 ~
 1
 squared-number

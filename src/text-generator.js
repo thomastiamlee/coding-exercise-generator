@@ -58,12 +58,18 @@ function convertPlanToText(plan, pathOrTemplates) {
 	else {
 		templates = pathOrTemplates;
 	}
+	var res = "";
 	for (var i = 0; i < plan.length; i++) {
 		var step = plan[i];
 		var actionName = step.action.name;
 		var template = getRandomTemplateText(templates, actionName);
-		console.log(template);
+		var initialize = step.action.initialize;
+		for (var j = 0; j < initialize.length; j++) {
+			template = template.replace("[*" + j + "]", initialize[j].alias);
+		}
+		res += template + " ";
 	}
+	console.log(res);
 }
 
 function getRandomTemplateText(templates, key) {

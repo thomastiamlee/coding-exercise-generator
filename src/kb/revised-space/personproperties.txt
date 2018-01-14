@@ -3,7 +3,7 @@ initialize: number[height];
 parameters: person;
 preconditions: !hasproperty(0 height);
 creates: 0/height;
-effects: hasproperty(0 height) in(+0 meters) visiblein(+0 meters);
+effects: hasproperty(0 height) owns(0 +0) in(+0 meters) visiblein(+0 meters);
 ~
 0
 0
@@ -15,7 +15,7 @@ initialize: number[height];
 parameters: person;
 preconditions: !hasproperty(0 height);
 creates: 0/height;
-effects: hasproperty(0 height) in(+0 feet) visiblein(+0 feet);
+effects: hasproperty(0 height) owns(0 +0) in(+0 feet) visiblein(+0 feet);
 ~
 0
 0
@@ -27,7 +27,7 @@ initialize: number[weight];
 parameters: person;
 preconditions: !hasproperty(0 weight);
 creates: 0/weight;
-effects: hasproperty(0 weight) in(+0 kilograms);
+effects: hasproperty(0 weight) owns(0 +0) in(+0 kilograms) visiblein(+0 kilograms);
 ~
 0
 0
@@ -39,7 +39,7 @@ initialize: number[weight];
 parameters: person;
 preconditions: !hasproperty(0 weight);
 creates: 0/weight;
-effects: hasproperty(0 weight) in(+0 pounds);
+effects: hasproperty(0 weight) owns(0 +0) in(+0 pounds) visiblein(+0 kilograms);
 ~
 0
 0
