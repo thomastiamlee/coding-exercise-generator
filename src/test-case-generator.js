@@ -18,7 +18,7 @@ function generateTestCases(exercise, count) {
 			if (!isNaN(returnValue.value))
 				res.push({parameters: parameters, returnValue: returnValue.value});
 		} catch (err) {
-			
+			console.log("ERROR");
 		}
 		
 	}
@@ -28,6 +28,9 @@ function generateTestCases(exercise, count) {
 function generateRandomConstant(type) {
 	if (type == "integer") {
 		return Math.floor(Math.random() * 41) - 20;
+	}
+	else if (type == "number") {
+		return Math.floor(Math.random() * 210) / 10;
 	}
 }
 

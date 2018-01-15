@@ -69,7 +69,7 @@ function convertPlanToText(plan, pathOrTemplates) {
 		}
 		res += template + " ";
 	}
-	console.log(res);
+	return res;
 }
 
 function getRandomTemplateText(templates, key) {

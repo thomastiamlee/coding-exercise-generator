@@ -20,7 +20,7 @@ effects: in(0 feet) !in(0 meters) visiblein(0 feet);
 ~
 0
 1
-o,{0},(number-0.3281),{0},*,1
+o,{0},(number-3.281),{0},*,1
 a,{0},{action_result}	
 ~
 

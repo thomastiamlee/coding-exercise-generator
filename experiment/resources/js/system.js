@@ -40,6 +40,7 @@ function init(editor) {
 	ui.text.correctText = "Your code passed the test cases! Nice job.";
 	ui.text.wrongText = "Your code failed some test cases. Try again.";
 	
+	system.mode = "planner";
 	system.currentProblem = 0;
 	system.problem = {};
 	
@@ -68,8 +69,15 @@ function generateExercise() {
 		});
 	}
 	
+	var url;
+	if (system.mode == "native") {
+		url = "exercise/native";
+	}
+	else if (system.mode == "planner") {
+		url = "exercise/planner";
+	}
 	$.ajax({
-		url: "exercise/native",
+		url: url,
 		type: "get",
 		dataType: "json",
 		success: function(data) {
