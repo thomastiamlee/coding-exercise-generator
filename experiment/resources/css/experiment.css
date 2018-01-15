@@ -51,10 +51,16 @@
 	font-size: 14pt;
 }
 
-#notification-icon {
+#circle {
 	font-size: 3em;
 	margin-bottom: 16px;
 	color: green;
+}
+
+#times {
+	font-size: 3em;
+	margin-bottom: 16px;
+	color: red;
 }
 
 #notification-text {
@@ -104,6 +110,7 @@ div#main-container {
 	font-weight: bold;
 	border-radius: 2px;
 	cursor: pointer;
+	position: relative;
 }
 
 #test-button:hover {
@@ -143,17 +150,26 @@ input.test-panel-input {
 
 .test-panel-label {
 	display: inline;
+	margin-right: 10px;
+}
+
+#test-result-label {
+	display: inline;
+	margin-left: 10px;
 }
 
 #test-result-text {
 	display: inline;
 	margin-left: 10px;
+	font-weight: bold;
 }
 
 #test-spinner {
 	width: 24px;
-	position: relative;
-	top: 5px;
+	position: absolute;
+	top:0px;
+	right: 36px;
+
 }
 
 .fixed-code {

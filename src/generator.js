@@ -140,10 +140,12 @@ function generateBasicExercise(options) {
 			var current = allNodes[i];
 			var freeIndices = current.getFreeInputOperandIndices();
 			if (freeIndices.length == current.inputOperandsSize) {
-				symbolMappings.push({name: "I" + inputCounter, obj: variable});
 				var targetIndex = freeIndices[Math.floor(Math.random() * freeIndices.length)];
 				current.attachInputOperand(variable, targetIndex);
-				if (inputVariables.indexOf(variable) == -1) inputVariables.push(variable);
+				if (inputVariables.indexOf(variable) == -1) {
+					symbolMappings.push({name: "I" + inputCounter, obj: variable});
+					inputVariables.push(variable);
+				}
 			}
 			if (Math.random() >= 0.75) {
 				inputCounter++;

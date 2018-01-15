@@ -22,7 +22,7 @@ function generateTestCases(exercise, count) {
 		}
 		
 	}
-	console.log(res);
+	return res;
 }
 
 function generateRandomConstant(type) {
