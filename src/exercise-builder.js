@@ -14,17 +14,19 @@ function buildExerciseFromActions(plan, table) {
 	// Add all the initialization variables
 	var allAliases = [];
 	var count = [];
+	var counter = "A".charCodeAt(0);
 	for (var i = 0; i < plan.length; i++) {
 		var current = plan[i].action.initialize;
 		for (var j = 0; j < current.length; j++) {
 			var alias = current[j].alias;
-			if (allAliases.indexOf(alias) == -1) {
+			/*if (allAliases.indexOf(alias) == -1) {
 				allAliases.push(alias);
 				count.push(0);
 			}
 			var index = allAliases.indexOf(alias);
-			count[index]++;
-			current[j].alias = alias + count[index];
+			count[index]++;*/
+			current[j].alias = String.fromCharCode(counter);
+			counter++;
 			var newVariable = new Component.variable(current[j].type);
 			inputVariables.push(newVariable);
 			symbolMappings.push({name: current[j].alias, obj: newVariable});
@@ -133,7 +135,6 @@ function buildExerciseFromActions(plan, table) {
 	// Add a return node
 	var returnNode = new Component.node(NODE_TYPE_RETURN);
 	var lastActionResult = getOperandFromSymbol("action_result_" + (plan.length - 1), symbolMappings);
-	console.log(lastActionResult);
 	returnNode.attachInputOperand(lastActionResult, 0);
 	currentTail.attachNode(returnNode, 0);
 	currentTail = returnNode;
@@ -142,6 +143,7 @@ function buildExerciseFromActions(plan, table) {
 	res.head = head;
 	res.symbols = symbolMappings;
 	res.inputVariables = inputVariables;
+	res.returnType = lastActionResult.type;
 	return res;
 }
 

@@ -64,8 +64,13 @@ function convertPlanToText(plan, pathOrTemplates) {
 		var actionName = step.action.name;
 		var template = getRandomTemplateText(templates, actionName);
 		var initialize = step.action.initialize;
+		var parameters = step.parameters;
+		var create = step.createParameters;
 		for (var j = 0; j < initialize.length; j++) {
 			template = template.replace("[*" + j + "]", initialize[j].alias);
+		}
+		for (var j = 0; j < parameters.length; j++) {
+			template = template.replace("[" + j + "]", parameters[j].getAlias());
 		}
 		res += template + " ";
 	}

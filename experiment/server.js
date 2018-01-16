@@ -110,8 +110,10 @@ function start() {
 					}
 					return res;
 				}
-				function buildFunctionHeader(symbols, inputVariables) {
-					var res = "int" + " ";
+				function buildFunctionHeader(exercise) {
+					var res = convertTypeToJava(exercise.returnType) + " ";
+					var symbols = exercise.symbols;
+					var inputVariables = exercise.inputVariables;
 					res += functionName + "(";
 					for (var i = 0; i < inputVariables.length; i++) {
 						var name = getSymbolFromOperand(inputVariables[i], symbols);
@@ -132,7 +134,7 @@ function start() {
 				var exercise = ExerciseBuilder.buildExerciseFromActions(plan, table);
 				var testCases = TestCaseGenerator.generateTestCases(exercise, 1000);
 				var text = TextGenerator.convertPlanToText(plan, plannerKnowledgeBasePath);
-				var functionHeader = buildFunctionHeader(exercise.symbols, exercise.inputVariables);
+				var functionHeader = buildFunctionHeader(exercise);
 				var inputSymbols = getInputSymbols(exercise.symbols, exercise.inputVariables);
 				
 				reply({exercise: exercise, testCases: testCases, text: text, functionHeader: functionHeader, inputSymbols: inputSymbols});
@@ -197,7 +199,7 @@ function start() {
 }
 		
 function convertTypeToJava(type) {
-	if (type == "number") return "float";
+	if (type == "number") return "double";
 	if (type == "integer") return "int";
 	if (type == "string") return "String";
 }

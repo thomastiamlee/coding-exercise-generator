@@ -75,7 +75,7 @@ function checkOutput(output, testCases) {
 }
 
 function convertTypeToJava(type) {
-	if (type == "number") return "float";
+	if (type == "number") return "double";
 	if (type == "integer") return "int";
 	if (type == "string") return "String";
 }

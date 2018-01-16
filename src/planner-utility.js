@@ -26,10 +26,13 @@ function entity(name, parents, type, instantiatable = true) {
 	}
 	else if (this.type == "local") {
 		this.attachments = [];
+		this.owner = null;
 		this.dataType = null;
 		this.value = null;
 		this.attachLocalEntity = function(other) {
 			if (other.type == "local") {
+				this.alias = null;
+				other.owner = this;
 				var found = false;
 				for (var i = 0; i < this.attachments.length; i++) {
 					if (this.attachments[i] == other) {
@@ -51,6 +54,16 @@ function entity(name, parents, type, instantiatable = true) {
 				if (this.attachments[i] == other) {
 					this.attachments.splice(i, 1);
 					break;
+				}
+			}
+		}
+		this.getAlias = function() {
+			if (this.alias == null) {
+				if (this.owner == null) {
+					return "the " + this.parents[0].name;
+				}
+				else {
+					return "the " + this.parents[0].name + " of " + this.owner.getAlias();
 				}
 			}
 		}
