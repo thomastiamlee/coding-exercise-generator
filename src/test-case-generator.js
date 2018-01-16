@@ -18,7 +18,7 @@ function generateTestCases(exercise, count) {
 			if (!isNaN(returnValue.value))
 				res.push({parameters: parameters, returnValue: returnValue.value});
 		} catch (err) {
-			console.log("ERROR");
+			console.log("Exception encountered in generating test case.");
 		}
 		
 	}
