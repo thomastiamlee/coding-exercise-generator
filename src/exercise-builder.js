@@ -136,7 +136,12 @@ function buildExerciseFromActions(plan, table) {
 	var returnNode = new Component.node(NODE_TYPE_RETURN);
 	var lastActionResult = getOperandFromSymbol("action_result_" + (plan.length - 1), symbolMappings);
 	returnNode.attachInputOperand(lastActionResult, 0);
-	currentTail.attachNode(returnNode, 0);
+	if (currentTail != null) {
+		currentTail.attachNode(returnNode, 0);
+	}
+	else {
+		head = returnNode;
+	}
 	currentTail = returnNode;
 	
 	var res = {};

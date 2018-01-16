@@ -18,7 +18,6 @@ function planExercise(kb, table) {
 		for (var i = 0; i < chosen.parameters.length; i++) {
 			res += " " + chosen.parameters[i].name;
 		}
-		
 		PlannerUtility.executeAction(kb, table, chosen);
 		if (PlannerUtility.isComputedAction(chosen.action) && Math.random() > 0.5) {
 			break;

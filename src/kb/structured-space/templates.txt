@@ -1,0 +1,19 @@
+statepersonheightinmeters
+-the height of [0] is [*0] meters.
+-[0] is [*0] meters tall.
+
+statepersonheightinfeet
+-the height of [0] is [*0] feet.
+-[0] is [*0] feet tall.
+
+situatepersonat
+-[0] is at the [1].
+
+convertmeterstofeet
+-convert [0] to feet.
+
+convertfeettometers
+-convert [0] to meters.
+
+travel
+-[0] went to [2].

@@ -1,0 +1,23 @@
+name: convertmeterstofeet*;
+initialize: ;
+parameters: distancevalue;
+preconditions: !converted(0) in(0 meters) !in(0 feet);
+creates: ;
+effects: in(0 feet) !in(0 meters) converted(0);
+~
+0
+0
+o,{0},(number-3.3),{0},*
+~
+
+name: convertfeettometers*;
+initialize: ;
+parameters: distancevalue;
+preconditions: !converted(0) in(0 feet) !in(0 meters);
+creates: ;
+effects: in(0 meters) !in(0 feet) converted(0);
+~
+0
+0
+o,{0},(number-0.3),{0},*
+~

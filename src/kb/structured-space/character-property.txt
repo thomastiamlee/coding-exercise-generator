@@ -1,0 +1,37 @@
+name: statepersonheightinmeters;
+initialize: number[height];
+parameters: person;
+preconditions: !visible(0 height);
+creates: 0/height;
+effects: visible(0 height) in(+0 meters) ownsproperty(0 +0);
+~
+0
+0
+a,{-0},{+0}
+~
+
+name: statepersonheightinfeet;
+initialize: number[height];
+parameters: person;
+preconditions: !visible(0 height);
+creates: 0/height;
+effects: visible(0 height) in(+0 feet) ownsproperty(0 +0);
+~
+0
+0
+a,{-0},{+0}
+~
+
+name: situatepersonat;
+initialize: ;
+parameters: person location;
+preconditions: !situated(0);
+creates: ;
+effects: situated(0) locatedat(0 1);
+
+name: travel*;
+initialize: ;
+parameters: person location location;
+preconditions: locatedat(0 1) !locatedat(0 2);
+creates: ;
+effects: locatedat(0 2) !locatedat(0 1);
