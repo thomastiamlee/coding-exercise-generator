@@ -162,12 +162,49 @@ function knowledgeBase() {
 	}
 }
 
+/* Constructor for the logic table, which serves as the mechanism for remembering computation-related
+variables during the planning process. */
+function logicTable() {
+	this.setValue = function(predicate, parameters, content) {
+		if (!this.predicate) {
+			this.predicate = [];
+		}
+		this.predicate.push({parameters: parameters, content: content});
+	};
+	this.getValue = function(predicate, parameters) {
+		if (!this.predicate) {
+			return null;
+		}
+		var list = this.predicate;
+		for (var i = 0; i < list.length; i++) {
+			var same = true;
+			var target = list[i].parameters;
+			if (target.length != parameters.length) {
+				same = false;
+			}
+			else {
+				for (var j = 0; j < target.length; j++) {
+					if (parameters[j] != target[j]) {
+						same = false;
+						break;
+					}
+				}
+			}
+			if (same) {
+				return list[i].content;
+			}
+		}
+		return null;
+	};
+}
+
 /* Constructor for the memory table, which serves as the main mechanism for remembering
 information during the planning process. */
 function memory() {
 	this.counter = 1;
 	this.assertions = [];
 	this.localEntities = [];
+	this.logicTable = new logicTable();
 
 	/* Creates a new local entity from a global entity and adds it to memory. The name is automatically
 	assigned to ensure that there are no duplicates. */
