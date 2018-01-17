@@ -108,6 +108,16 @@ function buildExerciseFromActions(plan, table) {
 				var operand = convertReferenceToEntity(currentBlock[1], currentStep);
 				actionOutput = operand;	
 			}
+			else if (type == "x") {
+				var operand1 = convertReferenceToEntity(currentBlock[1], currentStep);
+				var operand2 = convertOperandStringToObject(currentBlock[2], currentStep, symbolMappings);
+				if (operand2 instanceof Component.variable) {
+					operand1.alias = getSymbolFromOperand(operand2, symbolMappings);
+				}
+				else {
+					operand1.alias = operand2.value;
+				}
+			}
 			current++;
 		}
 		// Connect the nodes
@@ -120,6 +130,7 @@ function buildExerciseFromActions(plan, table) {
 			}
 		}
 		// Add to the main exercise
+		if (nodeList.length == 0) continue;
 		var actionHead = nodeList[0].node;
 		if (currentTail == null) {
 			head = actionHead;
@@ -160,6 +171,18 @@ function getOperandFromSymbol(name, symbolMappings) {
 	}
 	return null;
 }
+
+/* Utility function for searching the symbol mappings to get the variable name of a given operand.
+This function returns null is the symbol was not found. */
+function getSymbolFromOperand(operand, symbolMappings) {
+	for (var i = 0; i < symbolMappings.length; i++) {
+		if (symbolMappings[i].obj == operand) {
+			return symbolMappings[i].name;
+		}
+	}
+	return null;
+}
+
 
 function convertReferenceToEntity(referenceString, step) {
 	var parameters = step.parameters;

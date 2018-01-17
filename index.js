@@ -11,14 +11,14 @@ const TextGenerator = require("./src/text-generator");
 const Generator = require("./src/generator");
 const TestCaseGenerator = require("./src/test-case-generator");
 
-//var kb = Parser.parseKnowledgeBase("./src/kb/revised-space");
-//var table = new PlannerUtility.memory();
-//table.createLocalEntity([kb.getGlobalEntity("person")]);
-//var plan = Planner.planExercise(kb, table);
-//var exercise = ExerciseBuilder.buildExerciseFromActions(plan, table);
+var kb = Parser.parseKnowledgeBase("./src/kb/experiment-space");
+var table = new PlannerUtility.memory();
+table.createLocalEntity([kb.getGlobalEntity("person"), kb.getGlobalEntity("child"), kb.getGlobalEntity("student")]);
+var plan = Planner.planExercise(kb, table);
+var exercise = ExerciseBuilder.buildExerciseFromActions(plan, table);
 //var res = TextGenerator.convertPlanToText(plan, "./src/kb/structured-space");
 //var testCases = TestCaseGenerator.generateTestCases(exercise, 10);
-//console.log(plan);
+console.log(plan);
 //console.log(res);
 //console.log(res);
 //console.log(testCases);
@@ -31,4 +31,4 @@ const TestCaseGenerator = require("./src/test-case-generator");
 
 //VisualizationServer.start();
 
-ExperimentServer.start();
+//ExperimentServer.start();//

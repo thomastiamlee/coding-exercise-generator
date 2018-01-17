@@ -1,0 +1,11 @@
+name: introduce*;
+initialize: number[personname];
+parameters: person;
+preconditions: !known(0);
+creates: ;
+effects: known(0);
+~
+0
+
+x,{0},{-0}
+~

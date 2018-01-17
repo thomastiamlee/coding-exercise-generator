@@ -3,41 +3,8 @@ person;
 student->person;
 child->person;
 
-location;
-store->location;
-grocery->store;
-bakery->store;
-giftshop->store;
-bookstore->store;
-
-object;
-food->object;
-bread->food;
-croissant->food;
-cupcake->food;
-
-distancevalue;
-height->distancevalue;
-massvalue;
-weight->massvalue;
-temperature;
-
-stringvalue;
-personname->stringvalue;
-
 #static;
-meters;
-feet;
-inches;
-kilograms;
-pounds;
-celsius;
-fahrenheit;
 
 #assertions;
-hasproperty(person weight);
-hasproperty(person height);
-hasproperty(person name);
-hasproperty(location temperature);
 
 #actions;
