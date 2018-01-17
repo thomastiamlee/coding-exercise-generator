@@ -1,0 +1,47 @@
+name: stateheightinmeters;
+initialize: number[height];
+parameters: entity;
+preconditions: known(0) hasproperty(0 height);
+creates: 0/height;
+effects: knownproperty(0 +0) inunit(+0 meters);
+~
+0
+0
+a,{-0},{+0}
+~
+
+name: stateheightinfeet;
+initialize: number[height];
+parameters: entity;
+preconditions: known(0) hasproperty(0 height);
+creates: 0/height;
+effects: knownproperty(0 +0) inunit(+0 feet);
+~
+0
+0
+a,{-0},{+0}
+~
+
+name: stateweightinpounds;
+initialize: number[weight];
+parameters: entity;
+preconditions: known(0) hasproperty(0 weight);
+creates: 0/weight;
+effects: knownproperty(0 +0) inunit(+0 pounds);
+~
+0
+0
+a,{-0},{+0}
+~
+
+name: stateweightinkilograms;
+initialize: number[weight];
+parameters: entity;
+preconditions: known(0) hasproperty(0 weight);
+creates: 0/weight;
+effects: knownproperty(0 +0) inunit(+0 kilograms);
+~
+0
+0
+a,{-0},{+0}
+~

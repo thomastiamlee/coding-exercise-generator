@@ -1,10 +1,22 @@
 #global;
-person;
+entity;
+person->entity;
 student->person;
 child->person;
 
+distancevalue;
+height->distancevalue;
+massvalue;
+weight->massvalue;
+
 #static;
+meters;
+feet;
+kilograms;
+pounds;
 
 #assertions;
+hasproperty(person height);
+hasproperty(person weight);
 
 #actions;

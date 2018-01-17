@@ -1,0 +1,51 @@
+name: convertfeettometers*;
+initialize: ;
+parameters: distancevalue;
+preconditions: !inunit(0 meters) inunit(0 feet);
+creates: ;
+effects: !inunit(0 feet) inunit(0 meters);
+~
+0
+0
+o,{0},(number-0.3048),{0},*
+z,{0}
+~
+
+name: convertmeterstofeet*;
+initialize: ;
+parameters: distancevalue;
+preconditions: !inunit(0 feet) inunit(0 meters);
+creates: ;
+effects: !inunit(0 meters) inunit(0 feet);
+~
+0
+0
+o,{0},(number-3.28084),{0},*
+z,{0}
+~
+
+name: convertpoundstokilograms*;
+initialize: ;
+parameters: massvalue;
+preconditions: !inunit(0 kilograms) inunit(0 pounds);
+creates: ;
+effects: !inunit(0 pounds) inunit(0 kilograms);
+~
+0
+0
+o,{0},(number-0.453592),{0},*
+z,{0}
+~
+
+name: convertkilogramstopounds*;
+initialize: ;
+parameters: massvalue;
+preconditions: !inunit(0 pounds) inunit(0 kilograms);
+creates: ;
+effects: !inunit(0 kilograms) inunit(0 pounds);
+~
+0
+0
+o,{0},(number-2.20462),{0},*
+z,{0}
+~

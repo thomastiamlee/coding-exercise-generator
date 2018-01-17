@@ -1,4 +1,4 @@
-name: introduceperson*;
+name: introduceperson;
 initialize: number[personname];
 parameters: person;
 preconditions: !known(0);
@@ -7,6 +7,5 @@ effects: known(0);
 ~
 0
 
-z,{0}
 x,{0},{-0}
 ~

@@ -1,3 +1,31 @@
 introduceperson
 -there is a [^0] named [*0].
 -there is a [^0] whose name is [*0].
+
+stateheightinmeters
+-the height of [0] is [*0] meters.
+-[0] is [*0] meters tall.
+
+stateheightinfeet
+-the height of [0] is [*0] feet.
+-[0] is [*0] feet tall.
+
+stateweightinpounds
+-the weight of [0] is [*0] pounds.
+-[0] weighs [*0] pounds.
+
+stateweightinkilograms
+-the weight of [0] is [*0] kilograms.
+-[0] weighs [*0] kilograms.
+
+convertfeettometers
+-convert [0] to meters.
+
+convertmeterstofeet
+-convert [0] to feet.
+
+convertkilogramstopounds
+-convert [0] to pounds.
+
+convertpoundstokilograms
+-convert [0] to kilograms.
