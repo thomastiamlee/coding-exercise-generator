@@ -11,9 +11,9 @@ const TextGenerator = require("./src/text-generator");
 const Generator = require("./src/generator");
 const TestCaseGenerator = require("./src/test-case-generator");
 
-//var kb = Parser.parseKnowledgeBase("./src/kb/structured-space");
+//var kb = Parser.parseKnowledgeBase("./src/kb/revised-space");
 //var table = new PlannerUtility.memory();
-//table.createLocalEntity([kb.getGlobalEntity("person"), kb.getGlobalEntity("student"), kb.getGlobalEntity("child"), kb.getGlobalEntity("library"), kb.getGlobalEntity("cafe"), kb.getGlobalEntity("bookstore"), kb.getGlobalEntity("school")]);
+//table.createLocalEntity([kb.getGlobalEntity("person")]);
 //var plan = Planner.planExercise(kb, table);
 //var exercise = ExerciseBuilder.buildExerciseFromActions(plan, table);
 //var res = TextGenerator.convertPlanToText(plan, "./src/kb/structured-space");

@@ -6,9 +6,9 @@ creates: ;
 effects: in(0 meters) !in(0 feet) visiblein(0 meters);
 ~
 0
-1
-o,{0},(number-0.3048),{0},*,1
-a,{0},{action_result}
+0
+o,{0},(number-0.3048),{0},*
+z,{0}
 ~
 
 name: convertmeterstofeet*;
@@ -19,9 +19,9 @@ creates: ;
 effects: in(0 feet) !in(0 meters) visiblein(0 feet);
 ~
 0
-1
-o,{0},(number-3.281),{0},*,1
-a,{0},{action_result}	
+0
+o,{0},(number-3.281),{0},*
+z,{0}	
 ~
 
 
@@ -33,9 +33,9 @@ creates: ;
 effects: in(0 kilograms) !in(0 pounds) visiblein(0 pounds);
 ~
 0
-1
-o,{0},(number-0.4536),{0},*,1
-a,{0},{action_result}	
+0
+o,{0},(number-0.4536),{0},*
+z,{0}	
 ~
 
 name: convertcelsiustofahrenheit*;
@@ -47,9 +47,9 @@ effects: in(0 fahrenheit) !in(0 celsius) visiblein(0 fahrenheit);
 ~
 1
 temp-number
-3
+2
 o,{0},(number-9),[temp],*,1
 o,[temp],(number-5),[temp],/,2
-o,[temp],(number-32),{0},+,3,
-a,{0},{action_result}
+o,[temp],(number-32),{0},+
+z,{0}
 ~

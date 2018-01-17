@@ -7,8 +7,8 @@ effects: hasproperty(0 bmi) owns(0 +0);
 ~
 1
 squared-number
-2
+1
 o,{2},{2},[squared],*,1
-o,{1},[squared],{+0},/,2
-a,{+0},{action_result}
+o,{1},[squared],{+0},/
+z,{+0}
 ~

@@ -19,12 +19,6 @@ function buildExerciseFromActions(plan, table) {
 		var current = plan[i].action.initialize;
 		for (var j = 0; j < current.length; j++) {
 			var alias = current[j].alias;
-			/*if (allAliases.indexOf(alias) == -1) {
-				allAliases.push(alias);
-				count.push(0);
-			}
-			var index = allAliases.indexOf(alias);
-			count[index]++;*/
 			current[j].alias = String.fromCharCode(counter);
 			counter++;
 			var newVariable = new Component.variable(current[j].type);
@@ -34,8 +28,7 @@ function buildExerciseFromActions(plan, table) {
 	}
 	// Loop through all the actions
 	for (var i = 0; i < plan.length; i++) {
-		// Add action result
-		symbolMappings.push({name: "action_result_" + i, obj: new Component.variable("number")});
+		var actionOutput = null;
 		var currentStep = plan[i];
 		currentStep.number = i;
 		var currentAction = currentStep.action;
@@ -111,6 +104,10 @@ function buildExerciseFromActions(plan, table) {
 				newObj = {node: newNode, successor: successor};
 				nodeList.push(newObj);
 			}
+			else if (type == "z") {
+				var operand = convertReferenceToEntity(currentBlock[1], currentStep);
+				actionOutput = operand;	
+			}
 			current++;
 		}
 		// Connect the nodes
@@ -130,11 +127,12 @@ function buildExerciseFromActions(plan, table) {
 		else {
 			currentTail.attachNode(actionHead, 0);
 		}
+		plan[i].actionOutput = actionOutput;
 		currentTail = nodeList[terminalNodes[0]].node;
 	}
 	// Add a return node
 	var returnNode = new Component.node(NODE_TYPE_RETURN);
-	var lastActionResult = getOperandFromSymbol("action_result_" + (plan.length - 1), symbolMappings);
+	var lastActionResult = getOperandFromSymbol("e_" + plan[plan.length - 1].actionOutput.name, symbolMappings);
 	returnNode.attachInputOperand(lastActionResult, 0);
 	if (currentTail != null) {
 		currentTail.attachNode(returnNode, 0);
@@ -161,6 +159,23 @@ function getOperandFromSymbol(name, symbolMappings) {
 		}
 	}
 	return null;
+}
+
+function convertReferenceToEntity(referenceString, step) {
+	var parameters = step.parameters;
+	var create = step.createParameters;
+	
+	if (referenceString.charAt(0) == '{') {
+		var data = referenceString.substring(1, referenceString.length - 1);
+		if (data.charAt(0) == "+") {
+			var index = parseInt(data.substring(1));
+			return create[index];
+		}
+		else {
+			var index = parseInt(data);
+			return parameters[index];
+		}
+	}
 }
 
 /* Utility function for converting an operand string to the corresponding object.
@@ -194,10 +209,7 @@ function convertOperandStringToObject(operandString, step, symbolMappings) {
 	}
 	else if (operandString.charAt(0) == '{') {
 		var data = operandString.substring(1, operandString.length - 1);
-		if (data == "action_result") {
-			return getOperandFromSymbol("action_result_" + stepNumber, symbolMappings);
-		}
-		else if (data.charAt(0) == "+") {
+		if (data.charAt(0) == "+") {
 			var index = parseInt(data.substring(1));
 			var name = create[index].name;
 			return getOperandFromSymbol("e_" + name, symbolMappings);
