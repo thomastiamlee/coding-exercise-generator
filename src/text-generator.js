@@ -71,6 +71,7 @@ function convertPlanToText(plan, pathOrTemplates) {
 		}
 		for (var j = 0; j < parameters.length; j++) {
 			template = template.replace("[" + j + "]", parameters[j].getAlias());
+			template = template.replace("[^" + j + "]", parameters[j].parents[0].name);
 		}
 		res += template + " ";
 	}

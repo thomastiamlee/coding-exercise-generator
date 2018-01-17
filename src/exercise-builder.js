@@ -106,7 +106,8 @@ function buildExerciseFromActions(plan, table) {
 			}
 			else if (type == "z") {
 				var operand = convertReferenceToEntity(currentBlock[1], currentStep);
-				actionOutput = operand;	
+				actionOutput = operand;				
+				plan[i].actionOutput = actionOutput;
 			}
 			else if (type == "x") {
 				var operand1 = convertReferenceToEntity(currentBlock[1], currentStep);
@@ -138,7 +139,6 @@ function buildExerciseFromActions(plan, table) {
 		else {
 			currentTail.attachNode(actionHead, 0);
 		}
-		plan[i].actionOutput = actionOutput;
 		currentTail = nodeList[terminalNodes[0]].node;
 	}
 	// Add a return node

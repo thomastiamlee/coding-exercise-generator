@@ -66,6 +66,7 @@ function entity(name, parents, type, instantiatable = true) {
 					return "the " + this.parents[0].name + " of " + this.owner.getAlias();
 				}
 			}
+			return this.alias;
 		}
 	}
 	this.isExtendedFrom = function(parent) {

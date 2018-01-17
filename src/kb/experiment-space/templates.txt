@@ -1,0 +1,3 @@
+introduceperson
+-there is a [^0] named [*0].
+-there is a [^0] whose name is [*0].
