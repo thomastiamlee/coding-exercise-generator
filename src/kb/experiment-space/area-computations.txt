@@ -1,12 +1,40 @@
-name: computeareaofsquareobject;
+name: computeareaofsquareobject*;
 initialize: ;
 parameters: entity square side distanceunit;
-preconditions: shapeof(0 1) knownproperty(0 2) inunit(2 3);
+preconditions: !knownproperty(0 area) shapeof(0 1) owns(0 2) inunit(2 3);
 creates: 0/area;
-effects: knownproperty(0 +0) inunit(+0 2);
+effects: knownproperty(0 area) owns(0 +0) inunit(+0 2);
 ~
 0
 0
-a,{0},{0},{+0},*
-r,{+0}
+o,{2},{2},{+0},*
+z,{+0}
+~
+
+name: computeareaofrectangleobject*;
+initialize: ;
+parameters: entity rectangle slength width distanceunit;
+preconditions: !knownproperty(0 area) shapeof(0 1) owns(0 2) owns(0 3) inunit(2 4) inunit(3 4);
+creates: 0/area;
+effects: knownproperty(0 area) owns(0 +0) inunit(+0 4);
+~
+0
+0
+o,{2},{3},{+0},*
+z,{+0}
+~
+
+name: computeareaofcircleobject*;
+initialize: ;
+parameters: entity circle radius distanceunit;
+preconditions: !knownproperty(0 area) shapeof(0 1) owns(0 2) inunit(2 3);
+creates: 0/area;
+effects: knownproperty(0 area) owns(0 +0) inunit(+0 3);
+~
+1
+temp
+0
+o,{2},{2},[temp],*,1
+o,[temp],(number-3.1416),{+0},*
+z,{+0}
 ~

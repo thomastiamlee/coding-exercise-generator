@@ -9,13 +9,36 @@ location->entity;
 house->location;
 school->location;
 
+object->entity;
+paper->object;
+
+food->object;
+cookie->food;
+
 distancevalue;
 height->distancevalue;
+side->distancevalue;
+slength->distancevalue;
+width->distancevalue;
+radius->distancevalue;
+diameter->distancevalue;
 massvalue;
 weight->massvalue;
 
+area;
+
 temperaturevalue;
 temperature->temperaturevalue;
+
+shape->abstract;
+square->shape;
+rectangle->shape;
+circle->shape;
+triangle->shape;
+
+form->abstract;
+cube->form;
+sphere->form;
 
 distanceunit->abstract;
 meters->distanceunit;
@@ -34,5 +57,9 @@ kelvin->temperatureunit;
 hasproperty(person height);
 hasproperty(person weight);
 hasproperty(location temperature);
+
+canhaveshape(paper square);
+canhaveshape(paper rectangle);
+canhaveshape(cookie circle);
 
 #actions;

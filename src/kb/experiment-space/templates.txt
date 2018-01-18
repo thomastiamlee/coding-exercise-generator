@@ -5,6 +5,9 @@ introduceperson
 introducelocation
 -there is a [^0].
 
+introduceobject
+-there is a [^0].
+
 stateheight
 -the height of [0] is [*0] [^1].
 -[0] is [*0] [^1] tall.
@@ -15,6 +18,25 @@ stateweight
 
 statetemperature
 -the temperature in [0] is [*0] degrees [^1].
+
+stateshape
+-the shape of [0] is [^1].
+-[0] is in the shape of a [^1].
+
+stateside
+-one side of [0] measures [*0] [^2].
+
+statelength
+-the length of [0] measures [*0] [^2].
+
+statewidth
+-the width of [0] measures [*0] [^2].
+
+stateradius
+-the radius of [0] measures [*0] [^2].
+
+statediameter
+-the diameter of [0] measures [*0] [^2].
 
 convertfeettometers
 -convert [0] to meters.
@@ -38,4 +60,10 @@ convertcelsiustokelvin
 -convert [0] to degrees kelvin.
 
 computeareaofsquareobject
--compute the area of [0].
+-compute the area of [0] in [^3].
+
+computeareaofrectangleobject
+-compute the area of [0] in [^4].
+
+computeareaofcircleobject
+-compute the area of [0] in [^3].

@@ -10,7 +10,7 @@ function planExercise(kb, table) {
 	while (true) {
 		var choices = PlannerUtility.getAvailableActions(kb, table);
 		if (choices.length == 0) {
-			break;
+			//break;
 		}
 		var chosen = choices[Math.floor(Math.random() * choices.length)];
 		actionList.push(chosen);
@@ -18,10 +18,12 @@ function planExercise(kb, table) {
 		for (var i = 0; i < chosen.parameters.length; i++) {
 			res += " " + chosen.parameters[i].name;
 		}
+		console.log(res);
 		PlannerUtility.executeAction(kb, table, chosen);
 		if (PlannerUtility.isComputedAction(chosen.action) && Math.random() > 0.5) {
-			break;
+			//break;
 		}
+		if (chosen.action.name == "computeareaofcircleobject") break;
 	}
 	while (actionList.length > 0 && PlannerUtility.isComputedAction(actionList[actionList.length - 1].action) == false) {
 		actionList.splice(actionList.length - 1, 1);

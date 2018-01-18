@@ -1,9 +1,9 @@
 name: stateheight;
 initialize: number[height];
 parameters: entity distanceunit;
-preconditions: known(0) hasproperty(0 height);
+preconditions: known(0) !knownproperty(0 height) hasproperty(0 height);
 creates: 0/height;
-effects: knownproperty(0 +0) inunit(+0 1);
+effects: knownproperty(0 height) owns(0 +0) inunit(+0 1) unitvisiblein(+0 1);
 ~
 0
 0
@@ -13,9 +13,9 @@ a,{-0},{+0}
 name: stateweight;
 initialize: number[weight];
 parameters: entity massunit;
-preconditions: known(0) hasproperty(0 weight);
+preconditions: known(0) !knownproperty(0 weight) hasproperty(0 weight);
 creates: 0/weight;
-effects: knownproperty(0 +0) inunit(+0 1);
+effects: knownproperty(0 weight) owns(0 +0) inunit(+0 1) unitvisiblein(+0 1);
 ~
 0
 0
@@ -25,11 +25,80 @@ a,{-0},{+0}
 name: statetemperature;
 initialize: number[temperature];
 parameters: entity temperatureunit;
-preconditions: known(0) hasproperty(0 temperature);
+preconditions: known(0) !knownproperty(0 temperature) hasproperty(0 temperature);
 creates: 0/temperature;
-effects: knownproperty(0 +0) inunit(+0 1);
+effects: knownproperty(0 temperature) owns(0 +0) inunit(+0 1) unitvisiblein(+0 1);
 ~
 0
 0
 a,{-0},{+0}
+~
+
+name: stateshape;
+initialize: ;
+parameters: entity shape;
+preconditions: known(0) !knownproperty(0 shape) canhaveshape(0 1);
+creates: ;
+effects: knownproperty(0 shape) shapeof(0 1);
+
+name: stateside;
+initialize: number[side];
+parameters: entity square distanceunit;
+preconditions: !knownproperty(0 side) shapeof(0 1);
+creates: 0/side;
+effects: knownproperty(0 side) owns(0 +0) inunit(+0 2) unitvisiblein(+0 2);
+~
+0
+0
+a,{-0},{+0}
+~
+
+name: statelength;
+initialize: number[length];
+parameters: entity rectangle distanceunit;
+preconditions: !knownproperty(0 slength) shapeof(0 1);
+creates: 0/slength;
+effects: knownproperty(0 slength) owns(0 +0) inunit(+0 2) unitvisiblein(+0 2);
+~
+0
+0
+a,{-0},{+0}
+~
+
+name: statewidth;
+initialize: number[width];
+parameters: entity rectangle distanceunit;
+preconditions: !knownproperty(0 width) shapeof(0 1);
+creates: 0/width;
+effects: knownproperty(0 width) owns(0 +0) inunit(+0 2) unitvisiblein(+0 2);
+~
+0
+0
+a,{-0},{+0}
+~
+
+name: stateradius;
+initialize: number[width];
+parameters: entity circle distanceunit;
+preconditions: !knownproperty(0 radius) !knownproperty(0 diameter) shapeof(0 1);
+creates: 0/radius 0/diameter;
+effects: knownproperty(0 radius) knownproperty(0 diameter) owns(0 +0) owns(0 +1) inunit(+0 2) inunit(+1 2) unitvisiblein(+0 2) unitvisiblein(+1 2);
+~
+0
+1
+a,{-0},{+0},1
+o,{-0},(number-2),{+1},*
+~
+
+name: statediameter;
+initialize: number[width];
+parameters: entity circle distanceunit;
+preconditions: !knownproperty(0 radius) !knownproperty(0 diameter) shapeof(0 1);
+creates: 0/radius 0/diameter;
+effects: knownproperty(0 radius) knownproperty(0 diameter) owns(0 +0) owns(0 +1) inunit(+0 2) inunit(+1 2) unitvisiblein(+0 2) unitvisiblein(+1 2);
+~
+0
+1
+a,{-0},{+1},1
+o,{-0},(number-2),{+0},/
 ~

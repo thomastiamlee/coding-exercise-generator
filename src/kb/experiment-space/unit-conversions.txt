@@ -1,9 +1,9 @@
 name: convertfeettometers*;
 initialize: ;
 parameters: distancevalue meters feet;
-preconditions: !inunit(0 1) inunit(0 2);
+preconditions: !inunit(0 1) inunit(0 2) !unitvisiblein(0 1);
 creates: ;
-effects: !inunit(0 2) inunit(0 1);
+effects: !inunit(0 2) inunit(0 1) unitvisiblein(0 1);
 ~
 0
 0
@@ -14,9 +14,9 @@ z,{0}
 name: convertmeterstofeet*;
 initialize: ;
 parameters: distancevalue feet meters;
-preconditions: !inunit(0 1) inunit(0 2);
+preconditions: !inunit(0 1) inunit(0 2) !unitvisiblein(0 1);
 creates: ;
-effects: !inunit(0 2) inunit(0 1);
+effects: !inunit(0 2) inunit(0 1) unitvisiblein(0 1);
 ~
 0
 0
@@ -27,9 +27,9 @@ z,{0}
 name: convertpoundstokilograms*;
 initialize: ;
 parameters: massvalue kilograms pounds;
-preconditions: !inunit(0 1) inunit(0 2);
+preconditions: !inunit(0 1) inunit(0 2) !unitvisiblein(0 1);
 creates: ;
-effects: !inunit(0 2) inunit(0 1);
+effects: !inunit(0 2) inunit(0 1) unitvisiblein(0 1);
 ~
 0
 0
@@ -40,9 +40,9 @@ z,{0}
 name: convertkilogramstopounds*;
 initialize: ;
 parameters: massvalue pounds kilograms;
-preconditions: !inunit(0 1) inunit(0 2);
+preconditions: !inunit(0 1) inunit(0 2) !unitvisiblein(0 1);
 creates: ;
-effects: !inunit(0 2) inunit(0 1);
+effects: !inunit(0 2) inunit(0 1) unitvisiblein(0 1);
 ~
 0
 0
@@ -53,9 +53,9 @@ z,{0}
 name: convertcelsiustofahrenheit*;
 initialize: ;
 parameters: temperaturevalue fahrenheit celsius;
-preconditions: !inunit(0 1) inunit(0 2);
+preconditions: !inunit(0 1) inunit(0 2) !unitvisiblein(0 1);
 creates: ;
-effects: !inunit(0 2) inunit(0 1);
+effects: !inunit(0 2) inunit(0 1) unitvisiblein(0 1);
 ~
 1
 temp
@@ -69,9 +69,9 @@ z,{0}
 name: convertfahrenheittocelsius*;
 initialize: ;
 parameters: temperaturevalue celsius fahrenheit;
-preconditions: !inunit(0 1) inunit(0 2);
+preconditions: !inunit(0 1) inunit(0 2) !unitvisiblein(0 1);
 creates: ;
-effects: !inunit(0 2) inunit(0 1);
+effects: !inunit(0 2) inunit(0 1) unitvisiblein(0 1);
 ~
 1
 temp
@@ -85,9 +85,9 @@ z,{0}
 name: convertcelsiustokelvin*;
 initialize: ;
 parameters: temperaturevalue kelvin celsius;
-preconditions: !inunit(0 1) inunit(0 2);
+preconditions: !inunit(0 1) inunit(0 2) !unitvisiblein(0 1);
 creates: ;
-effects: !inunit(0 2) inunit(0 1);
+effects: !inunit(0 2) inunit(0 1) unitvisiblein(0 1);
 ~
 0
 0

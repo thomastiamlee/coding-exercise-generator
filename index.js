@@ -13,8 +13,8 @@ const TestCaseGenerator = require("./src/test-case-generator");
 
 var kb = Parser.parseKnowledgeBase("./src/kb/experiment-space");
 var table = new PlannerUtility.memory();
-table.createLocalEntity([kb.getGlobalEntity("person"), kb.getGlobalEntity("child"), kb.getGlobalEntity("student"), kb.getGlobalEntity("school"), kb.getGlobalEntity("house")]);
-table.createLocalEntity([kb.getGlobalEntity("meters"), kb.getGlobalEntity("feet"), kb.getGlobalEntity("pounds"), kb.getGlobalEntity("kilograms"), kb.getGlobalEntity("celsius"), kb.getGlobalEntity("fahrenheit"), kb.getGlobalEntity("kelvin")]);
+table.createLocalEntity([kb.getGlobalEntity("person"), kb.getGlobalEntity("child"), kb.getGlobalEntity("student"), kb.getGlobalEntity("school"), kb.getGlobalEntity("house"), kb.getGlobalEntity("paper"), kb.getGlobalEntity("cookie")]);
+table.createLocalEntity([kb.getGlobalEntity("meters"), kb.getGlobalEntity("feet"), kb.getGlobalEntity("pounds"), kb.getGlobalEntity("kilograms"), kb.getGlobalEntity("celsius"), kb.getGlobalEntity("fahrenheit"), kb.getGlobalEntity("kelvin"), kb.getGlobalEntity("square"), kb.getGlobalEntity("rectangle"), kb.getGlobalEntity("triangle"), kb.getGlobalEntity("circle"), kb.getGlobalEntity("cube"), kb.getGlobalEntity("sphere")]);
 var plan = Planner.planExercise(kb, table);
 console.log(plan);
 
