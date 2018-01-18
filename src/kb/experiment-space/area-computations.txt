@@ -33,8 +33,40 @@ effects: knownproperty(0 area) owns(0 +0) inunit(+0 3);
 ~
 1
 temp
-0
+1
 o,{2},{2},[temp],*,1
 o,[temp],(number-3.1416),{+0},*
+z,{+0}
+~
+
+name: computevolumeofcubeobject*;
+initialize: ;
+parameters: entity cube side distanceunit;
+preconditions: !knownproperty(0 volume) formof(0 1) owns(0 2) inunit(2 3);
+creates: 0/volume;
+effects: knownproperty(0 volume) owns(0 +0) inunit(+0 3);
+~
+1
+temp
+1
+o,{2},{2},[temp],*,1
+o,[temp],{2},{+0},*
+z,{+0}
+~
+
+name: computevolumeofsphereobject*;
+initialize: ;
+parameters: entity sphere radius distanceunit;
+preconditions: !knownproperty(0 volume) formof(0 1) owns(0 2) inunit(2 3);
+creates: 0/volume;
+effects: knownproperty(0 volume) owns(0 +0) inunit(+0 3);
+~
+1
+temp
+3
+o,{2},{2},[temp],*,1
+o,[temp],{2},[temp],*,2
+o,[temp],{number-4},[temp],*,3
+o,[temp],{number-3},[temp],/
 z,{+0}
 ~

@@ -66,10 +66,16 @@ convertcelsiustokelvin
 -convert [0] to degrees kelvin.
 
 computeareaofsquareobject
--compute the area of [0] in [^3].
+-compute the area of [0] in [^3] squared.
 
 computeareaofrectangleobject
--compute the area of [0] in [^4].
+-compute the area of [0] in [^4] squared.
 
 computeareaofcircleobject
--compute the area of [0] in [^3].
+-compute the area of [0] in [^3] squared.
+
+computevolumeofcubeobject
+-compute the volume of [0] in [^3] cubed.
+
+computevolumeofsphereobject
+-compute the volume of [0] in [^3] cubed.

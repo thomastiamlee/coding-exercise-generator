@@ -41,6 +41,13 @@ preconditions: known(0) !knownproperty(0 shape) canhaveshape(0 1);
 creates: ;
 effects: knownproperty(0 shape) shapeof(0 1);
 
+name: stateform;
+initialize: ;
+parameters: entity form;
+preconditions: known(0) !knownproperty(0 form) canhaveform(0 1);
+creates: ;
+effects: knownproperty(0 shape) formof(0 1);
+
 name: stateside;
 initialize: number[side];
 parameters: entity square distanceunit;

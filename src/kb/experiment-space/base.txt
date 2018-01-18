@@ -11,6 +11,7 @@ school->location;
 
 object->entity;
 paper->object;
+ball->object;
 
 food->object;
 cookie->food;
@@ -26,6 +27,7 @@ massvalue;
 weight->massvalue;
 
 area;
+volume;
 
 temperaturevalue;
 temperature->temperaturevalue;
@@ -63,5 +65,7 @@ canbeat(person location);
 canhaveshape(paper square);
 canhaveshape(paper rectangle);
 canhaveshape(cookie circle);
+
+canhaveform(ball sphere);
 
 #actions;
