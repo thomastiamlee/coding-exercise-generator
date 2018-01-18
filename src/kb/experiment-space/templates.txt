@@ -8,6 +8,12 @@ introducelocation
 introduceobject
 -there is a [^0].
 
+situateat
+-[0] is at [1].
+
+gotolocation
+-[0] went from [1] to [2].
+
 stateheight
 -the height of [0] is [*0] [^1].
 -[0] is [*0] [^1] tall.

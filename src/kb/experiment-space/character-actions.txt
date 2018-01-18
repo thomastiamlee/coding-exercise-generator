@@ -1,0 +1,6 @@
+name: gotolocation;
+initialize: ;
+parameters: person location location;
+preconditions: isat(0 1) !isat(0 2) canbeat(0 2);
+creates: ;
+effects: isat(0 2) !isat(0 1);

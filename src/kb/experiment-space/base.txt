@@ -58,6 +58,8 @@ hasproperty(person height);
 hasproperty(person weight);
 hasproperty(location temperature);
 
+canbeat(person location);
+
 canhaveshape(paper square);
 canhaveshape(paper rectangle);
 canhaveshape(cookie circle);
