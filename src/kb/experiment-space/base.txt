@@ -4,19 +4,30 @@ person->entity;
 student->person;
 child->person;
 
+location->entity;
+house->location;
+school->location;
+
 distancevalue;
 height->distancevalue;
 massvalue;
 weight->massvalue;
+
+temperaturevalue;
+temperature->temperaturevalue;
 
 #static;
 meters;
 feet;
 kilograms;
 pounds;
+celsius;
+fahrenheit;
+kelvin;
 
 #assertions;
 hasproperty(person height);
 hasproperty(person weight);
+hasproperty(location temperature);
 
 #actions;

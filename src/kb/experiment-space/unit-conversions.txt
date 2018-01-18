@@ -49,3 +49,48 @@ effects: !inunit(0 kilograms) inunit(0 pounds);
 o,{0},(number-2.20462),{0},*
 z,{0}
 ~
+
+name: convertcelsiustofahrenheit*;
+initialize: ;
+parameters: temperaturevalue;
+preconditions: !inunit(0 fahrenheit) inunit(0 celsius);
+creates: ;
+effects: !inunit(0 celsius) inunit(0 fahrenheit);
+~
+1
+temp
+2
+o,{0},(number-9),[temp],*,1
+o,[temp],(number-5),[temp],/,2
+o,[temp],(number-32),{0},+
+z,{0}
+~
+
+name: convertfahrenheittocelsius*;
+initialize: ;
+parameters: temperaturevalue;
+preconditions: !inunit(0 celsius) inunit(0 fahrenheit);
+creates: ;
+effects: !inunit(0 fahrenheit) inunit(0 celsius);
+~
+1
+temp
+2
+o,{0},(number-32),[temp],-,1
+o,[temp],(number-5),[temp],*,2
+o,[temp],(number-9),{0},/
+z,{0}
+~
+
+name: convertcelsiustokelvin*;
+initialize: ;
+parameters: temperaturevalue;
+preconditions: !inunit(0 kelvin) inunit(0 celsius);
+creates: ;
+effects: !inunit(0 celsius) inunit(0 kelvin);
+~
+0
+0
+o,{0},(number-273.15),{0},+
+z,{0}
+~

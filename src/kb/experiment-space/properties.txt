@@ -45,3 +45,15 @@ effects: knownproperty(0 +0) inunit(+0 kilograms);
 0
 a,{-0},{+0}
 ~
+
+name: statetemperatureincelsius;
+initialize: number[temperature];
+parameters: entity;
+preconditions: known(0) hasproperty(0 temperature);
+creates: 0/temperature;
+effects: knownproperty(0 +0) inunit(+0 celsius);
+~
+0
+0
+a,{-0},{+0}
+~

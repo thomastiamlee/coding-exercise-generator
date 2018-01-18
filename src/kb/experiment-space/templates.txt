@@ -2,6 +2,9 @@ introduceperson
 -there is a [^0] named [*0].
 -there is a [^0] whose name is [*0].
 
+introducelocation
+-there is a [^0].
+
 stateheightinmeters
 -the height of [0] is [*0] meters.
 -[0] is [*0] meters tall.
@@ -18,6 +21,12 @@ stateweightinkilograms
 -the weight of [0] is [*0] kilograms.
 -[0] weighs [*0] kilograms.
 
+statetemperatureincelsius
+-the temperature in [0] is [*0] degrees celsius.
+
+statetemperatureinfahrenheit
+-the temperature in [0] is [*0] degrees fahrenheit.
+
 convertfeettometers
 -convert [0] to meters.
 
@@ -29,3 +38,12 @@ convertkilogramstopounds
 
 convertpoundstokilograms
 -convert [0] to kilograms.
+
+convertcelsiustofahrenheit
+-convert [0] to degrees fahrenheit.
+
+convertfahrenheittocelsius
+-convert [0] to degrees celsius.
+
+convertcelsiustokelvin
+-convert [0] to degrees kelvin.

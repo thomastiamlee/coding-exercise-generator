@@ -13,7 +13,7 @@ const TestCaseGenerator = require("./src/test-case-generator");
 
 var kb = Parser.parseKnowledgeBase("./src/kb/experiment-space");
 var table = new PlannerUtility.memory();
-table.createLocalEntity([kb.getGlobalEntity("person"), kb.getGlobalEntity("child"), kb.getGlobalEntity("student")]);
+table.createLocalEntity([kb.getGlobalEntity("person"), kb.getGlobalEntity("child"), kb.getGlobalEntity("student"), kb.getGlobalEntity("school"), kb.getGlobalEntity("house")]);
 var plan = Planner.planExercise(kb, table);
 console.log(plan);
 

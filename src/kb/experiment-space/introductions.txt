@@ -9,3 +9,10 @@ effects: known(0);
 
 x,{0},{-0}
 ~
+
+name: introducelocation;
+initialize: ;
+parameters: location;
+preconditions: !known(0);
+creates: ;
+effects: known(0);
