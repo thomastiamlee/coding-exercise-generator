@@ -1,9 +1,9 @@
 name: convertfeettometers*;
 initialize: ;
-parameters: distancevalue;
-preconditions: !inunit(0 meters) inunit(0 feet);
+parameters: distancevalue meters feet;
+preconditions: !inunit(0 1) inunit(0 2);
 creates: ;
-effects: !inunit(0 feet) inunit(0 meters);
+effects: !inunit(0 2) inunit(0 1);
 ~
 0
 0
@@ -13,10 +13,10 @@ z,{0}
 
 name: convertmeterstofeet*;
 initialize: ;
-parameters: distancevalue;
-preconditions: !inunit(0 feet) inunit(0 meters);
+parameters: distancevalue feet meters;
+preconditions: !inunit(0 1) inunit(0 2);
 creates: ;
-effects: !inunit(0 meters) inunit(0 feet);
+effects: !inunit(0 2) inunit(0 1);
 ~
 0
 0
@@ -26,10 +26,10 @@ z,{0}
 
 name: convertpoundstokilograms*;
 initialize: ;
-parameters: massvalue;
-preconditions: !inunit(0 kilograms) inunit(0 pounds);
+parameters: massvalue kilograms pounds;
+preconditions: !inunit(0 1) inunit(0 2);
 creates: ;
-effects: !inunit(0 pounds) inunit(0 kilograms);
+effects: !inunit(0 2) inunit(0 1);
 ~
 0
 0
@@ -39,10 +39,10 @@ z,{0}
 
 name: convertkilogramstopounds*;
 initialize: ;
-parameters: massvalue;
-preconditions: !inunit(0 pounds) inunit(0 kilograms);
+parameters: massvalue pounds kilograms;
+preconditions: !inunit(0 1) inunit(0 2);
 creates: ;
-effects: !inunit(0 kilograms) inunit(0 pounds);
+effects: !inunit(0 2) inunit(0 1);
 ~
 0
 0
@@ -52,10 +52,10 @@ z,{0}
 
 name: convertcelsiustofahrenheit*;
 initialize: ;
-parameters: temperaturevalue;
-preconditions: !inunit(0 fahrenheit) inunit(0 celsius);
+parameters: temperaturevalue fahrenheit celsius;
+preconditions: !inunit(0 1) inunit(0 2);
 creates: ;
-effects: !inunit(0 celsius) inunit(0 fahrenheit);
+effects: !inunit(0 2) inunit(0 1);
 ~
 1
 temp
@@ -68,10 +68,10 @@ z,{0}
 
 name: convertfahrenheittocelsius*;
 initialize: ;
-parameters: temperaturevalue;
-preconditions: !inunit(0 celsius) inunit(0 fahrenheit);
+parameters: temperaturevalue celsius fahrenheit;
+preconditions: !inunit(0 1) inunit(0 2);
 creates: ;
-effects: !inunit(0 fahrenheit) inunit(0 celsius);
+effects: !inunit(0 2) inunit(0 1);
 ~
 1
 temp
@@ -84,10 +84,10 @@ z,{0}
 
 name: convertcelsiustokelvin*;
 initialize: ;
-parameters: temperaturevalue;
-preconditions: !inunit(0 kelvin) inunit(0 celsius);
+parameters: temperaturevalue kelvin celsius;
+preconditions: !inunit(0 1) inunit(0 2);
 creates: ;
-effects: !inunit(0 celsius) inunit(0 kelvin);
+effects: !inunit(0 2) inunit(0 1);
 ~
 0
 0

@@ -1,0 +1,12 @@
+name: computeareaofsquareobject;
+initialize: ;
+parameters: entity square side distanceunit;
+preconditions: shapeof(0 1) knownproperty(0 2) inunit(2 3);
+creates: 0/area;
+effects: knownproperty(0 +0) inunit(+0 2);
+~
+0
+0
+a,{0},{0},{+0},*
+r,{+0}
+~

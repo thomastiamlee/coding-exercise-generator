@@ -1,4 +1,5 @@
 #global;
+abstract;
 entity;
 person->entity;
 student->person;
@@ -16,14 +17,18 @@ weight->massvalue;
 temperaturevalue;
 temperature->temperaturevalue;
 
+distanceunit->abstract;
+meters->distanceunit;
+feet->distanceunit;
+massunit->abstract;
+kilograms->massunit;
+pounds->massunit;
+temperatureunit->abstract;
+celsius->temperatureunit;
+fahrenheit->temperatureunit;
+kelvin->temperatureunit;
+
 #static;
-meters;
-feet;
-kilograms;
-pounds;
-celsius;
-fahrenheit;
-kelvin;
 
 #assertions;
 hasproperty(person height);

@@ -5,27 +5,16 @@ introduceperson
 introducelocation
 -there is a [^0].
 
-stateheightinmeters
--the height of [0] is [*0] meters.
--[0] is [*0] meters tall.
+stateheight
+-the height of [0] is [*0] [^1].
+-[0] is [*0] [^1] tall.
 
-stateheightinfeet
--the height of [0] is [*0] feet.
--[0] is [*0] feet tall.
+stateweight
+-the weight of [0] is [*0] [^1].
+-[0] weighs [*0] [^1].
 
-stateweightinpounds
--the weight of [0] is [*0] pounds.
--[0] weighs [*0] pounds.
-
-stateweightinkilograms
--the weight of [0] is [*0] kilograms.
--[0] weighs [*0] kilograms.
-
-statetemperatureincelsius
--the temperature in [0] is [*0] degrees celsius.
-
-statetemperatureinfahrenheit
--the temperature in [0] is [*0] degrees fahrenheit.
+statetemperature
+-the temperature in [0] is [*0] degrees [^1].
 
 convertfeettometers
 -convert [0] to meters.
@@ -47,3 +36,6 @@ convertfahrenheittocelsius
 
 convertcelsiustokelvin
 -convert [0] to degrees kelvin.
+
+computeareaofsquareobject
+-compute the area of [0].

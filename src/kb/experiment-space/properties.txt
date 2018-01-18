@@ -1,57 +1,33 @@
-name: stateheightinmeters;
+name: stateheight;
 initialize: number[height];
-parameters: entity;
+parameters: entity distanceunit;
 preconditions: known(0) hasproperty(0 height);
 creates: 0/height;
-effects: knownproperty(0 +0) inunit(+0 meters);
+effects: knownproperty(0 +0) inunit(+0 1);
 ~
 0
 0
 a,{-0},{+0}
 ~
 
-name: stateheightinfeet;
-initialize: number[height];
-parameters: entity;
-preconditions: known(0) hasproperty(0 height);
-creates: 0/height;
-effects: knownproperty(0 +0) inunit(+0 feet);
-~
-0
-0
-a,{-0},{+0}
-~
-
-name: stateweightinpounds;
+name: stateweight;
 initialize: number[weight];
-parameters: entity;
+parameters: entity massunit;
 preconditions: known(0) hasproperty(0 weight);
 creates: 0/weight;
-effects: knownproperty(0 +0) inunit(+0 pounds);
+effects: knownproperty(0 +0) inunit(+0 1);
 ~
 0
 0
 a,{-0},{+0}
 ~
 
-name: stateweightinkilograms;
-initialize: number[weight];
-parameters: entity;
-preconditions: known(0) hasproperty(0 weight);
-creates: 0/weight;
-effects: knownproperty(0 +0) inunit(+0 kilograms);
-~
-0
-0
-a,{-0},{+0}
-~
-
-name: statetemperatureincelsius;
+name: statetemperature;
 initialize: number[temperature];
-parameters: entity;
+parameters: entity temperatureunit;
 preconditions: known(0) hasproperty(0 temperature);
 creates: 0/temperature;
-effects: knownproperty(0 +0) inunit(+0 celsius);
+effects: knownproperty(0 +0) inunit(+0 1);
 ~
 0
 0
