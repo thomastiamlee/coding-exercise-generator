@@ -27,6 +27,6 @@ effects: known(0);
 name: situateat;
 initialize: ;
 parameters: entity location;
-preconditions: known(0) !haslocation(0) canbeat(0 1);
+preconditions: known(0) !haslocation(0) canbeat(0 1) !beenin(0 1);
 creates: ;
-effects: haslocation(0) isat(0 1) known(1);
+effects: haslocation(0) isat(0 1) beenin(0 1) known(1);

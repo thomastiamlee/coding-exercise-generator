@@ -21,9 +21,9 @@ function planExercise(kb, table) {
 		console.log(res);
 		PlannerUtility.executeAction(kb, table, chosen);
 		if (PlannerUtility.isComputedAction(chosen.action) && Math.random() > 0.5) {
-			//break;
+			break;
 		}
-		if (chosen.action.name == "convertcelsiustofahrenheit") break;
+		//if (chosen.action.name == "convertcelsiustofahrenheit") break;
 	}
 	while (actionList.length > 0 && PlannerUtility.isComputedAction(actionList[actionList.length - 1].action) == false) {
 		actionList.splice(actionList.length - 1, 1);
