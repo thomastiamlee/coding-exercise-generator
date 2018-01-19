@@ -1,0 +1,13 @@
+name: computechangegivenamountpaid*;
+initialize: number[paid];
+parameters: person entity cost currencyunit;
+preconditions: bought(0 1) owns(1 2) inunit(2 3);
+creates: 0/change;
+effects: ;
+~
+1
+change
+0
+o,{-0},{2},{+0},-
+z,{+0}
+~

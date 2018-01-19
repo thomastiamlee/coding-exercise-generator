@@ -67,11 +67,23 @@ function convertPlanToText(plan, pathOrTemplates) {
 		var parameters = step.parameters;
 		var create = step.createParameters;
 		for (var j = 0; j < initialize.length; j++) {
-			template = template.replace("[*" + j + "]", initialize[j].alias);
+			while (true) {
+				var temp = template.replace("[*" + j + "]", initialize[j].alias);
+				if (temp == template) break;
+				template = temp;
+			}
 		}
 		for (var j = 0; j < parameters.length; j++) {
-			template = template.replace("[" + j + "]", parameters[j].getAlias());
-			template = template.replace("[^" + j + "]", parameters[j].parents[0].name);
+			while (true) {
+				var temp = template.replace("[" + j + "]", parameters[j].getAlias());
+				if (temp == template) break;
+				template = temp;
+			}
+			while (true) {
+				var temp = template.replace("[^" + j + "]", parameters[j].parents[0].name);
+				if (temp == template) break;
+				template = temp;
+			}
 		}
 		res += template + " ";
 	}

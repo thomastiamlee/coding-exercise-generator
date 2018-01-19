@@ -23,7 +23,7 @@ function planExercise(kb, table) {
 		if (PlannerUtility.isComputedAction(chosen.action) && Math.random() > 0.5) {
 			//break;
 		}
-		if (chosen.action.name == "computevolumeofcubeobject") break;
+		if (chosen.action.name == "computechangegivenamountpaid") break;
 	}
 	while (actionList.length > 0 && PlannerUtility.isComputedAction(actionList[actionList.length - 1].action) == false) {
 		actionList.splice(actionList.length - 1, 1);

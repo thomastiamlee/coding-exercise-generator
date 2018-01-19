@@ -4,3 +4,10 @@ parameters: person location location;
 preconditions: isat(0 1) !isat(0 2) canbeat(0 2) !beenin(0 2);
 creates: ;
 effects: isat(0 2) !isat(0 1) beenin(0 2);
+
+name: buyitem;
+initialize: ;
+parameters: person location entity;
+preconditions: isat(0 1) sells(1 2) !ownsitem(0 2);
+creates: ;
+effects: bought(0 2) ownsitem(0 2) known(2);

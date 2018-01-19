@@ -102,3 +102,15 @@ effects: knownproperty(0 radius) knownproperty(0 diameter) owns(0 +0) owns(0 +1)
 a,{-0},{+1},1
 o,{-0},(number-2),{+0},/
 ~
+
+name: statecost;
+initialize: number[cost];
+parameters: entity currencyunit;
+preconditions: known(0) !knownproperty(0 cost) hasproperty(0 cost);
+creates: 0/cost;
+effects: knownproperty(0 cost) owns(0 +0) inunit(+0 1) unitvisiblein(+0 1);
+~
+0
+0
+a,{-0},{+0}
+~

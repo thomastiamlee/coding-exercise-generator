@@ -8,11 +8,13 @@ child->person;
 location->entity;
 house->location;
 school->location;
+bookstore->location;
 
 object->entity;
 paper->object;
 ball->object;
 dice->object;
+book->object;
 
 food->object;
 cookie->food;
@@ -26,12 +28,14 @@ radius->distancevalue;
 diameter->distancevalue;
 massvalue;
 weight->massvalue;
+temperaturevalue;
+temperature->temperaturevalue;
+currencyvalue;
+cost->currencyvalue;
 
 area;
 volume;
-
-temperaturevalue;
-temperature->temperaturevalue;
+change;
 
 shapeorform->abstract;
 shape->shapeorform;
@@ -53,6 +57,9 @@ temperatureunit->abstract;
 celsius->temperatureunit;
 fahrenheit->temperatureunit;
 kelvin->temperatureunit;
+currencyunit->abstract;
+yen->currencyunit;
+dollars->currencyunit;
 
 #static;
 
@@ -66,13 +73,18 @@ hasproperty(sphere diameter);
 hasproperty(sphere radius);
 hasproperty(square side);
 hasproperty(cube side);
+hasproperty(object cost);
 
 canbeat(person location);
 
 canhaveshape(paper square);
 canhaveshape(paper rectangle);
+canhaveshape(book square);
+canhaveshape(book rectangle);
 canhaveshape(cookie circle);
 canhaveshape(ball sphere);
 canhaveshape(dice cube);
+
+sells(bookstore book);
 
 #actions;
