@@ -57,7 +57,7 @@ z,{+0}
 name: computevolumeofsphereobject*;
 initialize: ;
 parameters: entity sphere radius distanceunit;
-preconditions: !knownproperty(0 volume) formof(0 1) owns(0 2) inunit(2 3);
+preconditions: !knownproperty(0 volume) shapeof(0 1) owns(0 2) inunit(2 3);
 creates: 0/volume;
 effects: knownproperty(0 volume) owns(0 +0) inunit(+0 3);
 ~
@@ -66,7 +66,7 @@ temp
 3
 o,{2},{2},[temp],*,1
 o,[temp],{2},[temp],*,2
-o,[temp],{number-4},[temp],*,3
-o,[temp],{number-3},[temp],/
+o,[temp],(number-4),[temp],*,3
+o,[temp],(number-3),{+0},/
 z,{+0}
 ~

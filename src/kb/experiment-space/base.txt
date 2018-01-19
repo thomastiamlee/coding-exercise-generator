@@ -32,13 +32,13 @@ volume;
 temperaturevalue;
 temperature->temperaturevalue;
 
-shape->abstract;
+shapeorform->abstract;
+shape->shapeorform;
 square->shape;
 rectangle->shape;
 circle->shape;
 triangle->shape;
-
-form->abstract;
+form->shapeorform;
 cube->form;
 sphere->form;
 
@@ -59,13 +59,16 @@ kelvin->temperatureunit;
 hasproperty(person height);
 hasproperty(person weight);
 hasproperty(location temperature);
+hasproperty(circle diameter);
+hasproperty(circle radius);
+hasproperty(sphere diameter);
+hasproperty(sphere radius);
 
 canbeat(person location);
 
 canhaveshape(paper square);
 canhaveshape(paper rectangle);
 canhaveshape(cookie circle);
-
-canhaveform(ball sphere);
+canhaveshape(ball sphere);
 
 #actions;

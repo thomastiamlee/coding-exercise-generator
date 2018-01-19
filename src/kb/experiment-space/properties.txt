@@ -36,17 +36,10 @@ a,{-0},{+0}
 
 name: stateshape;
 initialize: ;
-parameters: entity shape;
+parameters: entity shapeorform;
 preconditions: known(0) !knownproperty(0 shape) canhaveshape(0 1);
 creates: ;
 effects: knownproperty(0 shape) shapeof(0 1);
-
-name: stateform;
-initialize: ;
-parameters: entity form;
-preconditions: known(0) !knownproperty(0 form) canhaveform(0 1);
-creates: ;
-effects: knownproperty(0 shape) formof(0 1);
 
 name: stateside;
 initialize: number[side];
@@ -86,8 +79,8 @@ a,{-0},{+0}
 
 name: stateradius;
 initialize: number[width];
-parameters: entity circle distanceunit;
-preconditions: !knownproperty(0 radius) !knownproperty(0 diameter) shapeof(0 1);
+parameters: entity shapeorform distanceunit;
+preconditions: !knownproperty(0 radius) !knownproperty(0 diameter) shapeof(0 1) hasproperty(1 radius) hasproperty(1 diameter);
 creates: 0/radius 0/diameter;
 effects: knownproperty(0 radius) knownproperty(0 diameter) owns(0 +0) owns(0 +1) inunit(+0 2) inunit(+1 2) unitvisiblein(+0 2) unitvisiblein(+1 2);
 ~
@@ -99,8 +92,8 @@ o,{-0},(number-2),{+1},*
 
 name: statediameter;
 initialize: number[width];
-parameters: entity circle distanceunit;
-preconditions: !knownproperty(0 radius) !knownproperty(0 diameter) shapeof(0 1);
+parameters: entity shapeorform distanceunit;
+preconditions: !knownproperty(0 radius) !knownproperty(0 diameter) shapeof(0 1) hasproperty(1 radius) hasproperty(1 diameter);
 creates: 0/radius 0/diameter;
 effects: knownproperty(0 radius) knownproperty(0 diameter) owns(0 +0) owns(0 +1) inunit(+0 2) inunit(+1 2) unitvisiblein(+0 2) unitvisiblein(+1 2);
 ~
