@@ -15,11 +15,12 @@ function planExercise(kb, list) {
 			candidates.push(actions[i]);
 		}
 	}
-//	var targetAction = candidates[Math.floor(Math.random() * candidates.length)];
-	var targetAction = kb.getAction("computepriceofmultipleitems");
+  //var targetAction = candidates[Math.floor(Math.random() * candidates.length)];
+	var targetAction = kb.getAction("convertcelsiustofahrenheit");
 	console.log(targetAction.name);
 	
 	while (!success) {
+		console.log("TRY");
 		var table = new PlannerUtility.memory();
 		for (var i = 0; i < list.length; i++) {
 			table.createLocalEntity(kb.getGlobalEntity(list[i]));
@@ -27,7 +28,6 @@ function planExercise(kb, list) {
 		var localEntities = table.getLocalEntity();
 	
 		while (true) {
-			console.log("TRY");
 			var choices = PlannerUtility.getAvailableActions(kb, table);
 			if (choices.length == 0) {
 				break;
@@ -38,7 +38,7 @@ function planExercise(kb, list) {
 			for (var i = 0; i < chosen.parameters.length; i++) {
 				res += " " + chosen.parameters[i].name;
 			}
-			//console.log(res);
+			console.log(res);
 			PlannerUtility.executeAction(kb, table, chosen);
 			//if (PlannerUtility.isComputedAction(chosen.action) && Math.random() > threshold) {
 				//break;
