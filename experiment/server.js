@@ -18,7 +18,7 @@ const ExerciseBuilder = require("../src/exercise-builder");
 const Compile = require("./compile");
 
 const functionName = "func";
-const plannerKnowledgeBasePath = "src/kb/revised-space";
+const plannerKnowledgeBasePath = "src/kb/experiment-space";
 
 function start() {
 	// Create a server with a host and port
@@ -128,12 +128,11 @@ function start() {
 					return res;
 				}
 				var kb = Parser.parseKnowledgeBase(plannerKnowledgeBasePath);
-				var table = new PlannerUtility.memory();
-				table.createLocalEntity([kb.getGlobalEntity("person")]);
-				var plan = PlannerSimple.planExercise(kb, table);
-				var exercise = ExerciseBuilder.buildExerciseFromActions(plan, table);
+				var list = ["person", "child", "student", "school", "bookstore", "house", "paper", "cookie", "ball", "dice", "book", "meters", "fahrenheit", "kelvin", "square", "rectangle", "triangle", "circle", "cube", "sphere", "yen", "pesos"];
+				var plan = PlannerSimple.planExercise(kb, list);
+				var exercise = ExerciseBuilder.buildExerciseFromActions(plan.plan, plan.table);
 				var testCases = TestCaseGenerator.generateTestCases(exercise, 1000);
-				var text = TextGenerator.convertPlanToText(plan, plannerKnowledgeBasePath);
+				var text = TextGenerator.convertPlanToText(plan.plan, plannerKnowledgeBasePath);
 				var functionHeader = buildFunctionHeader(exercise);
 				var inputSymbols = getInputSymbols(exercise.symbols, exercise.inputVariables);
 				

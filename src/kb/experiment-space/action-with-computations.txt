@@ -11,3 +11,16 @@ change
 o,{-0},{2},{+0},-
 z,{+0}
 ~
+
+name: computepriceofmultipleitems*;
+initialize: ;
+parameters: entity cost entity cost currencyunit;
+preconditions: owns(0 1) owns(2 3) inunit(1 4) inunit(3 4) !computedtotal();
+creates: totalprice;
+effects: computedtotal();
+~
+0
+0
+o,{2},{4},{+0},+
+z,{+0}
+~

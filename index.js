@@ -13,7 +13,7 @@ const TestCaseGenerator = require("./src/test-case-generator");
 
 var kb = Parser.parseKnowledgeBase("./src/kb/experiment-space");
 var table = new PlannerUtility.memory();
-var list = ["person", "child", "student", "school", "bookstore", "house", "paper", "cookie", "ball", "dice", "book", "meters", "fahrenheit", "kelvin", "square", "rectangle", "triangle", "circle", "cube", "sphere", "yen", "pesos"];
+var list = ["person", "child", "student", "school", "bookstore", "house", "paper", "cookie", "ball", "dice", "book", "pen", "notebook", "meters", "feet", "pounds", "kilograms", "celsius", "fahrenheit", "kelvin", "square", "rectangle", "triangle", "circle", "cube", "sphere", "yen", "pesos"];
 //table.createLocalEntity([kb.getGlobalEntity("person"), kb.getGlobalEntity("child"), kb.getGlobalEntity("student"), kb.getGlobalEntity("school"), kb.getGlobalEntity("bookstore"), kb.getGlobalEntity("house"), kb.getGlobalEntity("paper"), kb.getGlobalEntity("cookie"), kb.getGlobalEntity("ball"), kb.getGlobalEntity("dice"), kb.getGlobalEntity("book")]);
 //table.createLocalEntity([kb.getGlobalEntity("meters"), kb.getGlobalEntity("feet"), kb.getGlobalEntity("pounds"), kb.getGlobalEntity("kilograms"), kb.getGlobalEntity("celsius"), kb.getGlobalEntity("fahrenheit"), kb.getGlobalEntity("kelvin"), kb.getGlobalEntity("square"), kb.getGlobalEntity("rectangle"), kb.getGlobalEntity("triangle"), kb.getGlobalEntity("circle"), kb.getGlobalEntity("cube"), kb.getGlobalEntity("sphere"), kb.getGlobalEntity("yen"), kb.getGlobalEntity("pesos")]);
 var plan = Planner.planExercise(kb, list);
@@ -36,4 +36,4 @@ console.log(Reader.convertToFlowchartDefinition(exercise));
 
 //VisualizationServer.start();
 
-//ExperimentServer.start();//
+//ExperimentServer.start();

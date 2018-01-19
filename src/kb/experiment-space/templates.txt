@@ -1,6 +1,5 @@
 introduceperson
--there is a [^0] named [*0].
--there is a [^0] whose name is [*0].
+-there is a [^0].
 
 introducelocation
 -there is a [^0].
@@ -12,7 +11,7 @@ situateat
 -[0] is at [1].
 
 gotolocation
--[0] went from [1] to [2].
+-[0] went to [2].
 
 buyitem
 -[0] bought [2].
@@ -95,3 +94,6 @@ computevolumeofsphereobject
 
 computechangegivenamountpaid
 -[0] paid [*0] [^3] for [1]. compute the change of [0].
+
+computepriceofmultipleitems
+-compute the total cost of [1] and [3] in [^4].

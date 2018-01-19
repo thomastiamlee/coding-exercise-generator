@@ -67,19 +67,20 @@ function start() {
 			method: "GET",
 			path: "/generatetest",
 			handler: function(request, reply) {
-				var kb = Parser.parseKnowledgeBase("./src/kb/revised-space");
-				var table = new PlannerUtility.memory();
-				table.createLocalEntity(kb.getGlobalEntity("person"));
-				var actionList = Planner.planExercise(kb, table);
+				var kb = Parser.parseKnowledgeBase("./src/kb/experiment-space");
+				var list = ["person", "child", "student", "school", "bookstore", "house", "paper", "cookie", "ball", "dice", "book", "meters", "fahrenheit", "kelvin", "square", "rectangle", "triangle", "circle", "cube", "sphere", "yen", "pesos"];
+				var plan = Planner.planExercise(kb, list);
+				
 				var text = "";
-				for (var i = 0; i < actionList.length; i++) {
-					text += actionList[i].action.name + " ";
-					for (var j = 0; j < actionList[i].parameters.length; j++) {
-						text += actionList[i].parameters[j].name + " ";
+				for (var i = 0; i < plan.plan.length; i++) {
+					text += plan.plan[i].action.name + " ";
+					for (var j = 0; j < plan.plan[i].parameters.length; j++) {
+						text += plan.plan[i].parameters[j].name + " ";
 					}
 					text += "\n";
 				}
-				var exercise = ExerciseBuilder.buildExerciseFromActions(actionList, table);
+				var exercise = ExerciseBuilder.buildExerciseFromActions(plan.plan, plan.table);
+				text += TextGenerator.convertPlanToText(plan.plan, "./src/kb/experiment-space");
 				var flowchart = Reader.convertToFlowchartDefinition(exercise);
 				return reply.view("generation-test.html", {text: text, flowchart: flowchart});
 			}

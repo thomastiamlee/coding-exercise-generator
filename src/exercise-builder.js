@@ -16,14 +16,16 @@ function buildExerciseFromActions(plan, table) {
 	var count = [];
 	var counter = "A".charCodeAt(0);
 	for (var i = 0; i < plan.length; i++) {
+		plan[i].initializeAliases = [];
 		var current = plan[i].action.initialize;
 		for (var j = 0; j < current.length; j++) {
 			var alias = current[j].alias;
-			current[j].alias = String.fromCharCode(counter);
+			var newAlias = String.fromCharCode(counter);
+			plan[i].initializeAliases.push(newAlias);
 			counter++;
 			var newVariable = new Component.variable(current[j].type);
 			inputVariables.push(newVariable);
-			symbolMappings.push({name: current[j].alias, obj: newVariable});
+			symbolMappings.push({name: newAlias, obj: newVariable});
 		}
 	}
 	// Loop through all the actions
@@ -210,6 +212,7 @@ This function assumes that all symbolMappings have been read already. */
 function convertOperandStringToObject(operandString, step, symbolMappings) {
 	var parameters = step.parameters;
 	var create = step.createParameters;
+	var initialize = step.initializeAliases;
 	var stepNumber = step.number;
 	// Variable case
 	if (operandString.charAt(0) == '[') {
@@ -239,8 +242,10 @@ function convertOperandStringToObject(operandString, step, symbolMappings) {
 		}
 		else if (data.charAt(0) == "-") {
 			var index = parseInt(data.substring(1));
-			var alias = step.action.initialize[index].alias;
-			return getOperandFromSymbol(alias, symbolMappings);	
+			var name = initialize[index];
+			console.log("SM");
+			console.log(symbolMappings);
+			return getOperandFromSymbol(name, symbolMappings);
 		}
 		else {
 			var index = parseInt(data);

@@ -8,23 +8,26 @@ function planExercise(kb, list) {
 	var actionList = [];
 	var success = false;
 	
+	var actions = kb.getAction();
+	var candidates = [];
+	for (var i = 0; i < actions.length; i++) {
+		if (PlannerUtility.isComputedAction(actions[i])) {
+			candidates.push(actions[i]);
+		}
+	}
+//	var targetAction = candidates[Math.floor(Math.random() * candidates.length)];
+	var targetAction = kb.getAction("computepriceofmultipleitems");
+	console.log(targetAction.name);
+	
 	while (!success) {
 		var table = new PlannerUtility.memory();
 		for (var i = 0; i < list.length; i++) {
 			table.createLocalEntity(kb.getGlobalEntity(list[i]));
 		}
 		var localEntities = table.getLocalEntity();
-		
-		var actions = kb.getAction();
-		var candidates = [];
-		for (var i = 0; i < actions.length; i++) {
-			if (PlannerUtility.isComputedAction(actions[i])) {
-				candidates.push(actions[i]);
-			}
-		}
-		var targetAction = candidates[Math.floor(Math.random() * candidates.length)];
-		
+	
 		while (true) {
+			console.log("TRY");
 			var choices = PlannerUtility.getAvailableActions(kb, table);
 			if (choices.length == 0) {
 				break;

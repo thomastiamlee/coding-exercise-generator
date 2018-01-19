@@ -1,14 +1,9 @@
 name: introduceperson;
-initialize: number[personname];
+initialize: ;
 parameters: person;
 preconditions: !known(0);
 creates: ;
 effects: known(0);
-~
-0
-
-x,{0},{-0}
-~
 
 name: introducelocation;
 initialize: ;
