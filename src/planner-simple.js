@@ -7,10 +7,11 @@ that will serve as possible elements in the story. */
 function planExercise(kb, table) {
 	var actionList = [];
 	var localEntities = table.getLocalEntity();
+	var threshold = Math.random() * 2 + 0.25;
 	while (true) {
 		var choices = PlannerUtility.getAvailableActions(kb, table);
 		if (choices.length == 0) {
-			//break;
+			break;
 		}
 		var chosen = choices[Math.floor(Math.random() * choices.length)];
 		actionList.push(chosen);
@@ -20,14 +21,16 @@ function planExercise(kb, table) {
 		}
 		console.log(res);
 		PlannerUtility.executeAction(kb, table, chosen);
-		if (PlannerUtility.isComputedAction(chosen.action) && Math.random() > 0.5) {
+		if (PlannerUtility.isComputedAction(chosen.action) && Math.random() > threshold) {
 			//break;
 		}
-		if (chosen.action.name == "convertphptoyen") break;
+		if (chosen.action.name == "computechangegivenamountpaid") break;
 	}
 	while (actionList.length > 0 && PlannerUtility.isComputedAction(actionList[actionList.length - 1].action) == false) {
 		actionList.splice(actionList.length - 1, 1);
 	}
+	console.log("AL");
+	console.log(actionList);
 	
 	var current = 0;
 		
