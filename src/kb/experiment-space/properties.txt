@@ -43,8 +43,8 @@ effects: knownproperty(0 shape) shapeof(0 1);
 
 name: stateside;
 initialize: number[side];
-parameters: entity square distanceunit;
-preconditions: !knownproperty(0 side) shapeof(0 1);
+parameters: entity shapeorform distanceunit;
+preconditions: !knownproperty(0 side) shapeof(0 1) hasproperty(1 side);
 creates: 0/side;
 effects: knownproperty(0 side) owns(0 +0) inunit(+0 2) unitvisiblein(+0 2);
 ~

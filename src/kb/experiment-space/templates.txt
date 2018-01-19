@@ -26,7 +26,7 @@ statetemperature
 -the temperature in [0] is [*0] degrees [^1].
 
 stateshape
--the shape of [0] is [^1].
+-the shape of [0] is a [^1].
 -[0] is in the shape of a [^1].
 
 stateside

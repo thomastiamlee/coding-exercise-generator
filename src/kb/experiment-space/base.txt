@@ -12,6 +12,7 @@ school->location;
 object->entity;
 paper->object;
 ball->object;
+dice->object;
 
 food->object;
 cookie->food;
@@ -63,6 +64,8 @@ hasproperty(circle diameter);
 hasproperty(circle radius);
 hasproperty(sphere diameter);
 hasproperty(sphere radius);
+hasproperty(square side);
+hasproperty(cube side);
 
 canbeat(person location);
 
@@ -70,5 +73,6 @@ canhaveshape(paper square);
 canhaveshape(paper rectangle);
 canhaveshape(cookie circle);
 canhaveshape(ball sphere);
+canhaveshape(dice cube);
 
 #actions;

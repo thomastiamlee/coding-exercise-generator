@@ -42,7 +42,7 @@ z,{+0}
 name: computevolumeofcubeobject*;
 initialize: ;
 parameters: entity cube side distanceunit;
-preconditions: !knownproperty(0 volume) formof(0 1) owns(0 2) inunit(2 3);
+preconditions: !knownproperty(0 volume) shapeof(0 1) owns(0 2) inunit(2 3);
 creates: 0/volume;
 effects: knownproperty(0 volume) owns(0 +0) inunit(+0 3);
 ~
