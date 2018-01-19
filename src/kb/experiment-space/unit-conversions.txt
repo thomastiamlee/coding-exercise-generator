@@ -94,3 +94,29 @@ effects: !inunit(0 2) inunit(0 1) unitvisiblein(0 1);
 o,{0},(number-273.15),{0},+
 z,{0}
 ~
+
+name: convertyentophp*;
+initialize: ;
+parameters: currencyvalue pesos yen;
+preconditions: !inunit(0 1) inunit(0 2) !unitvisiblein(0 1);
+creates: ;
+effects: !inunit(0 2) inunit(0 1) unitvisiblein(0 1);
+~
+0
+0
+o,{0},(number-2.2),{0},/
+z,{0}
+~
+
+name: convertphptoyen*;
+initialize: ;
+parameters: currencyvalue yen pesos;
+preconditions: !inunit(0 1) inunit(0 2) !unitvisiblein(0 1);
+creates: ;
+effects: !inunit(0 2) inunit(0 1) unitvisiblein(0 1);
+~
+0
+0
+o,{0},(number-2.2),{0},*
+z,{0}
+~

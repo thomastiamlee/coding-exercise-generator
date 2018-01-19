@@ -59,7 +59,7 @@ fahrenheit->temperatureunit;
 kelvin->temperatureunit;
 currencyunit->abstract;
 yen->currencyunit;
-dollars->currencyunit;
+pesos->currencyunit;
 
 #static;
 

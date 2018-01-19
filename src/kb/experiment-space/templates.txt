@@ -72,6 +72,12 @@ convertfahrenheittocelsius
 convertcelsiustokelvin
 -convert [0] to degrees kelvin.
 
+convertyentophp
+-convert [0] to pesos. assume that 1 peso is equivalent to 2.2 yen.
+
+convertphptoyen
+-convert [0] to yen. assume that 1 peso is equivalent to 2.2 yen.
+
 computeareaofsquareobject
 -compute the area of [0] in [^3] squared.
 
