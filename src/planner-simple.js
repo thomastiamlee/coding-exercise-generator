@@ -4,39 +4,59 @@ const PlannerUtility = require("./planner-utility");
 /* Attempts to plan an exercise, given the initial space.
 The space is an array containing non-primitive type names
 that will serve as possible elements in the story. */
-function planExercise(kb, table) {
+function planExercise(kb, list) {
 	var actionList = [];
-	var localEntities = table.getLocalEntity();
-	var threshold = Math.random() * 2 + 0.25;
-	while (true) {
-		var choices = PlannerUtility.getAvailableActions(kb, table);
-		if (choices.length == 0) {
-			break;
+	var success = false;
+	
+	while (!success) {
+		var table = new PlannerUtility.memory();
+		for (var i = 0; i < list.length; i++) {
+			table.createLocalEntity(kb.getGlobalEntity(list[i]));
 		}
-		var chosen = choices[Math.floor(Math.random() * choices.length)];
-		actionList.push(chosen);
-		var res = chosen.action.name;
-		for (var i = 0; i < chosen.parameters.length; i++) {
-			res += " " + chosen.parameters[i].name;
+		var localEntities = table.getLocalEntity();
+		
+		var actions = kb.getAction();
+		var candidates = [];
+		for (var i = 0; i < actions.length; i++) {
+			if (PlannerUtility.isComputedAction(actions[i])) {
+				candidates.push(actions[i]);
+			}
 		}
-		console.log(res);
-		PlannerUtility.executeAction(kb, table, chosen);
-		if (PlannerUtility.isComputedAction(chosen.action) && Math.random() > threshold) {
-			//break;
+		var targetAction = candidates[Math.floor(Math.random() * candidates.length)];
+		
+		while (true) {
+			var choices = PlannerUtility.getAvailableActions(kb, table);
+			if (choices.length == 0) {
+				break;
+			}
+			var chosen = choices[Math.floor(Math.random() * choices.length)];
+			actionList.push(chosen);
+			var res = chosen.action.name;
+			for (var i = 0; i < chosen.parameters.length; i++) {
+				res += " " + chosen.parameters[i].name;
+			}
+			//console.log(res);
+			PlannerUtility.executeAction(kb, table, chosen);
+			//if (PlannerUtility.isComputedAction(chosen.action) && Math.random() > threshold) {
+				//break;
+			//}
+			if (targetAction == chosen.action) {
+				break;
+			}
 		}
-		if (chosen.action.name == "computechangegivenamountpaid") break;
+		if (actionList[actionList.length - 1].action == targetAction) {
+			success = true;
+		}
 	}
 	while (actionList.length > 0 && PlannerUtility.isComputedAction(actionList[actionList.length - 1].action) == false) {
 		actionList.splice(actionList.length - 1, 1);
 	}
-	console.log("AL");
-	console.log(actionList);
 	
 	var current = 0;
 		
 	while (current < actionList.length - 1) {
 		// Initialize data structures
-		var table = new PlannerUtility.memory();
+		var table2 = new PlannerUtility.memory();
 		var space = [].concat(localEntities);
 		// Execute all actions before the current action
 		for (var i = 0; i < current; i++) {
@@ -51,7 +71,7 @@ function planExercise(kb, table) {
 					parameters[k] = PlannerUtility.replaceSymbolicParameters(actionList[i].parameters, actionList[i].createParameters, parameters[k]);
 				}
 				var newAssertion = new PlannerUtility.assertionQuery(truth, predicate, parameters);
-				table.assert(newAssertion);
+				table2.assert(newAssertion);
 			}
 		}
 		
@@ -81,7 +101,7 @@ function planExercise(kb, table) {
 					parameters[k] = PlannerUtility.replaceSymbolicParameters(actionList[i].parameters, actionList[i].createParameters, parameters[k]);
 				}
 				var newAssertion = new PlannerUtility.assertionQuery(truth, predicate, parameters);
-				if (PlannerUtility.checkAssertion(kb, table, newAssertion) == false) {
+				if (PlannerUtility.checkAssertion(kb, table2, newAssertion) == false) {
 					valid = false;
 					break;
 				}
@@ -102,7 +122,7 @@ function planExercise(kb, table) {
 					parameters[k] = PlannerUtility.replaceSymbolicParameters(actionList[i].parameters, actionList[i].createParameters, parameters[k]);
 				}
 				var newAssertion = new PlannerUtility.assertionQuery(truth, predicate, parameters);
-				table.assert(newAssertion);
+				table2.assert(newAssertion);
 			}
 		}
 
@@ -118,7 +138,7 @@ function planExercise(kb, table) {
 		}
 	}
 	
-	return actionList;
+	return {plan: actionList, table: table};
 }
 
 
