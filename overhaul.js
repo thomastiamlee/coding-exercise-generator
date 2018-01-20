@@ -11,4 +11,6 @@ food.parent = domain.getExistentByName("food");
 
 var action = domain.getActionByName("eat");
 var match = action.getParameterMatchings([person, food]);
-console.log(match);
+
+var initial = new PlannerComponents.state([ new PlannerComponents.query(true, "hungry", [person]), new PlannerComponents.query(true, "edible", [food])]);
+var goal = new PlannerComponents.state([ new PlannerComponents.query(false, "hungry", [person])]);

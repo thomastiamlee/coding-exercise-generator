@@ -110,9 +110,33 @@ var query = function(truth, predicate, parameters) {
 	this.truth = truth;
 	this.predicate = predicate;
 	this.parameters = parameters;
+	this.isSameWith = function(other) {
+		if (this.truth != other.truth) return false;
+		if (this.predicate != other.predicate) return false;
+		if (this.parameters.length != other.parameters.length) return false;
+		for (var i = 0; i < other.parameters.length; i++) {
+			if (this.parameters[i] != other.parameters[i]) return false;
+		}
+		return true;
+	}
 }
 var state = function(truths) {
 	this.truths = truths;
+	this.isSameWith = function(other) {
+		var temp = [].concat(this.truths);
+		for (var i = 0; i < other.truths.length; i++) {
+			var index = -1;
+			for (var j = 0; j < temp.length; j++) {
+				if (temp[j].isSameWith(other.truths[i])) {
+					index = j;
+					break;
+				}
+			}
+			if (index == -1) return false;
+			temp.splice(index, 1);
+		}
+		return temp.length == 0;
+	}
 }
 
-module.exports = {domain, existent};
+module.exports = {domain, existent, state, query};
