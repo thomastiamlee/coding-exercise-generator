@@ -20,7 +20,6 @@ var action = function(name, parameters, preconditions, postconditions) {
 	this.postconditions = postconditions;
 }
 var domain = function(existents, assertions, actions) {
-	
 	this.existents = [];
 	this.assertions = [];
 	this.actions = [];
@@ -31,6 +30,15 @@ var domain = function(existents, assertions, actions) {
 			}
 		}
 		console.log("warning: attempted to get a non-existent existent name " + name);
+		return null;
+	}
+	this.getActionByName = function(name) {
+		for (var i = 0; i < this.actions.length; i++) {
+			if (this.actions[i].name == name) {
+				return this.actions[i];
+			}
+		}
+		console.log("warning: attempted to get a non-existent action name " + name);
 		return null;
 	}
 	for (var i = 0; i < existents.length; i++) {
@@ -61,5 +69,13 @@ var domain = function(existents, assertions, actions) {
 		this.actions.push(new action(name, parameters, preconditions, postconditions));
 	}
 }
+var query = function(truth, predicate, parameters) {
+	this.truth = truth;
+	this.predicate = predicate;
+	this.parameters = parameters;
+}
+var state = function(truths) {
+	this.truths = truths;
+}
 
-module.exports = {domain};
+module.exports = {domain, existent};

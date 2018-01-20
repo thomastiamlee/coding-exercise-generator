@@ -1,7 +1,3 @@
-action: eat(person p, food f).
-pre: hungry(x) ^ can_eat(m,n).
-post: !hungry(x).
-
-action: dive(person p).
-pre: .
-post: cool(p).
+action: eat(person p, object o).
+pre: hungry(p) ^ edible(o).
+post: !hungry(p).
