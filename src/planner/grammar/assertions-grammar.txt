@@ -1,0 +1,52 @@
+{
+	function debug(message) {
+		//console.log(message);
+	}
+}
+
+start
+	= "\r\n"* a:assertion_list? "\r\n"*
+	{
+		debug("parsed: start");
+		if (a) return a;
+		return [];
+	}
+	
+assertion_list
+	= a:assertion_item "\r\n"+ b:assertion_list
+	{
+		debug("parsed: assertion_list");
+		return [a].concat(b);
+	}
+	/ a:assertion_item
+	{
+		debug("parsed: assertion_list");
+		return [a];
+	}
+
+assertion_item
+	= a:predicate_token "(" b:parameter_list? ")"
+	{
+		debug("parsed: assertion_item");
+		if (!b) b = [];
+		return { predicate: a, parameters: b };
+	}
+	
+predicate_token
+	= a:([a-zA-Z_]+)
+	{
+		debug("parsed: predicate_token");
+		return a.join("");
+	}
+
+parameter_list
+	= a:[a-zA-Z_]+ "," b:parameter_list
+	{
+		debug("parsed: parameter_list");
+		return [a.join("")].concat(b);
+	}
+	/ a:[a-zA-Z_]+
+	{
+		debug("parsed: parameter_list");
+		return [a.join("")];
+	}

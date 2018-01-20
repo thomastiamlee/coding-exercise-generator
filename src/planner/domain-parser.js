@@ -9,16 +9,21 @@ function parseExistents() {
 	var existents = File.readFileSync(domainPath + "/existents.txt", "utf-8");
 	var parser = Peg.generate(grammar, {trace: false});
 	var result = parser.parse(existents);
-	console.log(result);
+	return result;
 }
 
 function parseAssertions() {
-	
+	var grammar = File.readFileSync(grammarPath + "/assertions-grammar.txt", "utf-8");
+	var existents = File.readFileSync(domainPath + "/assertions.txt", "utf-8");
+	var parser = Peg.generate(grammar, {trace: false});
+	var result = parser.parse(existents);
+	console.log(result);
 }
 
 
 function parseDomain() {
 	var existents = parseExistents();
+	var assertions = parseAssertions();
 }
 
 module.exports = {parseDomain};
