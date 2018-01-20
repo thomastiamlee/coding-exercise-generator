@@ -55,6 +55,35 @@ var action = function(name, parameters, preconditions, postconditions) {
 		}
 		return result;
 	}
+	this.applyParametersToAssertions = function(parameters, assertions) {
+		var mappings = [];
+		for (var i = 0; i < this.parameters.length; i++) {
+			mappings.push({name: this.parameters[i].symbol, replacement: parameters[i]});
+		}
+		var result = [];
+		for (var i = 0; i < assertions.length; i++) {
+			var truth = assertions[i].truth;
+			var predicate = assertions[i].predicate;
+			var replaced = [];
+			for (var j = 0; j < assertions[i].parameters.length; j++) {
+				var current = assertions[i].parameters[j];
+				for (var k = 0; k < mappings.length; k++) {
+					if (mappings[k].name == current) {
+						replaced.push(mappings[k].replacement);
+						break;
+					}
+				}
+			}
+			result.push(new query(truth, predicate, replaced));
+		}
+		return result;
+	}
+	this.applyParametersToPreconditions = function(parameters) {
+		return this.applyParametersToAssertions(parameters, this.preconditions);
+	}
+	this.applyParametersToPostconditions = function(parameters) {
+		return this.applyParametersToAssertions(parameters, this.postconditions);
+	}
 }
 var domain = function(existents, assertions, actions) {
 	this.existents = [];
@@ -136,6 +165,9 @@ var state = function(truths) {
 			temp.splice(index, 1);
 		}
 		return temp.length == 0;
+	}
+	this.regress = function(action) {
+		
 	}
 }
 
