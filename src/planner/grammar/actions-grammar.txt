@@ -1,0 +1,95 @@
+{
+	function debug(message) {
+		console.log(message);
+	}
+}
+
+start
+	= "\r\n"* a:action_list? "\r\n"*
+	{
+		debug("parsed: start");
+		if (a) return a;
+		return [];
+	}
+	
+action_list
+	= a:action_item "\r\n"+ b:action_list
+	{
+		debug("parsed: action_list");
+		return [a].concat(b);
+	}
+	/ a:action_item
+	{
+		debug("parsed: action_list");
+		return [a];
+	}
+
+action_item
+	= _ "action:" _ a:action_name_token _ "(" _ b:action_parameter_list? _ ")" _ "." _ "pre:" _ c:action_condition_list? _ "." _ "post:" _ d:action_condition_list? _ "."
+	{
+		debug("parsed: action_item");
+		if (!b) b = []; if (!c) c = []; if (!d) d = [];
+		return { name: a, parameters: b, preconditions: c, postconditions: d };
+	}
+
+action_name_token
+	= a:([a-zA-Z_]+)
+	{
+		debug("parsed: action_name_token");
+		return a.join("");
+	}
+	
+action_parameter_list
+	= a:action_parameter_item _ "," _ b:action_parameter_item
+	{
+		debug("parsed: action_parameter_list");
+		return [a].concat(b);
+	}
+	/ a:action_parameter_item
+	{
+		debug("parsed: action_parameter_list");
+		return [a];
+	}
+	
+action_parameter_item
+	= a:([a-zA-Z_])+ " " _ b:([a-zA-Z_]+)
+	{
+		debug("parsed: action_parameter_item");
+		return { type: a.join(""), symbol: b.join("") };
+	}
+
+action_condition_list
+	= a:action_condition_item _ "^" _ b:action_condition_list
+	{
+		debug("parsed: action_condition_list");
+		return [a].concat(b);
+	}
+	/ a:action_condition_item
+	{
+		debug("parsed: action_condition_list");
+		return [a];
+	}
+
+action_condition_item
+	= a:"!"? b:([a-zA-Z_]+) _ "(" _ c:action_condition_parameter_list? _ ")"
+	{
+		debug("parsed: action_condition_item");
+		var truth = false;
+		if (!a) truth = true; if (!c) c = [];
+		return { truth: truth, predicate: b.join(""), parameters: c };
+	}
+	
+action_condition_parameter_list
+	= a:([a-zA-Z_]+) _ "," _ b:action_condition_parameter_list
+	{
+		debug("parsed: action_condition_parameter_list");
+		return [a.join("")].concat(b);
+	}
+	/ a:([a-zA-Z_]+)
+	{
+		debug("parsed: action_condition_parameter_list");
+		return [a.join("")];
+	}
+	
+_
+	= [ \t\r\n]*

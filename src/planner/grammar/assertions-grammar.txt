@@ -25,7 +25,7 @@ assertion_list
 	}
 
 assertion_item
-	= a:predicate_token "(" b:parameter_list? ")"
+	= _ a:predicate_token _ "(" _ b:parameter_list? _ ")" _
 	{
 		debug("parsed: assertion_item");
 		if (!b) b = [];
@@ -40,7 +40,7 @@ predicate_token
 	}
 
 parameter_list
-	= a:[a-zA-Z_]+ "," b:parameter_list
+	= a:[a-zA-Z_]+ _ "," _ b:parameter_list
 	{
 		debug("parsed: parameter_list");
 		return [a.join("")].concat(b);
@@ -50,3 +50,6 @@ parameter_list
 		debug("parsed: parameter_list");
 		return [a.join("")];
 	}
+	
+_
+	= [ \t]*
