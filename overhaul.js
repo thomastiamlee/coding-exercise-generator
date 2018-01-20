@@ -1,6 +1,6 @@
 const PlannerComponents = require("./src/planner/planner-components");
-
 const DomainParser = require("./src/planner/domain-parser");
+const Planner = require("./src/planner/planner");
 
 var domain = DomainParser.parseDomain();
 
@@ -18,4 +18,5 @@ var initial = new PlannerComponents.state([ new PlannerComponents.query(true, "h
 var goal = new PlannerComponents.state([ new PlannerComponents.query(false, "hungry", [person])]);
 
 var x = goal.regress(action, match[0]);
-console.log(goal.isSatisfiedBy(initial));
+
+Planner.backwardStateSpaceSearch([person, food], initial, goal, domain);
