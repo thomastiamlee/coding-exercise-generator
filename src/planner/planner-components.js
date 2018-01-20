@@ -8,6 +8,13 @@ var localMemory = function(domain) {
 		this.name = type + namingCounter;
 		this.parent = domain.getExistentByName(type);
 		this.namingCounter++;
+		this.isExtendedFrom = function(other) {
+			var current = this;
+			while (current != null) {
+				if (current == other) return true;
+				current = this.parent;
+			}
+		}
 	}	
 	this.createLocalExistent(types) {
 		if (types instanceof Array == false) {
