@@ -25,12 +25,12 @@ existent_list
 	}
 
 existent_item
-	= "[" a:([a-zA-Z ]+) "]>[" b:([a-zA-Z ]+) "]"
+	= "[" a:([a-zA-Z_]+) "]>[" b:([a-zA-Z_]+) "]"
 	{
 		debug("parsed: existent_item");
 		return { name: a.join(""), parent: b.join("") };
 	}
-	/ "[" a:([a-zA-Z ]+) "]"
+	/ "[" a:([a-zA-Z_]+) "]"
 	{
 		debug("parsed: existent_item");
 		return { name: a.join("") };

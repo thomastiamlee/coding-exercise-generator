@@ -1,0 +1,2 @@
+has_property(person, height)
+has_property(person, weight)

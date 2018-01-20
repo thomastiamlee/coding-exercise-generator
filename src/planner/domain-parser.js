@@ -12,9 +12,13 @@ function parseExistents() {
 	console.log(result);
 }
 
+function parseAssertions() {
+	
+}
+
 
 function parseDomain() {
-	parseExistents();
+	var existents = parseExistents();
 }
 
 module.exports = {parseDomain};

@@ -1,8 +1,8 @@
 [person]
-[distance value]
-[height]>[distance value]
-[distance unit]
-[meters]>[distance unit]
-[feet]>[distance unit]
+[distance_value]
+[height]>[distance_value]
+[distance_unit]
+[meters]>[distance_unit]
+[feet]>[distance_unit]
 [location]
 
