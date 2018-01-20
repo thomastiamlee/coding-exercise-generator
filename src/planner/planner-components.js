@@ -166,8 +166,31 @@ var state = function(truths) {
 		}
 		return temp.length == 0;
 	}
-	this.regress = function(action) {
-		
+	this.regress = function(action, parameters) {
+		var preconditions = action.applyParametersToPreconditions(parameters);
+		var postconditions = action.applyParametersToPostconditions(parameters);
+		var newTruths = [];
+		for (var i = 0; i < this.truths.length; i++) {
+			var toRemove = false;
+			for (var j = 0; j < postconditions.length; j++) {
+				if (this.truths[i].isSameWith(postconditions[j])) {
+					toRemove = true;
+					break;
+				}
+			}
+			if (!toRemove) newTruths.push(this.truths[i]);
+		}
+		for (var i = 0; i < preconditions.length; i++) {
+			var found = false;
+			for (var j = 0; j < newTruths.length; j++) {
+				if (newTruths[j].isSameWith(preconditions[i])) {
+					found = true;
+					break;
+				}
+			}
+			if (!found) newTruths.push(preconditions[i]);
+		}
+		return newTruths;
 	}
 }
 

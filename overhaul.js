@@ -14,3 +14,9 @@ var match = action.getParameterMatchings([person, food]);
 
 var initial = new PlannerComponents.state([ new PlannerComponents.query(true, "hungry", [person]), new PlannerComponents.query(true, "edible", [food])]);
 var goal = new PlannerComponents.state([ new PlannerComponents.query(false, "hungry", [person])]);
+
+console.log("BEFORE");
+console.log(goal);
+var x = goal.regress(action, match[0]);
+console.log("AFTER:");
+console.log(x);
