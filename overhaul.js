@@ -10,3 +10,5 @@ var food = new PlannerComponents.existent("food1");
 food.parent = domain.getExistentByName("food");
 
 var action = domain.getActionByName("eat");
+var match = action.getParameterMatchings([person, food]);
+console.log(match);

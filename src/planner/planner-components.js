@@ -5,7 +5,7 @@ var existent = function(name) {
 		var current = this;
 		while (current != null) {
 			if (current == other) return true;
-			current = this.parent;
+			current = current.parent;
 		}
 	}
 }
@@ -18,6 +18,43 @@ var action = function(name, parameters, preconditions, postconditions) {
 	this.parameters = parameters;
 	this.preconditions = preconditions;
 	this.postconditions = postconditions;
+	this.getParameterMatchings = function(existents) {	
+		var possibilities = [];
+		var result = [];
+		for (var i = 0; i < this.parameters.length; i++) {
+			possibilities.push([]);
+			var current = this.parameters[i].type;
+			for (var j = 0; j < existents.length; j++) {
+				if (existents[j].isExtendedFrom(current)) {
+					possibilities[i].push(existents[j]);
+				}
+			}
+		}
+		var combinations = 1;
+		for (var i = 0; i < possibilities.length; i++) {
+			combinations *= possibilities[i].length;
+		}
+		for (var i = 0; i < combinations; i++) {
+			var matching = [];
+			var c = 1;
+			for (var j = 0; j < possibilities.length; j++) {
+				var len = possibilities[j].length;
+				matching.push(possibilities[j][Math.floor(i / c) % len]);
+				c *= len;
+			}
+			var duplicate = [];
+			var valid = true;
+			for (var j = 0; j < matching.length; j++) {
+				if (duplicate.indexOf(matching[j]) != -1) {
+					valid = false;
+					break;
+				}
+				duplicate.push(matching[j]);
+			}
+			result.push(matching);
+		}
+		return result;
+	}
 }
 var domain = function(existents, assertions, actions) {
 	this.existents = [];
