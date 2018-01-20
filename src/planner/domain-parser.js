@@ -8,6 +8,13 @@ var domain = function(existents, assertions, actions) {
 	var existent = function(name) {
 		this.name = name;
 		this.parent = null;
+		this.isExtendedFrom = function(other) {
+			var current = this;
+			while (current != null) {
+				if (current == other) return true;
+				current = this.parent;
+			}
+		}
 	}
 	var assertion = function(predicate, parameters) {
 		this.predicate = predicate;
