@@ -1,0 +1,37 @@
+{
+	function debug(message) {
+		//console.log(message);
+	}
+}
+
+start
+	= "\r\n"* a:existent_list? "\r\n"*
+	{
+		debug("parsed: start");
+		if (a) return a;
+		return [];
+	}
+	
+existent_list
+	= a:existent_item "\r\n"+ b:existent_list
+	{
+		debug("parsed: existent_list");
+		return [a].concat(b);
+	}
+	/ a:existent_item
+	{
+		debug("parsed: existent_list");
+		return [a];
+	}
+
+existent_item
+	= "[" a:([a-zA-Z ]+) "]>[" b:([a-zA-Z ]+) "]"
+	{
+		debug("parsed: existent_item");
+		return { name: a.join(""), parent: b.join("") };
+	}
+	/ "[" a:([a-zA-Z ]+) "]"
+	{
+		debug("parsed: existent_item");
+		return { name: a.join("") };
+	}
