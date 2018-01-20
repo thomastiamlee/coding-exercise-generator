@@ -148,6 +148,15 @@ var query = function(truth, predicate, parameters) {
 		}
 		return true;
 	}
+	this.isOppositeWith = function(other) {
+		if (this.truth == other.truth) return false;
+		if (this.predicate != other.predicate) return false;
+		if (this.parameters.length != other.parameters.length) return false;
+		for (var i = 0; i < other.parameters.length; i++) {
+			if (this.parameters[i] != other.parameters[i]) return false;
+		}
+		return true;
+	}
 }
 var state = function(truths) {
 	this.truths = truths;
@@ -190,7 +199,27 @@ var state = function(truths) {
 			}
 			if (!found) newTruths.push(preconditions[i]);
 		}
-		return newTruths;
+		return new state(newTruths);
+	}
+	this.isSatisfiedBy = function(other) {
+		for (var i = 0; i < this.truths.length; i++) {
+			var current = this.truths[i];
+			if (current.truth == true) {
+				var satisfied = false;
+				for (var j = 0; j < other.truths.length; j++) {
+					if (other.truths[j].isSameWith(current)) { satisfied = true; break; }
+				}
+			}
+			else {
+				var satisfied = true;
+				for (var j = 0; j < other.truths.length; j++) {
+					if (other.truths[j].isOppositeWith(current)) { satisfied = false; break; }
+					break;
+				}
+			}
+			if (!satisfied) { return false; }
+		}
+		return true;
 	}
 }
 
