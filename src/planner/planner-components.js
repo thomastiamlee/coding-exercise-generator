@@ -8,6 +8,11 @@ var existent = function(name) {
 			current = current.parent;
 		}
 	}
+	this.getAlias = function() {
+		if (!this.alias) {
+			return this.name;
+		}
+	}
 }
 var assertion = function(predicate, parameters) {
 	this.predicate = predicate;

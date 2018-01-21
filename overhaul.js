@@ -5,3 +5,5 @@ const Planner = require("./src/planner/planner");
 
 var domain = DomainParser.parseDomain();
 var plan = Planner.plan(domain);
+var text = TextGenerator.convertPlanToText(plan);
+console.log(text);

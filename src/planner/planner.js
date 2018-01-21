@@ -153,8 +153,8 @@ function plan(domain) {
 	var logicPlan = backwardStateSpaceSearchLogic(existents, targetAction, parameters, 1);
 	var goal = logicPlan.state;
 	var initial = generateInitialState(existents);
-	var plan = backwardStateSpaceSearchActions(existents, initial, goal);
-	return {plan: plan, logicPlan: logicPlan};
+	var actionPlan = backwardStateSpaceSearchActions(existents, initial, goal);
+	return {actionPlan: actionPlan, logicPlan: logicPlan};
 }
 
 module.exports = {plan};
