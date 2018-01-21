@@ -45,13 +45,22 @@ function parseLogicActions() {
 	return result;
 }
 
+function parseContraints() {
+	var grammar = File.readFileSync(grammarPath + "/constraints-grammar.txt", "utf-8");
+	var constraints = File.readFileSync(domainPath + "/constraints.txt", "utf-8");
+	var parser = Peg.generate(grammar, {trace: false});
+	var result = parser.parse(constraints);
+	return result;
+}
+
 function parseDomain() {
 	var existents = parseExistents();
 	var assertions = parseAssertions();
 	var actions = parseActions();
 	var logicActions = parseLogicActions();
+	var constraints = parseContraints();
 	
-	return new PlannerComponents.domain(existents, assertions, actions, logicActions);
+	return new PlannerComponents.domain(existents, assertions, actions, logicActions, constraints);
 }
 
 module.exports = {parseDomain};

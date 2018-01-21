@@ -132,11 +132,17 @@ var action = function(name, parameters, requirements, preconditions, postconditi
 		return this.applyParametersToAssertions(parameters, this.requirements);
 	}
 }
-var domain = function(existents, assertions, actions, logicActions) {
+var constraint = function(name, dataType, specifications) {
+	this.name = name;
+	this.dataType = dataType;
+	this.specifications = specifications;
+}
+var domain = function(existents, assertions, actions, logicActions, constraints) {
 	this.existents = [];
 	this.assertions = [];
 	this.actions = [];
 	this.logicActions = [];
+	this.constraints = [];
 	this.getExistentByName = function(name) {
 		for (var i = 0; i < this.existents.length; i++) {
 			if (this.existents[i].name == name) {
@@ -193,6 +199,9 @@ var domain = function(existents, assertions, actions, logicActions) {
 		var preconditions = logicActions[i].preconditions;
 		var postconditions = logicActions[i].postconditions;
 		this.logicActions.push(new action(name, parameters, requirements, preconditions, postconditions, null));
+	}
+	for (var i = 0; i < constraints.length; i++) {
+		this.constraints.push(new constraint(constraints[i].name, constraints[i].dataType, constraints[i].specification));
 	}
 }
 

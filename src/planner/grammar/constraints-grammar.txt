@@ -1,0 +1,71 @@
+{
+	function debug(message) {
+		//console.log(message);
+	}
+}
+
+start
+	= "\r\n"* a:constraint_list? "\r\n"*
+	{
+		debug("parsed: start");
+		if (a) return a;
+		return [];
+	}
+
+constraint_list
+	= a:constraint_item "\r\n"+ b:constraint_list
+	{
+		debug("parsed: constraint_list");
+		return [a].concat(b);
+	}
+	/ a:constraint_item
+	{
+		debug("parsed: constraint_list");
+		return [a];
+	}
+
+constraint_item
+	= a:([a-zA-Z_]+) "." b:data_type "." c:constraint_specification "."
+	{
+		debug("parsed: constraint_item");
+		return { name: a.join(""), dataType: b, specification: c };
+	}
+	
+data_type
+	= "string"
+	{
+		debug("parsed: data_type");
+		return "string";
+	}
+	/ "number"
+	{
+		debug("parsed: data_type");
+		return "number";
+	}
+	/ "integer"
+	{
+		debug("parsed: data_type");
+		return "integer";
+	}
+	
+constraint_specification
+	= "set[" a:value_list "]"
+	{
+		debug("parsed: constraint_specification");
+		return { type: "set", values: a };
+	}
+	
+value_list
+	= a:([a-zA-Z0-9. +-])+ "," b:value_list
+	{
+		debug("parsed: value_list");
+		return [a.join("")].concat(b);
+	}
+	/ a:([a-zA-Z0-9. +-])+
+	{
+		debug("parsed: value_list");
+		return [a.join("")];
+	}
+
+_
+	= [ \t\r\n]*
