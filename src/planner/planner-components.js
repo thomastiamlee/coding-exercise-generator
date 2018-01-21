@@ -13,7 +13,7 @@ var assertion = function(predicate, parameters) {
 	this.predicate = predicate;
 	this.parameters = parameters;
 }	
-var action = function(name, parameters, preconditions, postconditions) {
+var action = function(name, parameters, requirements, preconditions, postconditions) {
 	this.name = name;
 	this.parameters = parameters;
 	this.preconditions = preconditions;
@@ -85,10 +85,11 @@ var action = function(name, parameters, preconditions, postconditions) {
 		return this.applyParametersToAssertions(parameters, this.postconditions);
 	}
 }
-var domain = function(existents, assertions, actions) {
+var domain = function(existents, assertions, actions, logicActions) {
 	this.existents = [];
 	this.assertions = [];
 	this.actions = [];
+	this.logicActions = [];
 	this.getExistentByName = function(name) {
 		for (var i = 0; i < this.existents.length; i++) {
 			if (this.existents[i].name == name) {
@@ -132,9 +133,21 @@ var domain = function(existents, assertions, actions) {
 		}
 		var preconditions = actions[i].preconditions;
 		var postconditions = actions[i].postconditions;
-		this.actions.push(new action(name, parameters, preconditions, postconditions));
+		this.actions.push(new action(name, parameters,null, preconditions, postconditions));
+	}
+	for (var i = 0; i < logicActions.length; i++) {
+		var name = logicActions[i].name;
+		var parameters = logicActions[i].parameters;
+		for (var j = 0; j < parameters.length; j++) {
+			parameters[j].type = this.getExistentByName(parameters[j].type);
+		}
+		var requirements = logicActions[i].requirements;
+		var preconditions = logicActions[i].preconditions;
+		var postconditions = logicActions[i].postconditions;
+		this.logicActions.push(new action(name, parameters, requirements, preconditions, postconditions));
 	}
 }
+
 var query = function(truth, predicate, parameters) {
 	this.truth = truth;
 	this.predicate = predicate;

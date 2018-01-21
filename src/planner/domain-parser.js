@@ -33,12 +33,25 @@ function parseActions() {
 	return result;
 }
 
+function parseLogicActions() {
+	var grammar = File.readFileSync(grammarPath + "/logic-grammar.txt", "utf-8");
+	var parser = Peg.generate(grammar, {trace: false});
+	var result = [];
+	File.readdirSync(domainPath + "/logic").forEach(file => {
+		var actions = File.readFileSync(domainPath + "/logic/" + file.toString(), "utf-8");
+		var temp = parser.parse(actions);
+		result = result.concat(temp);
+	});
+	return result;
+}
+
 function parseDomain() {
 	var existents = parseExistents();
 	var assertions = parseAssertions();
 	var actions = parseActions();
+	var logicActions = parseLogicActions();
 	
-	return new PlannerComponents.domain(existents, assertions, actions);
+	return new PlannerComponents.domain(existents, assertions, actions, logicActions);
 }
 
 module.exports = {parseDomain};

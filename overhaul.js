@@ -3,6 +3,7 @@ const DomainParser = require("./src/planner/domain-parser");
 const Planner = require("./src/planner/planner");
 
 var domain = DomainParser.parseDomain();
+console.log(domain);
 
 var person = new PlannerComponents.existent("person1");
 person.parent = domain.getExistentByName("person");
