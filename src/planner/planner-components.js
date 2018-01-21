@@ -16,6 +16,7 @@ var assertion = function(predicate, parameters) {
 var action = function(name, parameters, requirements, preconditions, postconditions) {
 	this.name = name;
 	this.parameters = parameters;
+	this.requirements = requirements;
 	this.preconditions = preconditions;
 	this.postconditions = postconditions;
 	this.getParameterMatchings = function(existents) {	
