@@ -19,6 +19,20 @@ function plan(domain) {
 		}
 		return result;
 	}
+	function generateInitialState(existents) {
+		var assertions = domain.assertions;
+		var result = [];
+		for (var i = 0; i < assertions.length; i++) {
+			var predicate = assertions[i].predicate;
+			var matchings = assertions[i].getParameterMatchings(existents);
+			for (var j = 0; j < matchings.length; j++) {
+				var current = matchings[j];
+				var query = new PlannerComponents.query(true, predicate, current);
+				result.push(query);
+			}
+		}
+		return new PlannerComponents.state(result);
+	}
 	function backwardStateSpaceSearchActions(existents, initial, goal) {
 		var actions = domain.actions;
 		var stateStack = [goal];
@@ -137,6 +151,10 @@ function plan(domain) {
 	var matchings = targetAction.getParameterMatchings(existents);
 	var parameters = matchings[1];
 	var logicPlan = backwardStateSpaceSearchLogic(existents, targetAction, parameters, 1);
+	var goal = logicPlan.state;
+	var initial = generateInitialState(existents);
+	var plan = backwardStateSpaceSearchActions(existents, initial, goal);
+	console.log(plan);
 }
 
 module.exports = {plan};

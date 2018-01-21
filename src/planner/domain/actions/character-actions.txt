@@ -4,16 +4,16 @@ post: known(p).
 
 action: state_person_height(person p, height h, feet f).
 pre: !known(p, h).
-post: known(p, h) ^ propertyof(p, h) ^ in_unit(h, f).
+post: known(p, h) ^ known(h, f) ^ propertyof(p, h) ^ in_unit(h, f).
 
 action: plan_to_visit(person p, country c).
 pre: known(p).
-post: intention_to_visit(p, c) ^ known(c).
+post: intent_to_visit(p, c) ^ known(c).
 
 action: state_measurement_system(country c, measurement_system m).
 pre: !known(c, m) ^ measurement_system_of(c, m).
 post: known(c, m).
 
 action: plan_to_convert_property_for_travel(person p, distance_value d, feet f, meters m, country c, metric_system ms).
-pre: propertyof(p, d) ^ plan_to_visit(p, c) ^ known(c, ms) ^ in_unit(d, f) ^ !inunit(d, m).
-post: intention_to_convert(d, f, m).
+pre: propertyof(p, d) ^ intent_to_visit(p, c) ^ known(c, ms) ^ in_unit(d, f) ^ !inunit(d, m).
+post: intent_to_convert(d, f, m).
