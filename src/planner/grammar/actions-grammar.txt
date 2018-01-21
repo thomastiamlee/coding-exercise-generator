@@ -133,12 +133,12 @@ alias_reference
 	= "\"" a:([a-zA-Z ()\[\]\-.]+) "\""
 	{
 		debug("parsed: alias_reference");
-		return { type: "text", val: a };
+		return { type: "text", val: a.join("") };
 	}
 	/ a:([a-zA-Z_]+)
 	{
 		debug("parsed: alias_reference");
-		return { type: "reference", val: a };
+		return { type: "reference", val: a.join("") };
 	}
 
 _

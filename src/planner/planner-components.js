@@ -12,6 +12,7 @@ var existent = function(name) {
 		if (!this.alias) {
 			return this.name;
 		}
+		return this.alias;
 	}
 }
 var assertion = function(predicate, parameters) {
@@ -55,13 +56,14 @@ var assertion = function(predicate, parameters) {
 		return result;
 	}
 }	
-var action = function(name, parameters, requirements, preconditions, postconditions, texts) {
+var action = function(name, parameters, requirements, preconditions, postconditions, texts, aliases) {
 	this.name = name;
 	this.parameters = parameters;
 	this.requirements = requirements;
 	this.preconditions = preconditions;
 	this.postconditions = postconditions;
 	this.texts = texts;
+	this.aliases = aliases;
 	this.getParameterMatchings = function(existents) {	
 		var possibilities = [];
 		var result = [];
@@ -136,6 +138,21 @@ var constraint = function(name, dataType, specifications) {
 	this.name = name;
 	this.dataType = dataType;
 	this.specifications = specifications;
+	
+	this.getRandomValue = function() {
+		var chosen = null;
+		if (this.specifications.type == "set") {
+			var values = this.specifications.values;
+			chosen = values[Math.floor(Math.random() * values.length)];
+		}
+		if (this.dataType == "number") {
+			return parseFloat(chosen);
+		}
+		if (this.dataType == "integer") {
+			return parseInt(chosen);
+		}
+		return chosen;
+	}
 }
 var domain = function(existents, assertions, actions, logicActions, constraints) {
 	this.existents = [];
@@ -196,7 +213,8 @@ var domain = function(existents, assertions, actions, logicActions, constraints)
 		var preconditions = actions[i].preconditions;
 		var postconditions = actions[i].postconditions;
 		var texts = actions[i].texts;
-		this.actions.push(new action(name, parameters, null, preconditions, postconditions, texts));
+		var aliases = actions[i].aliases;
+		this.actions.push(new action(name, parameters, null, preconditions, postconditions, texts, aliases));
 	}
 	for (var i = 0; i < logicActions.length; i++) {
 		var name = logicActions[i].name;
@@ -207,7 +225,7 @@ var domain = function(existents, assertions, actions, logicActions, constraints)
 		var requirements = logicActions[i].requirements;
 		var preconditions = logicActions[i].preconditions;
 		var postconditions = logicActions[i].postconditions;
-		this.logicActions.push(new action(name, parameters, requirements, preconditions, postconditions, null));
+		this.logicActions.push(new action(name, parameters, requirements, preconditions, postconditions, null, null));
 	}
 	for (var i = 0; i < constraints.length; i++) {
 		this.constraints.push(new constraint(constraints[i].name, constraints[i].dataType, constraints[i].specification));

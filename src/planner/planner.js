@@ -145,6 +145,31 @@ function plan(domain) {
 		
 		return { state: state, plan: plan };
 	}
+	function setAliases(actionPlan) {
+		for (var i = actionPlan.length - 1; i >= 0; i--) {
+			var current = actionPlan[i].action;
+			var aliases = current.aliases;
+			var actionParameters = actionPlan[i].action.parameters;
+			var realParameters = actionPlan[i].parameters;
+			for (var j = 0; j < aliases.length; j++) {
+				var symbol = aliases[j].symbol;
+				var reference = aliases[j].reference;
+				var type = reference.type;
+				if (type == "reference") {
+					var replacement = domain.getConstraintByName(reference.val).getRandomValue();
+				}
+				else if (type == "text") {
+					var replacement = reference.val;
+				}
+				for (var k = 0; k < actionParameters.length; k++) {
+					if (actionParameters[k].symbol == symbol) {
+						realParameters[k].alias = replacement;
+						break;
+					}
+				}
+			}
+		}
+	}
 	
 	var targetAction = selectTargetLogicAction();
 	var existents = generateExistents();
@@ -154,6 +179,8 @@ function plan(domain) {
 	var goal = logicPlan.state;
 	var initial = generateInitialState(existents);
 	var actionPlan = backwardStateSpaceSearchActions(existents, initial, goal);
+	setAliases(actionPlan);
+	
 	return {actionPlan: actionPlan, logicPlan: logicPlan};
 }
 
