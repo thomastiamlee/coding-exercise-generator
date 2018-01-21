@@ -278,12 +278,17 @@ var state = function(truths) {
 		var preconditions = action.applyParametersToPreconditions(parameters);
 		var postconditions = action.applyParametersToPostconditions(parameters);
 		var newTruths = [];
+		var removed = [];
 		for (var i = 0; i < this.truths.length; i++) {
 			var toRemove = false;
 			for (var j = 0; j < postconditions.length; j++) {
 				if (this.truths[i].isSameWith(postconditions[j])) {
+					removed.push(postconditions[j]);
 					toRemove = true;
 					break;
+				}
+				else if (this.truths[i].isOppositeWith(postconditions[j])) {
+					return null;
 				}
 			}
 			if (!toRemove) newTruths.push(this.truths[i]);

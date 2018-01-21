@@ -3,6 +3,7 @@ const PlannerComponents = require("./planner-components");
 function plan(domain) {
 	function shuffle(arr) {
 		var res = [];
+		arr = [].concat(arr);
 		while (arr.length > 0) {
 			var index = Math.floor(Math.random() * arr.length)
 			res.push(arr[index]);
@@ -60,8 +61,9 @@ function plan(domain) {
 				break;
 			}
 			
-			for (var i = 0; i < actions.length; i++) {
-				var potentialAction = actions[i];
+			var shuffled = shuffle(actions);
+			for (var i = 0; i < shuffled.length; i++) {
+				var potentialAction = shuffled[i];
 				var matchings = potentialAction.getParameterMatchings(existents);
 				for (var j = 0; j < matchings.length; j++) {
 					var newState = currentState.regress(potentialAction, matchings[j]);
@@ -129,8 +131,9 @@ function plan(domain) {
 				break;
 			}
 			
-			for (var i = 0; i < actions.length; i++) {
-				var potentialAction = actions[i];
+			var shuffled = shuffle(actions);
+			for (var i = 0; i < shuffled.length; i++) {
+				var potentialAction = shuffled[i];
 				var matchings = potentialAction.getParameterMatchings(existents);
 				for (var j = 0; j < matchings.length; j++) {
 					var newState = currentState.regress(potentialAction, matchings[j]);
@@ -210,7 +213,6 @@ function plan(domain) {
 			}
 		}
 	}
-	
 	var targetAction = selectTargetLogicAction();
 	console.log("Chosen target action: " + targetAction.name);
 	var existents = generateExistents();
