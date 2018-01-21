@@ -56,7 +56,7 @@ var assertion = function(predicate, parameters) {
 		return result;
 	}
 }	
-var action = function(name, parameters, requirements, preconditions, postconditions, texts, aliases) {
+var action = function(name, parameters, requirements, preconditions, postconditions, texts, aliases, logic) {
 	this.name = name;
 	this.parameters = parameters;
 	this.requirements = requirements;
@@ -64,6 +64,7 @@ var action = function(name, parameters, requirements, preconditions, postconditi
 	this.postconditions = postconditions;
 	this.texts = texts;
 	this.aliases = aliases;
+	this.logic = logic;
 	this.getParameterMatchings = function(existents) {	
 		var possibilities = [];
 		var result = [];
@@ -214,7 +215,7 @@ var domain = function(existents, assertions, actions, logicActions, constraints)
 		var postconditions = actions[i].postconditions;
 		var texts = actions[i].texts;
 		var aliases = actions[i].aliases;
-		this.actions.push(new action(name, parameters, null, preconditions, postconditions, texts, aliases));
+		this.actions.push(new action(name, parameters, null, preconditions, postconditions, texts, aliases, null));
 	}
 	for (var i = 0; i < logicActions.length; i++) {
 		var name = logicActions[i].name;
@@ -225,7 +226,8 @@ var domain = function(existents, assertions, actions, logicActions, constraints)
 		var requirements = logicActions[i].requirements;
 		var preconditions = logicActions[i].preconditions;
 		var postconditions = logicActions[i].postconditions;
-		this.logicActions.push(new action(name, parameters, requirements, preconditions, postconditions, null, null));
+		var logic = logicActions[i].logic;
+		this.logicActions.push(new action(name, parameters, requirements, preconditions, postconditions, null, null, logic));
 	}
 	for (var i = 0; i < constraints.length; i++) {
 		this.constraints.push(new constraint(constraints[i].name, constraints[i].dataType, constraints[i].specification));

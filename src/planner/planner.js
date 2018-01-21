@@ -97,7 +97,7 @@ function plan(domain) {
 		var targetState = new PlannerComponents.state(targetAction.applyParametersToPreconditions(parameters));
 		var actions = domain.logicActions;
 		var stateStack = [targetState];
-		var actionStack = [[targetAction]];
+		var actionStack = [[{action: targetAction, parameters: parameters}]];
 		var stepStack = [1];
 		var visited = [];
 		
@@ -155,16 +155,34 @@ function plan(domain) {
 				var symbol = aliases[j].symbol;
 				var reference = aliases[j].reference;
 				var type = reference.type;
-				if (type == "reference") {
-					var replacement = domain.getConstraintByName(reference.val).getRandomValue();
+				if (aliases[j].type == "alias") {	
+					if (type == "reference") {
+						var replacement = domain.getConstraintByName(reference.val).getRandomValue();
+					}
+					else if (type == "text") {
+						var replacement = reference.val;
+					}
+					for (var k = 0; k < actionParameters.length; k++) {
+						var previous = "";
+						while (previous != replacement) {
+							previous = replacement;
+							replacement = replacement.replace("(" + actionParameters[k].symbol + ")", realParameters[k].getAlias());
+						}
+					}
+					for (var k = 0; k < actionParameters.length; k++) {
+						if (actionParameters[k].symbol == symbol) {
+							realParameters[k].alias = replacement;
+							break;
+						}
+					}
 				}
-				else if (type == "text") {
-					var replacement = reference.val;
-				}
-				for (var k = 0; k < actionParameters.length; k++) {
-					if (actionParameters[k].symbol == symbol) {
-						realParameters[k].alias = replacement;
-						break;
+				else if (aliases[j].type == "value") {
+					var target = domain.getConstraintByName(reference.val);
+					for (var k = 0; k < actionParameters.length; k++) {
+						if (actionParameters[k].symbol == symbol) {
+							realParameters[k].dataType = target.dataType;
+							break;
+						}
 					}
 				}
 			}

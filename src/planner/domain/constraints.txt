@@ -1,1 +1,2 @@
 person_name.string.set[Thomas,John,Bob,Mark,Robert,Jane,Sue,Michelle,Belle,Patricia].
+person_height.number.range[4,6].

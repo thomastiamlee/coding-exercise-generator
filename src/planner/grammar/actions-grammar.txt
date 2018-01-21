@@ -126,7 +126,12 @@ alias_item
 	= a:([a-zA-Z_]+) "[" b:alias_reference "]"
 	{
 		debug("parsed: alias_item");
-		return { symbol: a, reference: b };
+		return { type: "alias", symbol: a, reference: b };
+	}
+	/ a:([a-zA-Z_]+) "<" b:alias_reference ">"
+	{
+		debug("parsed: alias_item");
+		return { type: "value", symbol: a, reference: b };
 	}
 	
 alias_reference

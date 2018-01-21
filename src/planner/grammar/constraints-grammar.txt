@@ -54,6 +54,11 @@ constraint_specification
 		debug("parsed: constraint_specification");
 		return { type: "set", values: a };
 	}
+	/ "range[" a:value_list "]"
+	{
+		debug("parsed: constraint_specification");
+		return { type: "range", values: a };
+	}
 	
 value_list
 	= a:([a-zA-Z0-9. +-])+ "," b:value_list
