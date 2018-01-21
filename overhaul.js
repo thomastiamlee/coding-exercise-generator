@@ -8,3 +8,4 @@ var domain = DomainParser.parseDomain();
 var plan = Planner.plan(domain);
 var text = TextGenerator.convertPlanToText(plan);
 var exercise = ExerciseBuilder.generateExercise(plan);
+console.log(text);

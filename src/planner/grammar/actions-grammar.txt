@@ -104,7 +104,7 @@ action_text_list
 	}
 
 action_text_item
-	= "\"" a:([a-zA-Z ()\[\]\-.]+) "\""
+	= "\"" a:([a-zA-Z ()\[\]{}\-.]+) "\""
 	{
 		debug("parsed: action_text_item");
 		return a.join("");

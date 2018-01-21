@@ -145,7 +145,12 @@ function plan(domain) {
 		
 		return { state: state, plan: plan };
 	}
-	function setAliases(actionPlan) {
+	function setAliasesAndValues(actionPlan, logicPlan) {
+		var allPossibleInputs = [];
+		for (var i = 0; i < logicPlan.plan.length; i++) {
+			allPossibleInputs = allPossibleInputs.concat(logicPlan.plan[i].parameters);
+		}
+		var currentInputParameterCounter = "A".charCodeAt(0);
 		for (var i = actionPlan.length - 1; i >= 0; i--) {
 			var current = actionPlan[i].action;
 			var aliases = current.aliases;
@@ -181,12 +186,22 @@ function plan(domain) {
 					for (var k = 0; k < actionParameters.length; k++) {
 						if (actionParameters[k].symbol == symbol) {
 							realParameters[k].dataType = target.dataType;
+							if (allPossibleInputs.indexOf(realParameters[k]) != -1) {
+								realParameters[k].isInput = true;
+								realParameters[k].logicalValue = String.fromCharCode(currentInputParameterCounter++);
+							}
+							else {
+								realParameters[k].isInput = false;
+								realParameters[k].logicalValue = target.getRandomValue();
+							}
 							break;
 						}
 					}
 				}
 			}
 		}
+		
+		
 	}
 	
 	var targetAction = selectTargetLogicAction();
@@ -197,7 +212,7 @@ function plan(domain) {
 	var goal = logicPlan.state;
 	var initial = generateInitialState(existents);
 	var actionPlan = backwardStateSpaceSearchActions(existents, initial, goal);
-	setAliases(actionPlan);
+	setAliasesAndValues(actionPlan, logicPlan);
 	
 	return {actionPlan: actionPlan, logicPlan: logicPlan};
 }

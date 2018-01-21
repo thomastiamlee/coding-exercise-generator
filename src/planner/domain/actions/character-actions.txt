@@ -7,7 +7,7 @@ alias: p[person_name].
 action: state_person_height(person p, height h, feet f).
 pre: !known(p, h).
 post: known(p, h) ^ known(h, f) ^ propertyof(p, h) ^ in_unit(h, f).
-text: "The height of (p) is x [f].", "(p) is x [f] tall.".
+text: "The height of (p) is {h} [f].", "(p) is {h} [f] tall.".
 alias: h["the height of (p)"], h<person_height>.
 
 action: plan_to_visit(person p, country c).

@@ -27,6 +27,7 @@ function generateExercise(plan) {
 		}
 	}
 	var symbolMappings = [];
+	var inputVariables = [];
 	var logicPlan = plan.logicPlan.plan;
 	var head = null;
 	var tail = null;
@@ -41,6 +42,9 @@ function generateExercise(plan) {
 				if (currentParameters[j].dataType) {
 					var variable = new Component.variable(currentParameters[j].dataType);
 					symbolMappings.push({variable: variable, name: currentParameters[j].name});
+					if (currentParameters[j].isInput) {
+						inputVariables.push(variable);
+					}
 				}
 			}
 		}
@@ -124,7 +128,7 @@ function generateExercise(plan) {
 		}
 		tail = terminalNodes;
 	}
-	return {head: head, symbolMappings: symbolMappings}
+	return {head: head, symbolMappings: symbolMappings, inputVariables: inputVariables}
 }
 
 module.exports = {generateExercise};

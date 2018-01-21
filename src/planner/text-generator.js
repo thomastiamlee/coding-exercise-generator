@@ -29,6 +29,13 @@ function convertPlanToText(plan) {
 				chosen = chosen.replace("(" + actionParameters[j].symbol + ")", parameters[j].getAlias());
 			}
 		}
+		for (var j = 0; j < parameters.length; j++) {
+			var previous = "";
+			while (previous != chosen) {
+				var previous = chosen;
+				chosen = chosen.replace("{" + actionParameters[j].symbol + "}", parameters[j].logicalValue);
+			}
+		}
 		res += chosen + " ";
 	}
 	return res;
