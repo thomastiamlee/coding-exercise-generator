@@ -161,6 +161,15 @@ var domain = function(existents, assertions, actions, logicActions, constraints)
 		console.log("warning: attempted to get a non-existent action name " + name);
 		return null;
 	}
+	this.getConstraintByName = function(name) {
+		for (var i = 0; i < this.constraints.length; i++) {
+			if (this.constraints[i].name == name) {
+				return this.constraints[i];
+			}
+		}
+		console.log("warning: attempted to get a non-existent constraint name " + name);
+		return null;
+	}
 	for (var i = 0; i < existents.length; i++) {
 		this.existents.push(new existent(existents[i].name));
 	}
