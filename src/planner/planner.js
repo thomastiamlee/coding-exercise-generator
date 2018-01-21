@@ -1,6 +1,15 @@
 const PlannerComponents = require("./planner-components");
 
 function plan(domain) {
+	function shuffle(arr) {
+		var res = [];
+		while (arr.length > 0) {
+			var index = Math.floor(Math.random() * arr.length)
+			res.push(arr[index]);
+			arr.splice(index, 1);
+		}
+		return res;
+	}
 	function selectTargetLogicAction() {
 		var logicActions = domain.logicActions;
 		return logicActions[Math.floor(Math.random() * logicActions.length)];
@@ -200,18 +209,31 @@ function plan(domain) {
 				}
 			}
 		}
-		
-		
 	}
 	
 	var targetAction = selectTargetLogicAction();
+	console.log("Chosen target action: " + targetAction.name);
 	var existents = generateExistents();
 	var matchings = targetAction.getParameterMatchings(existents);
-	var parameters = matchings[1];
-	var logicPlan = backwardStateSpaceSearchLogic(existents, targetAction, parameters, 1);
-	var goal = logicPlan.state;
-	var initial = generateInitialState(existents);
-	var actionPlan = backwardStateSpaceSearchActions(existents, initial, goal);
+	matchings = shuffle(matchings);
+	var actionPlan = null; var logicPlan = null;	
+	for (var i = 0; i < matchings.length && (actionPlan == null || logicPlan == null); i++) {
+		actionPlan = null; logicPlan = null;
+		var parameters = matchings[i];
+		var logicPlan = backwardStateSpaceSearchLogic(existents, targetAction, parameters, 1);
+		if (logicPlan == null) continue;
+		var goal = logicPlan.state;
+		var initial = generateInitialState(existents);
+		var actionPlan = backwardStateSpaceSearchActions(existents, initial, goal);
+	}
+	if (logicPlan == null) {
+		console.log("Generation failed.");
+		return false;
+	}
+	if (actionPlan == null) {
+		console.log("Generation failed.");
+		return false;
+	}
 	setAliasesAndValues(actionPlan, logicPlan);
 	
 	return {actionPlan: actionPlan, logicPlan: logicPlan};

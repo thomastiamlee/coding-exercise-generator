@@ -1,0 +1,5 @@
+action: state_person_height(person p, height h, distance_unit u).
+pre: known(p) ^ !known(p, h).
+post: known(p, h) ^ known(h, u) ^ propertyof(p, h) ^ in_unit(h, u).
+text: "The height of (p) is {h} [u].", "(p) is {h} [u] tall.".
+alias: h["the height of (p)"], h<person_height>.

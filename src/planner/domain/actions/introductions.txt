@@ -4,12 +4,6 @@ post: known(p).
 text: "There is a [p] named (p).".
 alias: p[person_name].
 
-action: state_person_height(person p, height h, feet f).
-pre: !known(p, h).
-post: known(p, h) ^ known(h, f) ^ propertyof(p, h) ^ in_unit(h, f).
-text: "The height of (p) is {h} [f].", "(p) is {h} [f] tall.".
-alias: h["the height of (p)"], h<person_height>.
-
 action: plan_to_visit(person p, country c).
 pre: known(p).
 post: intent_to_visit(p, c) ^ known(c).
@@ -26,4 +20,10 @@ action: plan_to_convert_property_for_travel(person p, distance_value d, feet f, 
 pre: propertyof(p, d) ^ intent_to_visit(p, c) ^ known(c, ms) ^ in_unit(d, f) ^ !inunit(d, m).
 post: intent_to_convert(d, f, m).
 text: "(p) wants to convert (d) to [m].".
+alias: .
+
+action: plan_to_convert_property_for_travel_again(person p, distance_value d, meters m, feet f, country c, english_system ms).
+pre: propertyof(p, d) ^ intent_to_visit(p, c) ^ known(c, ms) ^ in_unit(d, m) ^ !inunit(d, f).
+post: intent_to_convert(d, m, f).
+text: "(p) wants to convert (d) to [f].".
 alias: .

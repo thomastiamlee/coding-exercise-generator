@@ -3,6 +3,15 @@ req: intent_to_convert(d, f, m).
 pre: in_unit(d, f) ^ !in_unit(d, m) ^ known(d, f) ^ !known(d, m).
 post: in_unit(d, m) ^ !in_unit(d, f) ^ known(d, m).
 {
+o,[d],(number/3.28084),[d],/
+r,[d]
+}
+
+action: convert_meters_to_feet(distance_value d, meters m, feet f).
+req: intent_to_convert(d, m, f).
+pre: in_unit(d, m) ^ !in_unit(d, f) ^ known(d, m) ^ !known(d, f).
+post: in_unit(d, f) ^ !in_unit(d, m) ^ known(d, f).
+{
 o,[d],(number/3.28084),[d],*
 r,[d]
 }
