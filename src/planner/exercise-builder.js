@@ -28,6 +28,7 @@ function generateExercise(plan) {
 	}
 	var symbolMappings = [];
 	var inputVariables = [];
+	var actionResults = [];
 	var logicPlan = plan.logicPlan.plan;
 	var head = null;
 	var tail = null;
@@ -106,7 +107,13 @@ function generateExercise(plan) {
 				nodeList.push({node: node, successors: successors});
 			}
 			else if (type == "r") {
-			
+				var first = line[1].substring(1, line[1].length - 1);
+				for (var k = 0; k < currentAction.parameters.length; j++) {
+					if (currentAction.parameters[k].symbol == first) {
+						actionResults.push(currentParameters[k]);
+						break;
+					}
+				}
 			}
 		}
 		for (var j = 0; j < nodeList.length; j++) {
@@ -127,6 +134,16 @@ function generateExercise(plan) {
 			}
 		}
 		tail = terminalNodes;
+	}
+	var finalActionResult = actionResults[0];
+	var returnOperand = null;
+	if (finalActionResult.dataType) {
+		returnOperand = getVariableFromName(finalActionResult.name, symbolMappings);
+	}
+	var returnNode = new Component.node(Component.NODE_TYPE_RETURN);
+	returnNode.attachInputOperand(returnOperand, 0);
+	for (var i = 0; i < tail.length; i++) {
+		tail[i].attachNode(returnNode, 0);
 	}
 	return {head: head, symbolMappings: symbolMappings, inputVariables: inputVariables}
 }
