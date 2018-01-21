@@ -20,4 +20,6 @@ var goal = new PlannerComponents.state([ new PlannerComponents.query(true, "full
 
 var x = goal.regress(action, match[0]);
 
-console.log(Planner.backwardStateSpaceSearch([person, food], initial, goal, domain));
+//console.log(Planner.backwardStateSpaceSearch([person, food], initial, goal, domain));
+
+Planner.plan(domain);

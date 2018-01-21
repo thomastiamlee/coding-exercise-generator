@@ -84,6 +84,9 @@ var action = function(name, parameters, requirements, preconditions, postconditi
 	this.applyParametersToPostconditions = function(parameters) {
 		return this.applyParametersToAssertions(parameters, this.postconditions);
 	}
+	this.applyParametersToRequirements = function(parameters) {
+		return this.applyParametersToAssertions(parameters, this.requirements);
+	}
 }
 var domain = function(existents, assertions, actions, logicActions) {
 	this.existents = [];

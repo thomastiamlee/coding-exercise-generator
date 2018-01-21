@@ -1,8 +1,12 @@
 const PlannerComponents = require("./planner-components");
 
-function backwardStateSpaceSearch(existents, initial, goal, domain) {
+function selectTargetComputation(domain) {
+	var logicActions = domain.logicActions;
+	return logicActions[Math.floor(Math.random() * logicActions.length)];
+}
+
+function backwardStateSpaceSearchActions(existents, initial, goal, domain) {
 	var actions = domain.actions;
-	
 	var stateStack = [goal];
 	var actionStack = [[]];
 	var visited = [goal];
@@ -39,8 +43,13 @@ function backwardStateSpaceSearch(existents, initial, goal, domain) {
 			}
 		}
 	}
-	
 	return plan;
 }
 
-module.exports = {backwardStateSpaceSearch};
+function plan(domain) {
+	var targetComputation = selectTargetComputation(domain);
+	console.log("Target computation selected:");
+	console.log(targetComputation);
+}
+
+module.exports = {plan};
