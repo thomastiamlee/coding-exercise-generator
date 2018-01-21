@@ -50,12 +50,13 @@ var assertion = function(predicate, parameters) {
 		return result;
 	}
 }	
-var action = function(name, parameters, requirements, preconditions, postconditions) {
+var action = function(name, parameters, requirements, preconditions, postconditions, texts) {
 	this.name = name;
 	this.parameters = parameters;
 	this.requirements = requirements;
 	this.preconditions = preconditions;
 	this.postconditions = postconditions;
+	this.texts = texts;
 	this.getParameterMatchings = function(existents) {	
 		var possibilities = [];
 		var result = [];
@@ -174,7 +175,8 @@ var domain = function(existents, assertions, actions, logicActions) {
 		}
 		var preconditions = actions[i].preconditions;
 		var postconditions = actions[i].postconditions;
-		this.actions.push(new action(name, parameters,null, preconditions, postconditions));
+		var texts = actions[i].texts;
+		this.actions.push(new action(name, parameters, null, preconditions, postconditions, texts));
 	}
 	for (var i = 0; i < logicActions.length; i++) {
 		var name = logicActions[i].name;
@@ -185,7 +187,7 @@ var domain = function(existents, assertions, actions, logicActions) {
 		var requirements = logicActions[i].requirements;
 		var preconditions = logicActions[i].preconditions;
 		var postconditions = logicActions[i].postconditions;
-		this.logicActions.push(new action(name, parameters, requirements, preconditions, postconditions));
+		this.logicActions.push(new action(name, parameters, requirements, preconditions, postconditions, null));
 	}
 }
 
