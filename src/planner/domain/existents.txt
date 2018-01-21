@@ -8,16 +8,20 @@
 [France]>[country]
 [USA]>[country]
 
-[distance_value]>[abstract]
-[mass_value]>[abstract]
+[numerical_value]>[abstract]
+
+[distance_value]>[numerical_value]
+[mass_value]>[numerical_value]
 [height]>[distance_value]
 [weight]>[mass_value]
 
-[distance_unit]>[abstract]
+[measurement_unit]>[abstract]
+
+[distance_unit]>[measurement_unit]
 [meters]>[distance_unit]
 [feet]>[distance_unit]
 
-[mass_unit]>[abstract]
+[mass_unit]>[measurement_unit]
 [pounds]>[mass_unit]
 [kilograms]>[mass_unit]
 

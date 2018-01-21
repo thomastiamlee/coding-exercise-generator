@@ -1,2 +1,3 @@
 person_name.string.set[Thomas,Lian].
 person_height.number.range[4,6].
+person_weight.number.range[4,6].

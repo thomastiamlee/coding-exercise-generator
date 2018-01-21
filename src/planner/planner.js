@@ -214,7 +214,6 @@ function plan(domain) {
 		}
 	}
 	var targetAction = selectTargetLogicAction();
-	console.log("Chosen target action: " + targetAction.name);
 	var existents = generateExistents();
 	var matchings = targetAction.getParameterMatchings(existents);
 	matchings = shuffle(matchings);

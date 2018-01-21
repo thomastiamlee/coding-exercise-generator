@@ -16,14 +16,8 @@ post: known(c, m).
 text: "[c] uses [m] as its measurement system.".
 alias: .
 
-action: plan_to_convert_property_for_travel(person p, distance_value d, feet f, meters m, country c, metric_system ms).
-pre: propertyof(p, d) ^ intent_to_visit(p, c) ^ known(c, ms) ^ in_unit(d, f) ^ !inunit(d, m).
-post: intent_to_convert(d, f, m).
-text: "(p) wants to convert (d) to [m].".
-alias: .
-
-action: plan_to_convert_property_for_travel_again(person p, distance_value d, meters m, feet f, country c, english_system ms).
-pre: propertyof(p, d) ^ intent_to_visit(p, c) ^ known(c, ms) ^ in_unit(d, m) ^ !inunit(d, f).
-post: intent_to_convert(d, m, f).
-text: "(p) wants to convert (d) to [f].".
+action: plan_to_convert_property_for_travel(person p, numerical_value n, measurement_unit src, measurement_unit dest, country c, measurement_system ms).
+pre: propertyof(p, n) ^ intent_to_visit(p, c) ^ known(c, ms) ^ in_unit(n, src) ^ !inunit(n, dest) ^ unit_of_system(ms, dest).
+post: intent_to_convert(n, src, dest).
+text: "(p) wants to convert (n) to [dest].".
 alias: .
