@@ -206,12 +206,16 @@ var state = function(truths) {
 			}
 			if (!toRemove) newTruths.push(this.truths[i]);
 		}
+		if (newTruths.length == this.truths.length) return null;
 		for (var i = 0; i < preconditions.length; i++) {
 			var found = false;
 			for (var j = 0; j < newTruths.length; j++) {
 				if (newTruths[j].isSameWith(preconditions[i])) {
 					found = true;
 					break;
+				}
+				else if (newTruths[j].isOppositeWith(preconditions[i])) {
+					return null;
 				}
 			}
 			if (!found) newTruths.push(preconditions[i]);
