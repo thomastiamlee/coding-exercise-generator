@@ -1,3 +1,7 @@
 action: eat(person p, object o).
 pre: hungry(p) ^ edible(o).
-post: !hungry(p).
+post: full(p) ^ !hungry(p).
+
+action: work(person p).
+pre: .
+post: hungry(p).

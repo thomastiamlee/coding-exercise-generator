@@ -1,0 +1,17 @@
+name: convert_meters_to_feet(distance_value d, meter m, feet f).
+requirements: intent_to_convert(d, m, f).
+preconditions: in_unit(d, m) ^ !in_unit(d, f).
+postconditions: in_unit(d, f) ^ !in_unit(d, m).
+{
+o,[d],(number/3.28084),[d],+
+r,[d]
+}
+
+name: convert_feet_to_meters(distance_value d, meter m, feet f).
+requirements: intent_to_convert(d, m, f).
+preconditions: in_unit(d, f) ^ !in_unit(d, m).
+postconditions: in_unit(d, m) ^ !in_unit(d, f).
+{
+o,[d],(number/3.28084),[d],+
+r,[d]
+}

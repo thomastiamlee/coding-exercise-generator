@@ -14,9 +14,9 @@ food2.parent = domain.getExistentByName("food");
 var action = domain.getActionByName("eat");
 var match = action.getParameterMatchings([person, food]);
 
-var initial = new PlannerComponents.state([ new PlannerComponents.query(true, "hungry", [person]), new PlannerComponents.query(true, "edible", [food])]);
-var goal = new PlannerComponents.state([ new PlannerComponents.query(false, "hungry", [person])]);
+var initial = new PlannerComponents.state([ new PlannerComponents.query(true, "edible", [food])]);
+var goal = new PlannerComponents.state([ new PlannerComponents.query(true, "full", [person])]);
 
 var x = goal.regress(action, match[0]);
 
-Planner.backwardStateSpaceSearch([person, food], initial, goal, domain);
+console.log(Planner.backwardStateSpaceSearch([person, food], initial, goal, domain));
