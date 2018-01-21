@@ -5,7 +5,7 @@ function generateExercise(plan) {
 	function getVariableFromName(name, symbolMappings) {
 		for (var i = 0; i < symbolMappings.length; i++) {
 			if (symbolMappings[i].name == name) {
-				return symbolMappings[i].variable;
+				return symbolMappings[i].obj;
 			}
 		}
 		return null;
@@ -13,7 +13,16 @@ function generateExercise(plan) {
 	function convertSymbolToOperand(str, realParameters, actionParameters, symbolMappings) {
 		var content = str.substring(1, str.length - 1);
 		if (str.charAt(0) == "(") {
-			
+			content = content.split("/");
+			var type = content[0];
+			var val = content[1];
+			if (type == "number") {
+				val = parseFloat(val);
+			}
+			else if (type == "integer") {
+				val = parseInt(val);
+			}
+			return new Component.operand(type, val);
 		}
 		else if (str.charAt(0) == "[") {
 			var name = null;
@@ -42,7 +51,7 @@ function generateExercise(plan) {
 			if (getVariableFromName(currentParameters[j], symbolMappings) == null) {
 				if (currentParameters[j].dataType) {
 					var variable = new Component.variable(currentParameters[j].dataType);
-					symbolMappings.push({variable: variable, name: currentParameters[j].name});
+					symbolMappings.push({obj: variable, name: currentParameters[j].name});
 					if (currentParameters[j].isInput) {
 						inputVariables.push(variable);
 					}
@@ -145,7 +154,7 @@ function generateExercise(plan) {
 	for (var i = 0; i < tail.length; i++) {
 		tail[i].attachNode(returnNode, 0);
 	}
-	return {head: head, symbolMappings: symbolMappings, inputVariables: inputVariables}
+	return {head: head, symbols: symbolMappings, inputs: inputVariables}
 }
 
 module.exports = {generateExercise};

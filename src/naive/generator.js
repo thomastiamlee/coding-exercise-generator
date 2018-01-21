@@ -1,5 +1,5 @@
-const Basic = require("./basic.js");
-const Component = require("./component.js");
+const Basic = require("../basic.js");
+const Component = require("../component.js");
 
 function generateRandomOperator(nodeType) {
 	if (nodeType == Component.NODE_TYPE_OPERATION) {

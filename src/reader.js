@@ -375,7 +375,7 @@ function convertToFlowchartDefinition(exercise) {
 	var res = "graph TD\n";
 	var nodeInformation = "";
 	var nodeConnections = "";
-
+	
 	var nodeList = head.getAllChildrenSolutionSuccessors();
 	for (var i = 0; i < nodeList.length; i++) {
 		var currentNode = nodeList[i];

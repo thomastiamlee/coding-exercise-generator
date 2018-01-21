@@ -6,12 +6,13 @@ const Vision = require("vision");
 const Nunjucks = require("nunjucks-hapi");
 const Reader = require("./reader");
 const fs = require("fs");
-const Parser = require("./parser");
-const ExerciseBuilder = require("./exercise-builder");
-const Planner = require("./planner-simple");
-const PlannerUtility = require("./planner-utility");
-const Generator = require("./generator");
-const TextGenerator = require("./text-generator");
+const Generator = require("./naive/generator");
+const NaiveTextGenerator = require("./naive/text-generator");
+const DomainParser = require("./planner/domain-parser");
+const Planner = require("./planner/planner");
+const PlannerTextGenerator = require("./planner/text-generator");
+const ExerciseBuilder = require("./planner/exercise-builder");
+
 
 function start() {
 	// Create a server with a host and port
@@ -67,19 +68,11 @@ function start() {
 			method: "GET",
 			path: "/generatetest",
 			handler: function(request, reply) {
-				var kb = Parser.parseKnowledgeBase("./src/kb/revised-space");
-				var table = new PlannerUtility.memory();
-				table.createLocalEntity(kb.getGlobalEntity("person"));
-				var actionList = Planner.planExercise(kb, table);
-				var text = "";
-				for (var i = 0; i < actionList.length; i++) {
-					text += actionList[i].action.name + " ";
-					for (var j = 0; j < actionList[i].parameters.length; j++) {
-						text += actionList[i].parameters[j].name + " ";
-					}
-					text += "\n";
-				}
-				var exercise = ExerciseBuilder.buildExerciseFromActions(actionList, table);
+				var domain = DomainParser.parseDomain();
+				var plan = Planner.plan(domain);
+				var text = PlannerTextGenerator.convertPlanToText(plan);
+				var exercise = ExerciseBuilder.generateExercise(plan);
+				
 				var flowchart = Reader.convertToFlowchartDefinition(exercise);
 				return reply.view("generation-test.html", {text: text, flowchart: flowchart});
 			}
@@ -91,7 +84,7 @@ function start() {
 			handler: function(request, reply) {
 				var exercise = Generator.generateBasicExercise({complexity: 3});
 				var flowchart = Reader.convertToFlowchartDefinition(exercise);
-				var text = TextGenerator.convertExerciseToNativeText(exercise.head, exercise.symbols);
+				var text = NaiveTextGenerator.convertExerciseToNativeText(exercise.head, exercise.symbols);
 				return reply.view("generation-test.html", {text: text, flowchart: flowchart});
 			}
 		});

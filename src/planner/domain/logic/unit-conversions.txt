@@ -3,6 +3,6 @@ req: intent_to_convert(d, f, m).
 pre: in_unit(d, f) ^ !in_unit(d, m) ^ known(d, f) ^ !known(d, m).
 post: in_unit(d, m) ^ !in_unit(d, f) ^ known(d, m).
 {
-o,[d],(number/3.28084),[d],+
+o,[d],(number/3.28084),[d],*
 r,[d]
 }

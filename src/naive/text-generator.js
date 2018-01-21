@@ -1,24 +1,11 @@
 const fs = require("fs");
 const Peg = require("pegjs");
-const Component = require("./component");
-const templateGrammarPath = "./src/grammar/text-template.txt";
-const nativeTemplatesPath = "./src/native-templates/native.txt";
+const Component = require("../component");
+const templateGrammarPath = "./src/naive/grammar/template-grammar.txt";
+const nativeTemplatesPath = "./src/naive/templates/native.txt";
 
 function loadNativeTemplates() {
 	var data = fs.readFileSync(nativeTemplatesPath, "utf-8");
-	var grammar = fs.readFileSync(templateGrammarPath, "utf-8");
-	var parser = Peg.generate(grammar, {trace: false});
-	var result = parser.parse(data);
-	return result;
-}
-
-function loadPlannerTemplates(path) {
-	if (fs.lstatSync(path).isDirectory()) {
-		var data = fs.readFileSync(path + "/templates.txt", "utf-8");
-	}
-	else {
-		var data = fs.readFileSync(path, "utf-8");
-	}
 	var grammar = fs.readFileSync(templateGrammarPath, "utf-8");
 	var parser = Peg.generate(grammar, {trace: false});
 	var result = parser.parse(data);
@@ -49,33 +36,6 @@ function convertExerciseToNativeText(node, symbolMappings, templates) {
 		text = text.replace("[0]", getSymbolFromOperand(node.inputOperands[0], symbolMappings));
 	}
 	return text;
-}
-
-function convertPlanToText(plan, pathOrTemplates) {
-	if (typeof pathOrTemplates == "string") {
-		templates = loadPlannerTemplates(pathOrTemplates);
-	}
-	else {
-		templates = pathOrTemplates;
-	}
-	var res = "";
-	for (var i = 0; i < plan.length; i++) {
-		var step = plan[i];
-		var actionName = step.action.name;
-		var template = getRandomTemplateText(templates, actionName);
-		var initialize = step.action.initialize;
-		var parameters = step.parameters;
-		var create = step.createParameters;
-		for (var j = 0; j < initialize.length; j++) {
-			template = template.replace("[*" + j + "]", initialize[j].alias);
-		}
-		for (var j = 0; j < parameters.length; j++) {
-			template = template.replace("[" + j + "]", parameters[j].getAlias());
-			template = template.replace("[^" + j + "]", parameters[j].parents[0].name);
-		}
-		res += template + " ";
-	}
-	return res;
 }
 
 function getRandomTemplateText(templates, key) {
@@ -118,4 +78,4 @@ function getSymbolFromOperand(operand, symbolMappings) {
 	return null;
 }
 
-module.exports = {convertExerciseToNativeText, convertPlanToText};
+module.exports = {convertExerciseToNativeText};
