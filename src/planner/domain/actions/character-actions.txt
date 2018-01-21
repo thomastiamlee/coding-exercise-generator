@@ -1,24 +1,29 @@
 action: introduce_person(person p).
 pre: !known(p).
 post: known(p).
-text: "There is a [p].".
+text: "There is a [p] named (p).".
+alias: p[person_name].
 
 action: state_person_height(person p, height h, feet f).
 pre: !known(p, h).
 post: known(p, h) ^ known(h, f) ^ propertyof(p, h) ^ in_unit(h, f).
 text: "The height of (p) is x [f].", "(p) is x [f] tall.".
+alias: .
 
 action: plan_to_visit(person p, country c).
 pre: known(p).
 post: intent_to_visit(p, c) ^ known(c).
 text: "(p) plans to visit (c).".
+alias: .
 
 action: state_measurement_system(country c, measurement_system m).
 pre: !known(c, m) ^ measurement_system_of(c, m).
 post: known(c, m).
 text: "(c) uses (m) as its measurement system.".
+alias: .
 
 action: plan_to_convert_property_for_travel(person p, distance_value d, feet f, meters m, country c, metric_system ms).
 pre: propertyof(p, d) ^ intent_to_visit(p, c) ^ known(c, ms) ^ in_unit(d, f) ^ !inunit(d, m).
 post: intent_to_convert(d, f, m).
 text: "(p) wants to convert (d) to [m].".
+alias: .

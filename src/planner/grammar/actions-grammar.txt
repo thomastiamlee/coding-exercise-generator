@@ -25,11 +25,11 @@ action_list
 	}
 
 action_item
-	= _ "action:" _ a:action_name_token _ "(" _ b:action_parameter_list? _ ")" _ "." _ "pre:" _ c:action_condition_list? _ "." _ "post:" _ d:action_condition_list? _ "." _ "text:" _ e:action_text_list _ "."
+	= _ "action:" _ a:action_name_token _ "(" _ b:action_parameter_list? _ ")" _ "." _ "pre:" _ c:action_condition_list? _ "." _ "post:" _ d:action_condition_list? _ "." _ "text:" _ e:action_text_list? _ "." _ "alias:" _ f:alias_list? _ "."
 	{
 		debug("parsed: action_item");
-		if (!b) b = []; if (!c) c = []; if (!d) d = []; if (!e) e = [];
-		return { name: a, parameters: b, preconditions: c, postconditions: d, texts: e };
+		if (!b) b = []; if (!c) c = []; if (!d) d = []; if (!e) e = []; if (!f) f = [];
+		return { name: a, parameters: b, preconditions: c, postconditions: d, texts: e, aliases: f };
 	}
 
 action_name_token
@@ -109,5 +109,37 @@ action_text_item
 		debug("parsed: action_text_item");
 		return a.join("");
 	}
+
+alias_list
+	= a:alias_item _ "," _ b:alias_list
+	{
+		debug("parsed: alias_list");
+		return [a].concat(b);
+	}
+	/ a:alias_item
+	{
+		debug("parsed: alias_list");
+		return [a];
+	}
+
+alias_item
+	= a:([a-zA-Z_]+) "[" b:alias_reference "]"
+	{
+		debug("parsed: alias_item");
+		return { symbol: a, reference: b };
+	}
+	
+alias_reference
+	= "\"" a:([a-zA-Z ()\[\]\-.]+) "\""
+	{
+		debug("parsed: alias_reference");
+		return { type: "text", val: a };
+	}
+	/ a:([a-zA-Z_]+)
+	{
+		debug("parsed: alias_reference");
+		return { type: "reference", val: a };
+	}
+
 _
 	= [ \t\r\n]*
