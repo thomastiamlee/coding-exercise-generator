@@ -1,11 +1,17 @@
 action: state_person_height(person p, height h, distance_unit u).
-pre: known(p) ^ !known(p, h).
-post: known(p, h) ^ known(h, u) ^ propertyof(p, h) ^ in_unit(h, u).
+pre: known(p) ^ !known(p, h) ^ property_of(p, h).
+post: known(p, h) ^ known(h, u) ^ in_unit(h, u).
 text: "The height of (p) is {h} [u].", "(p) is {h} [u] tall.".
 alias: h["the height of (p)"], h<person_height>.
 
 action: state_person_weight(person p, weight w, mass_unit u).
-pre: known(p) ^ !known(p, w).
-post: known(p, w) ^ known(w, u) ^ propertyof(p, w) ^ in_unit(w, u).
+pre: known(p) ^ !known(p, w) ^ property_of(p, h).
+post: known(p, w) ^ known(w, u) ^ in_unit(w, u).
 text: "The weight of (p) is {w} [u].", "(p) weighs {w} [u].".
 alias: w["the weight of (p)"], w<person_weight>.
+
+action: state_measurement_system(country c, measurement_system m).
+pre: known(c) ^ !known(c, m) ^ measurement_system_of(c, m).
+post: known(c, m).
+text: "[c] uses [m] as its measurement system.".
+alias: .

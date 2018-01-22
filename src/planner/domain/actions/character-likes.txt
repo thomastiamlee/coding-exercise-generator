@@ -1,0 +1,5 @@
+action: state_hobby(person p, activity a).
+pre: known(p) ^ !likes_activity(p, a).
+post: likes_activity(p, a).
+text: "(p) likes [a].", "The hobby of (p) is [a].".
+alias: .

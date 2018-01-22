@@ -1,6 +1,9 @@
 const PlannerComponents = require("./planner-components");
 
 function plan(domain) {
+	function log(str) {
+		console.log(str);
+	}
 	function shuffle(arr) {
 		var res = [];
 		arr = [].concat(arr);
@@ -21,16 +24,17 @@ function plan(domain) {
 		var existents = domain.existents;
 		for (var i = 0; i < existents.length; i++) {
 			var name = existents[i].name;
-			for (var j = 0; j < 1; j++) {
-				var newExistent = new PlannerComponents.existent(name + (j + 1));
+			if (existents[i].type == "atom" || existents[i].type == "multiple") {
+				var newExistent = new PlannerComponents.existent(name + "_instance");
 				newExistent.parent = existents[i];
 				result.push(newExistent);
-			}
+			}			
 		}
 		return result;
 	}
 	function generateInitialState(existents) {
 		var assertions = domain.assertions;
+		var buildAssertions = domain.buildAssertions;
 		var result = [];
 		for (var i = 0; i < assertions.length; i++) {
 			var predicate = assertions[i].predicate;
@@ -40,6 +44,48 @@ function plan(domain) {
 				var query = new PlannerComponents.query(true, predicate, current);
 				result.push(query);
 			}
+		}
+		var counter = 1;
+		var toBeAdded = [];
+		for (var i = 0; i < existents.length; i++) {
+			for (var j = 0; j < buildAssertions.length; j++) {
+				var parent = buildAssertions[j].parent;
+				if (existents[i].isExtendedFrom(parent)) {
+					var buildParameters = buildAssertions[j].buildParameters;
+					var added = [];
+					var newAssertions = buildAssertions[j].buildAssertions;
+					for (var k = 0; k < buildParameters.length; k++) {
+						var type = buildParameters[k].type;
+						var newExistent = new PlannerComponents.existent(type.name + (counter++));
+						newExistent.parent = type;
+						added.push(newExistent);
+					}
+					for (var k = 0; k < newAssertions.length; k++) {
+						var predicate = newAssertions[k].predicate;
+						var current = [];
+						for (var m = 0; m < newAssertions[k].parameters.length; m++) {
+							var symbol = newAssertions[k].parameters[m];
+							if (symbol == "_") {
+								current.push(existents[i]);
+							}
+							else {
+								for (var n = 0; n < added.length; n++) {
+									if (buildParameters[n].symbol == symbol) {
+										current.push(added[n]);
+										break;
+									}
+								}
+							}
+						}
+						var query = new PlannerComponents.query(true, predicate, current);
+						result.push(query);
+					}
+					toBeAdded = toBeAdded.concat(added);
+				}
+			}
+		}
+		for (var i = 0; i < toBeAdded.length; i++) {
+			existents.push(toBeAdded[i]);
 		}
 		return new PlannerComponents.state(result);
 	}
@@ -213,8 +259,11 @@ function plan(domain) {
 			}
 		}
 	}
+	log("Choosing target action...");
 	var targetAction = selectTargetLogicAction();
+	log("Chosen: " + targetAction.name);
 	var existents = generateExistents();
+	var initial = generateInitialState(existents);
 	var matchings = targetAction.getParameterMatchings(existents);
 	matchings = shuffle(matchings);
 	var actionPlan = null; var logicPlan = null;	
@@ -224,7 +273,6 @@ function plan(domain) {
 		var logicPlan = backwardStateSpaceSearchLogic(existents, targetAction, parameters, 1);
 		if (logicPlan == null) continue;
 		var goal = logicPlan.state;
-		var initial = generateInitialState(existents);
 		var actionPlan = backwardStateSpaceSearchActions(existents, initial, goal);
 	}
 	if (logicPlan == null) {

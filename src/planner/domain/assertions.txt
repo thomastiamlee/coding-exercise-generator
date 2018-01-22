@@ -5,3 +5,7 @@ unit_of_system(metric_system, meters)
 unit_of_system(metric_system, kilograms)
 unit_of_system(english_system, feet)
 unit_of_system(english_system, pounds)
+
+likes_activity(tourist, traveling)
+
+[person](height h, weight w) { property_of(_, h), property_of(_, w) }

@@ -1,6 +1,7 @@
 var existent = function(name) {
 	this.name = name;
 	this.parent = null;
+	this.type = null;
 	this.isExtendedFrom = function(other) {
 		var current = this;
 		while (current != null) {
@@ -55,7 +56,12 @@ var assertion = function(predicate, parameters) {
 		}
 		return result;
 	}
-}	
+}
+var buildAssertion = function(parent, buildParameters, buildAssertions) {
+	this.parent = parent;
+	this.buildParameters = buildParameters;
+	this.buildAssertions = buildAssertions;
+}
 var action = function(name, parameters, requirements, preconditions, postconditions, texts, aliases, logic) {
 	this.name = name;
 	this.parameters = parameters;
@@ -158,6 +164,7 @@ var constraint = function(name, dataType, specifications) {
 var domain = function(existents, assertions, actions, logicActions, constraints) {
 	this.existents = [];
 	this.assertions = [];
+	this.buildAssertions = [];
 	this.actions = [];
 	this.logicActions = [];
 	this.constraints = [];
@@ -189,21 +196,34 @@ var domain = function(existents, assertions, actions, logicActions, constraints)
 		return null;
 	}
 	for (var i = 0; i < existents.length; i++) {
-		this.existents.push(new existent(existents[i].name));
+		var newExistent = new existent(existents[i].name);
+		newExistent.type = existents[i].existentType;
+		this.existents.push(newExistent);
 	}
 	for (var i = 0; i < existents.length; i++) {
 		if (existents[i].parent) {
 			this.getExistentByName(existents[i].name).parent = this.getExistentByName(existents[i].parent);
 		}
-		this.existents.push(new existent(existents[i].name));
 	}
 	for (var i = 0; i < assertions.length; i++) {
-		var predicate = assertions[i].predicate;
-		var parameters = assertions[i].parameters;
-		for (var j = 0; j < parameters.length; j++) {
-			parameters[j] = this.getExistentByName(parameters[j]);
+		var type = assertions[i].type;
+		if (type == "global") {
+			var predicate = assertions[i].predicate;
+			var parameters = assertions[i].parameters;
+			for (var j = 0; j < parameters.length; j++) {
+				parameters[j] = this.getExistentByName(parameters[j]);
+			}
+			this.assertions.push(new assertion(predicate, parameters));
 		}
-		this.assertions.push(new assertion(predicate, parameters));
+		else if (type == "local") {
+			var parent = this.getExistentByName(assertions[i].parent);
+			var buildParameters = assertions[i].buildParameters;
+			for (var j = 0; j < buildParameters.length; j++) {
+				buildParameters[j].type = this.getExistentByName(buildParameters[j].type);
+			}
+			var buildAssertions = assertions[i].buildAssertions;
+			this.buildAssertions.push(new buildAssertion(parent, buildParameters, buildAssertions));
+		}
 	}
 	for (var i = 0; i < actions.length; i++) {
 		var name = actions[i].name;

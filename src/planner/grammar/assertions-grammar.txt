@@ -18,7 +18,17 @@ assertion_list
 		debug("parsed: assertion_list");
 		return [a].concat(b);
 	}
+	/ a:build_item "\r\n"+ b:assertion_list
+	{
+		debug("parsed: assertion_list");
+		return [a].concat(b);
+	}
 	/ a:assertion_item
+	{
+		debug("parsed: assertion_list");
+		return [a];
+	}
+	/ a:build_item
 	{
 		debug("parsed: assertion_list");
 		return [a];
@@ -29,8 +39,41 @@ assertion_item
 	{
 		debug("parsed: assertion_item");
 		if (!b) b = [];
-		return { predicate: a, parameters: b };
+		return { type: "global", predicate: a, parameters: b };
+	} 
+
+build_item
+	= _ "[" _ a:([a-zA-Z_]+) _ "]" _ "(" _ b:build_parameter_list _ ")" _ "{" _ c:build_assertion_list _ "}" _
+	{
+		debug("parsed: assertion_item");
+		if (!b) b = []; if (!c) c = [];
+		return { type: "local", parent: a.join(""), buildParameters: b, buildAssertions: c };
 	}
+
+build_parameter_list
+	= a:([a-zA-Z_]+) " " _ b:([a-zA-Z_]+) _ "," _ c:build_parameter_list
+	{
+		debug("parsed: build_parameter_list");
+		return [{ type: a.join(""), symbol: b.join("") }].concat(c);
+	}
+	/ a:([a-zA-Z_]+) " " _ b:([a-zA-Z_]+)
+	{
+		debug("parsed: build_parameter_list");
+		return [{ type: a.join(""), symbol: b.join("") }];
+	}
+	
+build_assertion_list
+	= a:assertion_item _ "," b:build_assertion_list
+	{
+		debug("parsed: build_assertion_list");
+		return [a].concat(b);
+	}
+	/ a:assertion_item
+	{
+		debug("parsed: build_assertion_list");
+		return [a];
+	}
+	
 	
 predicate_token
 	= a:([a-zA-Z_]+)

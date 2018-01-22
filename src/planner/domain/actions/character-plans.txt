@@ -1,0 +1,11 @@
+action: plan_to_visit_country(person p, country c, traveling t).
+pre: known(p) ^ likes_activity(p, t) ^ !intent_to_visit(p, c).
+post: intent_to_visit(p, c) ^ known(c).
+text: "(p) plans to visit [c].".
+alias: .
+
+action: plan_to_convert_property_for_travel(person p, numerical_value n, measurement_unit src, measurement_unit dest, country c, measurement_system ms).
+pre: property_of(p, n) ^ intent_to_visit(p, c) ^ known(c, ms) ^ in_unit(n, src) ^ !inunit(n, dest) ^ unit_of_system(ms, dest).
+post: intent_to_convert(n, src, dest).
+text: "(p) wants to convert (n) to [dest].".
+alias: .

@@ -25,13 +25,35 @@ existent_list
 	}
 
 existent_item
-	= "[" a:([a-zA-Z_]+) "]>[" b:([a-zA-Z_]+) "]"
+	= "[" a:([a-zA-Z_]+) b:existent_type "]>[" c:([a-zA-Z_]+) "]"
 	{
 		debug("parsed: existent_item");
-		return { name: a.join(""), parent: b.join("") };
+		return { name: a.join(""), parent: c.join(""), existentType: b };
 	}
-	/ "[" a:([a-zA-Z_]+) "]"
+	/ "[" a:([a-zA-Z_]+) b:existent_type "]"
 	{
 		debug("parsed: existent_item");
-		return { name: a.join("") };
+		return { name: a.join(""), existentType: b };
+	}
+
+existent_type
+	= "#"
+	{
+		return "abstract";
+		debug("parsed: existent_type");
+	}
+	/ "1"
+	{
+		return "atom";
+		debug("parsed: existent_type");
+	}
+	/ "*"
+	{
+		return "property";
+		debug("parsed: existent_type");
+	}
+	/ "-"
+	{
+		return "multiple";
+		debug("parsed: existent_type");
 	}

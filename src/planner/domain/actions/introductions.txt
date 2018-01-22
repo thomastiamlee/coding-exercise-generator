@@ -3,21 +3,3 @@ pre: !known(p).
 post: known(p).
 text: "There is a [p] named (p).".
 alias: p[person_name].
-
-action: plan_to_visit(person p, country c).
-pre: known(p).
-post: intent_to_visit(p, c) ^ known(c).
-text: "(p) plans to visit [c].".
-alias: .
-
-action: state_measurement_system(country c, measurement_system m).
-pre: !known(c, m) ^ measurement_system_of(c, m).
-post: known(c, m).
-text: "[c] uses [m] as its measurement system.".
-alias: .
-
-action: plan_to_convert_property_for_travel(person p, numerical_value n, measurement_unit src, measurement_unit dest, country c, measurement_system ms).
-pre: propertyof(p, n) ^ intent_to_visit(p, c) ^ known(c, ms) ^ in_unit(n, src) ^ !inunit(n, dest) ^ unit_of_system(ms, dest).
-post: intent_to_convert(n, src, dest).
-text: "(p) wants to convert (n) to [dest].".
-alias: .
