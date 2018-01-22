@@ -1,5 +1,17 @@
-action: introduce_person(person p).
-pre: !visible(p).
-post: visible(p).
-text: "(p) is a [p].".
+action: introduce(person p).
+pre: !introduced(p).
+post: introduced(p).
+text: " ".
 alias: p[person_name].
+
+action: state_profession(person p, profession prof).
+pre: introduced(p) ^ !stated_profession(p).
+post: stated_profession(p) ^ profession_of(p, prof).
+text: "(p) is a [prof].".
+alias: .
+
+action: state_hobby(person p, profession prof, hobby h).
+pre: professionals_can_like(prof, h) ^ profession_of(p, prof) ^ !stated_hobby(p).
+post: stated_hobby(p) ^ hobby_of(p, h).
+text: "(p) likes [h] very much.".
+alias: .

@@ -19,7 +19,7 @@ function plan(domain) {
 		var logicActions = domain.logicActions;
 		return logicActions[Math.floor(Math.random() * logicActions.length)];
 	}
-	function generateExistents() {
+	function generateExistents(targetAction) {
 		// This function will be changed later on, if time permits.
 		var result = [];
 		var existents = domain.existents;
@@ -29,13 +29,19 @@ function plan(domain) {
 				var newExistent = new PlannerComponents.existent(name + "_instance");
 				newExistent.parent = existents[i];
 				result.push(newExistent);
-			}			
+			}
+		}		
+		for (var j = 0; j < targetAction.parameters.length; j++) {
+			if (targetAction.parameters[j].type.type == "property") {
+				var newExistent = new PlannerComponents.existent(targetAction.parameters[j].type.name + (j + 1));
+				newExistent.parent = targetAction.parameters[j].type;
+				result.push(newExistent);
+			}
 		}
 		return result;
 	}
 	function generateInitialState(existents) {
 		var assertions = domain.assertions;
-		var buildAssertions = domain.buildAssertions;
 		var result = [];
 		for (var i = 0; i < assertions.length; i++) {
 			var predicate = assertions[i].predicate;
@@ -48,43 +54,7 @@ function plan(domain) {
 		}
 		var counter = 1;
 		var toBeAdded = [];
-		for (var i = 0; i < existents.length; i++) {
-			for (var j = 0; j < buildAssertions.length; j++) {
-				var parent = buildAssertions[j].parent;
-				if (existents[i].isExtendedFrom(parent)) {
-					var buildParameters = buildAssertions[j].buildParameters;
-					var added = [];
-					var newAssertions = buildAssertions[j].buildAssertions;
-					for (var k = 0; k < buildParameters.length; k++) {
-						var type = buildParameters[k].type;
-						var newExistent = new PlannerComponents.existent(type.name + (counter++));
-						newExistent.parent = type;
-						added.push(newExistent);
-					}
-					for (var k = 0; k < newAssertions.length; k++) {
-						var predicate = newAssertions[k].predicate;
-						var current = [];
-						for (var m = 0; m < newAssertions[k].parameters.length; m++) {
-							var symbol = newAssertions[k].parameters[m];
-							if (symbol == "_") {
-								current.push(existents[i]);
-							}
-							else {
-								for (var n = 0; n < added.length; n++) {
-									if (buildParameters[n].symbol == symbol) {
-										current.push(added[n]);
-										break;
-									}
-								}
-							}
-						}
-						var query = new PlannerComponents.query(true, predicate, current);
-						result.push(query);
-					}
-					toBeAdded = toBeAdded.concat(added);
-				}
-			}
-		}
+		
 		for (var i = 0; i < toBeAdded.length; i++) {
 			existents.push(toBeAdded[i]);
 		}
@@ -98,10 +68,12 @@ function plan(domain) {
 		var plan = null;
 		
 		while (stateStack.length > 0) {
-			var currentState = stateStack[0];
-			var currentAction = actionStack[0];
-			stateStack.splice(0,1);
-			actionStack.splice(0,1);
+			var currentState = stateStack[stateStack.length - 1];
+			var currentAction = actionStack[actionStack.length - 1];
+			stateStack.splice(stateStack.length - 1, 1);
+			actionStack.splice(actionStack.length - 1, 1);
+			
+			//log("     current state: " + currentState.debugString());
 			
 			var debugText = "[";
 			for (var i = 0; i < currentAction.length; i++) {
@@ -122,7 +94,6 @@ function plan(domain) {
 			for (var i = 0; i < shuffled.length; i++) {
 				var potentialAction = shuffled[i];
 				var matchings = potentialAction.getParameterMatchings(existents);
-				var validCount = 0;
 				for (var j = 0; j < matchings.length; j++) {
 					var newState = currentState.regress(potentialAction, matchings[j]);
 					if (newState == null) continue;
@@ -134,7 +105,8 @@ function plan(domain) {
 						}
 					}
 					if (!found) {
-						validCount++;
+						//log("         regressed by " + potentialAction.name);
+						//log("            new state: " + newState.debugString()); 
 						visited.push(newState);
 						stateStack.push(newState);
 						actionStack.push([].concat(currentAction).concat([{action: potentialAction, parameters: matchings[j]}]));
@@ -275,7 +247,7 @@ function plan(domain) {
 	log("Choosing target action...");
 	var targetAction = selectTargetLogicAction();
 	log("Chosen: " + targetAction.name);
-	var existents = generateExistents();
+	var existents = generateExistents(targetAction);
 	var initial = generateInitialState(existents);
 	var matchings = targetAction.getParameterMatchings(existents);
 	matchings = shuffle(matchings);
@@ -286,12 +258,7 @@ function plan(domain) {
 		var logicPlan = backwardStateSpaceSearchLogic(existents, targetAction, parameters, 1);
 		if (logicPlan == null) continue;
 		var goal = logicPlan.state;
-		//console.log(goal.truths[0]);
-		//console.log(goal.truths[1]);
-		//console.log(goal.truths[2]);
-		//console.log(goal.truths[3]);
-		//console.log(goal.truths[4]);
-		//console.log(goal.truths[5]);
+		log("GOAL: " + goal.debugString());
 		var actionPlan = backwardStateSpaceSearchActions(existents, initial, goal);
 	}
 	if (logicPlan == null) {

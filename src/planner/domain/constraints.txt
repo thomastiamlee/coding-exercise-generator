@@ -1,2 +1,2 @@
-person_name.string.set[Lian,Neil,Cloud,Ralph,Abby,Julia,Mela,Deanne].
-generic_number.number.range[1,1000].
+person_name.string.set[Lian,Neil,Cloud,Manuel,Thomas,Mela,Abby,Deanne].
+generic_number.number.range[1,200].

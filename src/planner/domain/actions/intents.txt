@@ -1,0 +1,11 @@
+action: state_intent_to_buy(person p, hobby h, item i).
+pre: hobby_of(p, h) ^ used_in_hobby(i, h) ^ !intent_to_buy(p, i).
+post: intent_to_buy(p, i) ^ introduced(i).
+text: "(p) wants to buy a new [i] for [h].".
+alias: .
+
+action: state_intent_to_buy(person p, profession prof, item i).
+pre: profession_of(p, prof) ^ used_in_profession(i, prof) ^ !intent_to_buy(p, i).
+post: intent_to_buy(p, i) ^ introduced(i).
+text: "(p) wants to buy a new [i] for work.".
+alias: .

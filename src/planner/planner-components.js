@@ -280,6 +280,17 @@ var query = function(truth, predicate, parameters) {
 		}
 		return true;
 	}
+	this.debugString = function() {
+		var res = "";
+		if (!this.truth) res += "!";
+		res += this.predicate + "(";
+		var parameterNames = [];
+		for (var i = 0; i < this.parameters.length; i++) {
+			parameterNames.push(this.parameters[i].name);
+		}
+		res += parameterNames.join(",") + ")";
+		return res;
+	}
 }
 var state = function(truths) {
 	this.truths = truths;
@@ -353,6 +364,13 @@ var state = function(truths) {
 			if (!satisfied) { return false; }
 		}
 		return true;
+	}
+	this.debugString = function() {
+		var truthStrings = [];
+		for (var i = 0; i < this.truths.length; i++) {
+			truthStrings.push(this.truths[i].debugString());
+		}
+		return truthStrings.join(" ^ ");
 	}
 }
 

@@ -1,5 +1,0 @@
-action: like_activity(person p, activity a).
-pre: !has_liked_activity(p) ^ likes_activity(p, a).
-post: has_liked_activity(p) ^ known_liked_activity(p, a).
-text: "(p) likes [a] very much.", "The hobby of (p) is [a].".
-alias: .

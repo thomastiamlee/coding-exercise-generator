@@ -1,9 +1,21 @@
-can_be_in_shape(book, rectangle)
+visible(person)
 
-likes_activity(backpacker, traveling)
-likes_activity(chef, cooking)
+professionals_can_like(chef, baking)
+professionals_can_like(chef, cooking)
+professionals_can_like(athlete, basketball)
+professionals_can_like(athlete, soccer)
+professionals_can_like(athlete, tennis)
+professionals_can_like(athlete, badminton)
+professionals_can_like(athlete, baseball)
 
-item_for(oven, cooking)
+used_in_hobby(oven, baking)
+used_in_hobby(shoes, basketball)
+used_in_hobby(shoes, soccer)
+used_in_hobby(shoes, tennis)
+used_in_hobby(shoes, badminton)
+used_in_hobby(shoes, baseball)
+used_in_hobby(racket, tennis)
+used_in_hobby(racket, badminton)
+used_in_hobby(bat, baseball)
 
-[person](height h, weight w, body_temperature bt, body_mass_index bmi, money m) { property_of(_, h), property_of(_, w), property_of(_, bmi), property_of(_, bt), property_of(_, m) }
-[object](side s, length l, width w, radius r, diameter d, area a, volume v, cost c) { property_of(_, s), property_of(_, l), property_of(_, w), property_of(_, d), property_of(_, r), property_of(_, a), property_of(_, c) }
+used_in_profession(stethoscope, doctor)

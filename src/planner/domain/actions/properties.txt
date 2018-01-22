@@ -1,0 +1,11 @@
+action: state_cost(item i, cost c).
+pre: introduced(i) ^ !stated_cost(i) ^ !assigned(c).
+post: stated_cost(i) ^ assigned(c) ^ property_of(i, c).
+text: "The [i] costs {c} yen.", "The price of the [i] is {c} yen.".
+alias: c<generic_number>.
+
+action: state_money(person p, money m).
+pre: introduced(p) ^ !stated_money(p) ^ !assigned(m).
+post: stated_money(p) ^ assigned(m) ^ property_of(p, m).
+text: "(p) has a total of {m} yen.".
+alias: m<generic_number>.
