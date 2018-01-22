@@ -1,4 +1,5 @@
 const PlannerComponents = require("./planner-components");
+const PLANNER_DEPTH_LIMIT = 6;
 
 function plan(domain) {
 	function log(str) {
@@ -99,12 +100,17 @@ function plan(domain) {
 		while (stateStack.length > 0) {
 			var currentState = stateStack[stateStack.length - 1];
 			var currentAction = actionStack[actionStack.length - 1];
+			if (currentAction.length > 0)
 			stateStack.splice(stateStack.length - 1, 1);
 			actionStack.splice(actionStack.length - 1, 1);
 			
 			if (currentState.isSatisfiedBy(initial)) {
 				plan = currentAction;
 				break;
+			}
+			
+			if (currentAction.length >= PLANNER_DEPTH_LIMIT) {
+				continue;
 			}
 			
 			var shuffled = shuffle(actions);

@@ -1,5 +1,5 @@
 action: introduce_person(person p).
 pre: !known(p).
 post: known(p).
-text: "There is a [p] named (p).".
+text: "(p) is a [p].".
 alias: p[person_name].

@@ -28,7 +28,7 @@ function generateExercise(plan) {
 			var name = null;
 			for (var i = 0; i < actionParameters.length; i++) {
 				if (actionParameters[i].symbol == content) {
-					name = realParameters[i].name;
+					name = realParameters[i].logicalValue;
 				}
 			}
 			if (name != null) return getVariableFromName(name, symbolMappings);
@@ -50,14 +50,29 @@ function generateExercise(plan) {
 		for (var j = 0; j < currentParameters.length; j++) {
 			if (getVariableFromName(currentParameters[j], symbolMappings) == null) {
 				if (currentParameters[j].dataType) {
-					var variable = new Component.variable(currentParameters[j].dataType);
-					symbolMappings.push({obj: variable, name: currentParameters[j].name});
+					var name = null;
+					var type = currentParameters[j].dataType;
 					if (currentParameters[j].isInput) {
+						name = currentParameters[j].logicalValue;
+						var variable = new Component.variable(currentParameters[j].dataType);
+						symbolMappings.push({obj: variable, name: name});
 						inputVariables.push(variable);
+					}
+					else {
+						var val = currentParameters[j].logicalValue;
+						if (type == "number") {
+							val = parseFloat(val);
+						}
+						else if (type == "integer") {
+							val = parseInt(val);
+						}
+						var variable = new Component.operand(type, val);
+						symbolMappings.push({obj: variable, name: name});
 					}
 				}
 			}
 		}
+		console.log(symbolMappings);
 		var terminalNodes = [];
 		var nodeList = [];
 		for (var j = 0; j < logicInformation.length; j++) {
@@ -147,7 +162,7 @@ function generateExercise(plan) {
 	var finalActionResult = actionResults[0];
 	var returnOperand = null;
 	if (finalActionResult.dataType) {
-		returnOperand = getVariableFromName(finalActionResult.name, symbolMappings);
+		returnOperand = getVariableFromName(finalActionResult.logicalValue, symbolMappings);
 	}
 	var returnNode = new Component.node(Component.NODE_TYPE_RETURN);
 	returnNode.attachInputOperand(returnOperand, 0);
