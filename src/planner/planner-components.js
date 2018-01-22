@@ -62,7 +62,7 @@ var buildAssertion = function(parent, buildParameters, buildAssertions) {
 	this.buildParameters = buildParameters;
 	this.buildAssertions = buildAssertions;
 }
-var action = function(name, parameters, requirements, preconditions, postconditions, texts, aliases, logic) {
+var action = function(name, parameters, requirements, preconditions, postconditions, texts, aliases, logic, mainText, subText) {
 	this.name = name;
 	this.parameters = parameters;
 	this.requirements = requirements;
@@ -71,6 +71,8 @@ var action = function(name, parameters, requirements, preconditions, postconditi
 	this.texts = texts;
 	this.aliases = aliases;
 	this.logic = logic;
+	this.mainText = mainText;
+	this.subText = subText;
 	this.getParameterMatchings = function(existents) {	
 		var possibilities = [];
 		var result = [];
@@ -235,7 +237,7 @@ var domain = function(existents, assertions, actions, logicActions, constraints)
 		var postconditions = actions[i].postconditions;
 		var texts = actions[i].texts;
 		var aliases = actions[i].aliases;
-		this.actions.push(new action(name, parameters, null, preconditions, postconditions, texts, aliases, null));
+		this.actions.push(new action(name, parameters, null, preconditions, postconditions, texts, aliases, null, null, null));
 	}
 	for (var i = 0; i < logicActions.length; i++) {
 		var name = logicActions[i].name;
@@ -247,7 +249,9 @@ var domain = function(existents, assertions, actions, logicActions, constraints)
 		var preconditions = logicActions[i].preconditions;
 		var postconditions = logicActions[i].postconditions;
 		var logic = logicActions[i].logic;
-		this.logicActions.push(new action(name, parameters, requirements, preconditions, postconditions, null, null, logic));
+		var mainText = logicActions[i].mainText;
+		var subText = logicActions[i].subText;
+		this.logicActions.push(new action(name, parameters, requirements, preconditions, postconditions, null, null, logic, mainText, subText));
 	}
 	for (var i = 0; i < constraints.length; i++) {
 		this.constraints.push(new constraint(constraints[i].name, constraints[i].dataType, constraints[i].specification));

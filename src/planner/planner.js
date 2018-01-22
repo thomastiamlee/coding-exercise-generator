@@ -276,7 +276,7 @@ function plan(domain) {
 	for (var i = 0; i < matchings.length && (actionPlan == null || logicPlan == null); i++) {
 		actionPlan = null; logicPlan = null;
 		var parameters = matchings[i];
-		var logicPlan = backwardStateSpaceSearchLogic(existents, targetAction, parameters, 1);
+		var logicPlan = backwardStateSpaceSearchLogic(existents, targetAction, parameters, 3);
 		if (logicPlan == null) continue;
 		var goal = logicPlan.state;
 		var actionPlan = backwardStateSpaceSearchActions(existents, initial, goal);

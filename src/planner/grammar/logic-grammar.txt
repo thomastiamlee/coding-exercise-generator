@@ -25,11 +25,11 @@ action_list
 	}
 
 action_item
-	= _ "action:" _ a:action_name_token _ "(" _ b:action_parameter_list? _ ")" _ "." _ "req:" _ c:action_condition_list? _ "." _ "pre:" _ d:action_condition_list? _ "." _ "post:" _ e:action_condition_list? _ "." _ "{\r\n" f:logic_codes "}"
+	= _ "action:" _ a:action_name_token _ "(" _ b:action_parameter_list? _ ")" _ "." _ "main:" _ main:action_text_item _ "." _ "sub:" _ sub:action_text_item _ "." _ "req:" _ c:action_condition_list? _ "." _ "pre:" _ d:action_condition_list? _ "." _ "post:" _ e:action_condition_list? _ "." _ "{\r\n" f:logic_codes "}"
 	{
 		debug("parsed: action_item");
 		if (!b) b = []; if (!c) c = []; if (!d) d = []; if (!e) e = [];
-		return { name: a, parameters: b, requirements: c, preconditions: d, postconditions: e, logic: f };
+		return { name: a, parameters: b, requirements: c, preconditions: d, postconditions: e, logic: f, mainText: main, subText: sub };
 	}
 
 action_name_token
@@ -96,6 +96,13 @@ logic_codes
 	{
 		debug("parsed: logic_codes");
 		return x.join("");
+	}
+	
+action_text_item
+	= "\"" a:([a-zA-Z0-9 ()\[\]{}\-.^/*]+) "\""
+	{
+		debug("parsed: action_text_item");
+		return a.join("");
 	}
 	
 _
