@@ -2,7 +2,8 @@
 [concrete#]>[entity]
 [abstract#]>[entity]
 
-[person-]>[concrete]
+[character#]>[concrete]
+[person-]>[character]
 
 [item#]>[concrete]
 [oven-]>[item]
@@ -10,6 +11,14 @@
 [stethoscope-]>[item]
 [bat-]>[item]
 [racket-]>[item]
+[book-]>[item]
+
+[location#]>[concrete]
+[country#]>[location]
+[America1]>[country]
+[France1]>[country]
+[Sweden1]>[country]
+[Japan1]>[country]
 
 [profession#]>[abstract]
 [chef1]>[profession]
@@ -24,9 +33,32 @@
 [tennis1]>[hobby]
 [badminton1]>[hobby]
 [baseball1]>[hobby]
+[reading1]>[hobby]
+[traveling1]>[hobby]
 
 [numerical_value#]>[abstract]
+[numerical_unit#]>[abstract]
 
 [monetary_value#]>[numerical_value]
 [cost*]>[monetary_value]
 [money*]>[monetary_value]
+
+[distance_value#]>[numerical_value]
+[height*]>[distance_value]
+[length*]>[distance_value]
+[width*]>[distance_value]
+
+[mass_value#]>[numerical_value]
+[weight*]>[mass_value]
+
+[distance_unit#]>[numerical_unit]
+[meters1]>[distance_unit]
+[feet1]>[distance_unit]
+
+[mass_unit#]>[numerical_unit]
+[kilograms1]>[mass_unit]
+[pounds1]>[mass_unit]
+
+[measure_system#]>[abstract]
+[metric_system1]>[measure_system]
+[imperial_system1]>[measure_system]

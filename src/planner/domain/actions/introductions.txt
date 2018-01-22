@@ -10,8 +10,8 @@ post: stated_profession(p) ^ profession_of(p, prof).
 text: "(p) is a [prof].".
 alias: .
 
-action: state_hobby(person p, profession prof, hobby h).
-pre: professionals_can_like(prof, h) ^ profession_of(p, prof) ^ !stated_hobby(p).
+action: state_hobby(person p, hobby h).
+pre: !stated_hobby(p).
 post: stated_hobby(p) ^ hobby_of(p, h).
-text: "(p) likes [h] very much.".
+text: "(p) likes [h] very much.", "The hobby of (p) is [h].".
 alias: .

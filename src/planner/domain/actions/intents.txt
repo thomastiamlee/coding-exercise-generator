@@ -9,3 +9,21 @@ pre: profession_of(p, prof) ^ used_in_profession(i, prof) ^ !intent_to_buy(p, i)
 post: intent_to_buy(p, i) ^ introduced(i).
 text: "(p) wants to buy a new [i] for work.".
 alias: .
+
+action: state_intent_to_travel(person p, traveling t, country c).
+pre: hobby_of(p, t) ^ !been_in(p, c) ^ !intent_to_travel(p, c).
+post: intent_to_travel(p, c) ^ introduced(c).
+text: "(p) is planning to travel to [c] for a vacation.".
+alias: .
+
+action: state_intent_to_travel(person p, athlete a, country c).
+pre: profession_of(p, a) ^ !been_in(p, c) ^ !intent_to_travel(p, c).
+post: intent_to_travel(p, c) ^ introduced(c).
+text: "(p) will be to travelling to [c] for a sports competition.".
+alias: .
+
+action: state_intent_to_convert(person p, country c, measure_system ms, numerical_value n, numerical_unit src, numerical_unit dest).
+pre: property_of(p, n) ^ in_unit(n, src) ^ !known_in_unit(n, dest) ^ stated_measure_system(c) ^ measure_system_in(c, ms) ^ unit_of_measure_system(dest, ms) ^ intent_to_travel(p, c) ^ !intent_to_convert(n, src, dest).
+post: intent_to_convert(n, src, dest).
+text: "(p) should convert (n) to [dest].".
+alias: .

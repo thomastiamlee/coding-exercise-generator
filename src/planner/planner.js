@@ -30,12 +30,22 @@ function plan(domain) {
 				newExistent.parent = existents[i];
 				result.push(newExistent);
 			}
-		}		
+		}
+		var counter = 1;
 		for (var j = 0; j < targetAction.parameters.length; j++) {
 			if (targetAction.parameters[j].type.type == "property") {
-				var newExistent = new PlannerComponents.existent(targetAction.parameters[j].type.name + (j + 1));
+				var newExistent = new PlannerComponents.existent(targetAction.parameters[j].type.name + (counter++));
 				newExistent.parent = targetAction.parameters[j].type;
 				result.push(newExistent);
+			}
+			else if (targetAction.parameters[j].type.type == "abstract") {
+				for (var k = 0; k < existents.length; k++) {
+					if (existents[k].type == "property" && existents[k].isExtendedFrom(targetAction.parameters[j].type)) {
+						var newExistent = new PlannerComponents.existent(existents[k].name + (counter++));
+						newExistent.parent = existents[k];
+						result.push(newExistent);
+					}
+				}
 			}
 		}
 		return result;
