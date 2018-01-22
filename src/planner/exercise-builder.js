@@ -163,7 +163,6 @@ function generateExercise(plan) {
 		for (var j = 0; j < nodeList.length; j++) {
 			var successors = nodeList[j].successors;
 			for (var k = 0; k < successors.length; k++) {
-				console.log("ATTACHING: " + j + " to " + successors[k]);
 				nodeList[j].node.attachNode(nodeList[successors[k]].node, k);
 			}
 		}

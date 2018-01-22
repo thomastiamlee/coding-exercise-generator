@@ -14,8 +14,10 @@
 
 [distance_value#]>[numerical_value]
 [mass_value#]>[numerical_value]
+[temperature_value#]>[numerical_value]
 [height*]>[distance_value]
 [weight*]>[mass_value]
+[body_temperature*]>[temperature_value]
 
 [body_mass_index*]>[numerical_value]
 
@@ -28,6 +30,10 @@
 [mass_unit#]>[measurement_unit]
 [pounds1]>[mass_unit]
 [kilograms1]>[mass_unit]
+
+[temperature_unit#]>[measurement_unit]
+[Celsius1]>[temperature_unit]
+[Fahrenheit1]>[temperature_unit]
 
 [measurement_system#]>[abstract]
 [metric_system1]>[measurement_system]

@@ -1,1 +1,1 @@
-[person](height h, weight w, body_mass_index b) { property_of(_, h), property_of(_, w), property_of(_, b) }
+[person](height h, weight w, body_temperature bt, body_mass_index bmi) { property_of(_, h), property_of(_, w), property_of(_, bmi), property_of(_, bt) }

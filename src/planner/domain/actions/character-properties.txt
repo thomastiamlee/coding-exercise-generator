@@ -9,3 +9,10 @@ pre: visible(p) ^ !known(w) ^ property_of(p, w).
 post: known(w) ^ in_unit(w, u) ^ known_in_unit(w, u).
 text: "The weight of (p) is {w} [u].", "(p) weighs {w} [u].".
 alias: w["the weight of (p)"], w<person_weight>.
+
+action: state_person_body_temperature(person p, body_temperature b, temperature_unit u).
+pre: visible(p) ^ !known(b) ^ property_of(p, b).
+post: known(b) ^ in_unit(b, u) ^ known_in_unit(b, u).
+text: "The body temperature of (p) is {b} [u].".
+alias: b["the body temperature of (p)"], b<person_body_temperature>.
+

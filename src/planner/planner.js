@@ -17,7 +17,6 @@ function plan(domain) {
 	}
 	function selectTargetLogicAction() {
 		var logicActions = domain.logicActions;
-		return logicActions[0];
 		return logicActions[Math.floor(Math.random() * logicActions.length)];
 	}
 	function generateExistents() {
@@ -104,11 +103,18 @@ function plan(domain) {
 			stateStack.splice(stateStack.length - 1, 1);
 			actionStack.splice(actionStack.length - 1, 1);
 			
+			var debugText = "[";
+			for (var i = 0; i < currentAction.length; i++) {
+				debugText += currentAction[i].action.name;
+				if (i !=currentAction.length - 1) debugText += ", ";
+			}
+			debugText += "]";
+			log(debugText);
+			
 			if (currentState.isSatisfiedBy(initial)) {
 				plan = currentAction;
 				break;
 			}
-			
 			if (currentAction.length >= PLANNER_DEPTH_LIMIT) {
 				continue;
 			}
@@ -276,7 +282,7 @@ function plan(domain) {
 	for (var i = 0; i < matchings.length && (actionPlan == null || logicPlan == null); i++) {
 		actionPlan = null; logicPlan = null;
 		var parameters = matchings[i];
-		var logicPlan = backwardStateSpaceSearchLogic(existents, targetAction, parameters, 3);
+		var logicPlan = backwardStateSpaceSearchLogic(existents, targetAction, parameters, 1);
 		if (logicPlan == null) continue;
 		var goal = logicPlan.state;
 		var actionPlan = backwardStateSpaceSearchActions(existents, initial, goal);

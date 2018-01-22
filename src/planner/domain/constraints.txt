@@ -1,3 +1,4 @@
 person_name.string.set[Lian,Neil,Cloud,Ralph,Abby,Julia,Mela,Deanne].
 person_height.number.range[4,6].
 person_weight.number.range[4,6].
+person_body_temperature.number.range[30,50].
