@@ -1,5 +1,5 @@
 const PlannerComponents = require("./planner-components");
-const PLANNER_DEPTH_LIMIT = 6;
+const PLANNER_DEPTH_LIMIT = 10;
 
 function plan(domain) {
 	function log(str) {
@@ -17,6 +17,7 @@ function plan(domain) {
 	}
 	function selectTargetLogicAction() {
 		var logicActions = domain.logicActions;
+		return logicActions[0];
 		return logicActions[Math.floor(Math.random() * logicActions.length)];
 	}
 	function generateExistents() {
@@ -100,7 +101,6 @@ function plan(domain) {
 		while (stateStack.length > 0) {
 			var currentState = stateStack[stateStack.length - 1];
 			var currentAction = actionStack[actionStack.length - 1];
-			if (currentAction.length > 0)
 			stateStack.splice(stateStack.length - 1, 1);
 			actionStack.splice(actionStack.length - 1, 1);
 			

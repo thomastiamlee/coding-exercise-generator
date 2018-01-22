@@ -2,8 +2,9 @@
 [concrete#]>[entity]
 [abstract#]>[entity]
 
-[person-]>[concrete]
-[tourist-]>[person]
+[person#]>[concrete]
+[chef-]>[person]
+[backpacker-]>[person]
 
 [country#]>[concrete]
 [France1]>[country]
@@ -15,6 +16,8 @@
 [mass_value#]>[numerical_value]
 [height*]>[distance_value]
 [weight*]>[mass_value]
+
+[body_mass_index*]>[numerical_value]
 
 [measurement_unit#]>[abstract]
 

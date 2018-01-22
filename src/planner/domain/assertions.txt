@@ -1,11 +1,1 @@
-measurement_system_of(France, english_system)
-measurement_system_of(USA, metric_system)
-
-unit_of_system(metric_system, meters)
-unit_of_system(metric_system, kilograms)
-unit_of_system(english_system, feet)
-unit_of_system(english_system, pounds)
-
-likes_activity(tourist, traveling)
-
-[person](height h, weight w) { property_of(_, h), property_of(_, w) }
+[person](height h, weight w, body_mass_index b) { property_of(_, h), property_of(_, w), property_of(_, b) }

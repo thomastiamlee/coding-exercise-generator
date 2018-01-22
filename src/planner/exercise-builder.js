@@ -25,14 +25,24 @@ function generateExercise(plan) {
 			return new Component.operand(type, val);
 		}
 		else if (str.charAt(0) == "[") {
-			var name = null;
 			for (var i = 0; i < actionParameters.length; i++) {
 				if (actionParameters[i].symbol == content) {
-					name = realParameters[i].logicalValue;
+					target = realParameters[i];
+					break;
 				}
 			}
-			if (name != null) return getVariableFromName(name, symbolMappings);
-			return getVariableFromName("t_" + content, symbolMappings);
+			if (content.indexOf("/") != -1) {
+				var dataType = content.split("/")[0];
+				var name = content.split("/")[1];
+				if (getVariableFromName("t_" + name, symbolMappings) == null) {
+					symbolMappings.push({name: "t_" + name, obj: new Component.variable(dataType)});
+				}
+				return getVariableFromName("t_" + name, symbolMappings);
+			}
+			else {
+				if (target.isInput) return getVariableFromName(target.logicalValue, symbolMappings);
+				return getVariableFromName(target.name, symbolMappings);
+			}
 		}
 	}
 	var symbolMappings = [];
@@ -48,31 +58,40 @@ function generateExercise(plan) {
 		var logicInformation = currentAction.logic.split("\r\n");
 		
 		for (var j = 0; j < currentParameters.length; j++) {
-			if (getVariableFromName(currentParameters[j], symbolMappings) == null) {
-				if (currentParameters[j].dataType) {
-					var name = null;
-					var type = currentParameters[j].dataType;
-					if (currentParameters[j].isInput) {
-						name = currentParameters[j].logicalValue;
-						var variable = new Component.variable(currentParameters[j].dataType);
-						symbolMappings.push({obj: variable, name: name});
-						inputVariables.push(variable);
+			var current = currentParameters[j];
+			var name = null;
+			if (current.isInput) {
+				name = currentParameters[j].logicalValue;
+			}
+			else if (current.logicalValue) {
+				name = currentParameters[j].name;
+			}
+			else {
+				name = currentParameters[j].name;
+			}
+			if (getVariableFromName(name, symbolMappings) == null) {
+				if (current.isInput) {
+					var variable = new Component.variable(currentParameters[j].dataType);
+					symbolMappings.push({obj: variable, name: name});
+					inputVariables.push(variable);
+				}
+				else if (current.logicalValue) {
+					var val = currentParameters[j].logicalValue;
+					if (type == "number") {
+						val = parseFloat(val);
 					}
-					else {
-						var val = currentParameters[j].logicalValue;
-						if (type == "number") {
-							val = parseFloat(val);
-						}
-						else if (type == "integer") {
-							val = parseInt(val);
-						}
-						var variable = new Component.operand(type, val);
-						symbolMappings.push({obj: variable, name: name});
+					else if (type == "integer") {
+						val = parseInt(val);
 					}
+					var operand = new Component.operand(type, val);
+					symbolMappings.push({obj: operand, name: name});
+				}
+				else {
+					var variable = new Component.variable(currentParameters[j].dataType);
+					symbolMappings.push({obj: variable, name: name});
 				}
 			}
 		}
-		console.log(symbolMappings);
 		var terminalNodes = [];
 		var nodeList = [];
 		for (var j = 0; j < logicInformation.length; j++) {
@@ -104,7 +123,7 @@ function generateExercise(plan) {
 					terminalNodes.push(j);
 				}
 				else {
-					successors = [parseInt(line[6])];
+					successors = [parseInt(line[5])];
 				}
 				var node = new Component.node(Component.NODE_TYPE_OPERATION);
 				node.attachInputOperand(first, 0);
@@ -132,7 +151,7 @@ function generateExercise(plan) {
 			}
 			else if (type == "r") {
 				var first = line[1].substring(1, line[1].length - 1);
-				for (var k = 0; k < currentAction.parameters.length; j++) {
+				for (var k = 0; k < currentAction.parameters.length; k++) {
 					if (currentAction.parameters[k].symbol == first) {
 						actionResults.push(currentParameters[k]);
 						break;
@@ -140,10 +159,12 @@ function generateExercise(plan) {
 				}
 			}
 		}
+			
 		for (var j = 0; j < nodeList.length; j++) {
 			var successors = nodeList[j].successors;
 			for (var k = 0; k < successors.length; k++) {
-				nodeList[k].node.attachNode(nodeList[successors[k]].node, k);
+				console.log("ATTACHING: " + j + " to " + successors[k]);
+				nodeList[j].node.attachNode(nodeList[successors[k]].node, k);
 			}
 		}
 		for (var j = 0; j < terminalNodes.length; j++) {
@@ -161,8 +182,11 @@ function generateExercise(plan) {
 	}
 	var finalActionResult = actionResults[0];
 	var returnOperand = null;
-	if (finalActionResult.dataType) {
+	if (finalActionResult.isInput) {
 		returnOperand = getVariableFromName(finalActionResult.logicalValue, symbolMappings);
+	}
+	else {
+		returnOperand = getVariableFromName(finalActionResult.name, symbolMappings);
 	}
 	var returnNode = new Component.node(Component.NODE_TYPE_RETURN);
 	returnNode.attachInputOperand(returnOperand, 0);
