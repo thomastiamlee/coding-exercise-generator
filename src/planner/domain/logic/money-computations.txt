@@ -1,0 +1,23 @@
+action: check_if_can_buy(person p, object o, cost c, money m).
+main: "Complete the function that returns 1 if (p) has enough money to buy the [o], or 0 otherwise.".
+sub: " ".
+req: visible(p) ^ intent_to_buy(p, o).
+pre: property_of(o, c) ^ property_of(p, m) ^ known(c) ^ known(m).
+post: .
+{
+c,[c],[m],<=,1,2
+a,(integer/1),[integer/result]
+a,(integer/0),[integer/result]
+r,[integer/result]
+}
+
+action: check_how_much_can_buy(person p, object o, cost c, money m).
+main: "Complete the function that returns the maximum number of pieces of the [o] (p) can buy.".
+sub: " ".
+req: visible(p) ^ intent_to_buy_max(p, o).
+pre: property_of(o, c) ^ property_of(p, m) ^ known(c) ^ known(m).
+post: .
+{
+o,[m],[c],[integer/result],%
+r,[integer/result]
+}

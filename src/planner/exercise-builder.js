@@ -151,11 +151,16 @@ function generateExercise(plan) {
 			}
 			else if (type == "r") {
 				var first = line[1].substring(1, line[1].length - 1);
+				var done = false;
 				for (var k = 0; k < currentAction.parameters.length; k++) {
 					if (currentAction.parameters[k].symbol == first) {
+						done = true;
 						actionResults.push(currentParameters[k]);
 						break;
 					}
+				}
+				if (!done) {
+					actionResults.push(getVariableFromName("t_" + first.split("/")[1], symbolMappings));
 				}
 			}
 		}
@@ -179,10 +184,13 @@ function generateExercise(plan) {
 		}
 		tail = terminalNodes;
 	}
-	var finalActionResult = actionResults[0];
+	var finalActionResult = actionResults[actionResults.length - 1];
 	var returnOperand = null;
-	if (finalActionResult.isInput) {
+	if (finalActionResult instanceof PlannerComponents.existent && finalActionResult.isInput) {
 		returnOperand = getVariableFromName(finalActionResult.logicalValue, symbolMappings);
+	}
+	else if (finalActionResult instanceof Component.variable || finalActionResult instanceof Component.operand) {
+		returnOperand = finalActionResult;
 	}
 	else {
 		returnOperand = getVariableFromName(finalActionResult.name, symbolMappings);

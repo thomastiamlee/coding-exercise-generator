@@ -98,10 +98,10 @@ function plan(domain) {
 		var plan = null;
 		
 		while (stateStack.length > 0) {
-			var currentState = stateStack[stateStack.length - 1];
-			var currentAction = actionStack[actionStack.length - 1];
-			stateStack.splice(stateStack.length - 1, 1);
-			actionStack.splice(actionStack.length - 1, 1);
+			var currentState = stateStack[0];
+			var currentAction = actionStack[0];
+			stateStack.splice(0,1);
+			actionStack.splice(0,1);
 			
 			var debugText = "[";
 			for (var i = 0; i < currentAction.length; i++) {
@@ -109,7 +109,6 @@ function plan(domain) {
 				if (i !=currentAction.length - 1) debugText += ", ";
 			}
 			debugText += "]";
-			log(debugText);
 			
 			if (currentState.isSatisfiedBy(initial)) {
 				plan = currentAction;
@@ -123,6 +122,7 @@ function plan(domain) {
 			for (var i = 0; i < shuffled.length; i++) {
 				var potentialAction = shuffled[i];
 				var matchings = potentialAction.getParameterMatchings(existents);
+				var validCount = 0;
 				for (var j = 0; j < matchings.length; j++) {
 					var newState = currentState.regress(potentialAction, matchings[j]);
 					if (newState == null) continue;
@@ -134,6 +134,7 @@ function plan(domain) {
 						}
 					}
 					if (!found) {
+						validCount++;
 						visited.push(newState);
 						stateStack.push(newState);
 						actionStack.push([].concat(currentAction).concat([{action: potentialAction, parameters: matchings[j]}]));
@@ -285,6 +286,12 @@ function plan(domain) {
 		var logicPlan = backwardStateSpaceSearchLogic(existents, targetAction, parameters, 1);
 		if (logicPlan == null) continue;
 		var goal = logicPlan.state;
+		//console.log(goal.truths[0]);
+		//console.log(goal.truths[1]);
+		//console.log(goal.truths[2]);
+		//console.log(goal.truths[3]);
+		//console.log(goal.truths[4]);
+		//console.log(goal.truths[5]);
 		var actionPlan = backwardStateSpaceSearchActions(existents, initial, goal);
 	}
 	if (logicPlan == null) {

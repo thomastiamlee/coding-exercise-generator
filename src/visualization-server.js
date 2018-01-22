@@ -71,6 +71,7 @@ function start() {
 				var domain = DomainParser.parseDomain();
 				var plan = Planner.plan(domain);
 				var text = PlannerTextGenerator.convertPlanToText(plan);
+				console.log(text);
 				var exercise = ExerciseBuilder.generateExercise(plan);
 				
 				var flowchart = Reader.convertToFlowchartDefinition(exercise);

@@ -10,16 +10,31 @@
 [France1]>[country]
 [USA1]>[country]
 
+[object#]>[concrete]
+[food#]>[object]
+[book-]>[object]
+[oven-]>[object]
+
 [numerical_value#]>[abstract]
 
 [distance_value#]>[numerical_value]
 [mass_value#]>[numerical_value]
 [temperature_value#]>[numerical_value]
+[monetary_value#]>[numerical_value]
 [height*]>[distance_value]
+[side*]>[distance_value]
+[length*]>[distance_value]
+[width*]>[distance_value]
+[radius*]>[distance_value]
+[diameter*]>[distance_value]
 [weight*]>[mass_value]
+[money*]>[monetary_value]
+[cost*]>[monetary_value]
 [body_temperature*]>[temperature_value]
 
 [body_mass_index*]>[numerical_value]
+[area*]>[numerical_value]
+[volume*]>[numerical_value]
 
 [measurement_unit#]>[abstract]
 
@@ -41,3 +56,10 @@
 
 [activity#]>[abstract]
 [traveling1]>[activity]
+[cooking1]>[activity]
+[baking1]>[activity]
+
+[shape#]>[abstract]
+[square1]>[shape]
+[rectangle1]>[shape]
+[circle1]>[shape]

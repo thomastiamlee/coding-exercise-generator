@@ -1,1 +1,9 @@
-[person](height h, weight w, body_temperature bt, body_mass_index bmi) { property_of(_, h), property_of(_, w), property_of(_, bmi), property_of(_, bt) }
+can_be_in_shape(book, rectangle)
+
+likes_activity(backpacker, traveling)
+likes_activity(chef, cooking)
+
+item_for(oven, cooking)
+
+[person](height h, weight w, body_temperature bt, body_mass_index bmi, money m) { property_of(_, h), property_of(_, w), property_of(_, bmi), property_of(_, bt), property_of(_, m) }
+[object](side s, length l, width w, radius r, diameter d, area a, volume v, cost c) { property_of(_, s), property_of(_, l), property_of(_, w), property_of(_, d), property_of(_, r), property_of(_, a), property_of(_, c) }

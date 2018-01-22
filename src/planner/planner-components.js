@@ -285,6 +285,7 @@ var state = function(truths) {
 	this.truths = truths;
 	this.isSameWith = function(other) {
 		var temp = [].concat(this.truths);
+		if (temp.length != other.truths.length) return false;
 		for (var i = 0; i < other.truths.length; i++) {
 			var index = -1;
 			for (var j = 0; j < temp.length; j++) {

@@ -9,3 +9,21 @@ pre: visible(p).
 post: intent_to_be_healthy(p).
 text: "(p) wants to be healthy.".
 alias: .
+
+action: plan_to_get_area(person p, object o, area a).
+pre: visible(p) ^ visible(o) ^ !known(a) ^ property_of(o, a).
+post: intent_to_get_area(o).
+text: "(p) wants to get the area of the [o].".
+alias: .
+
+action: plan_to_buy(person p, object o, activity a).
+pre: visible(p) ^ known_liked_activity(p, a) ^ item_for(o, a).
+post: intent_to_buy(p, o) ^ visible(o).
+text: "(p) wants to buy a new [o].".
+alias: .
+
+action: plan_to_buy_max(person p, object o).
+pre: visible(p) ^ visible(o).
+post: intent_to_buy_max(p, o).
+text: "(p) wants to buy as many pieces of the [o] as possible.".
+alias: .
