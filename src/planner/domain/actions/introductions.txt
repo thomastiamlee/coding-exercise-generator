@@ -15,3 +15,16 @@ pre: !stated_hobby(p).
 post: stated_hobby(p) ^ hobby_of(p, h).
 text: "(p) likes [h] very much.", "The hobby of (p) is [h].".
 alias: .
+
+action: state_trait_overweight(person p).
+pre: !stated_trait_overweight(p).
+post: stated_trait_overweight(p).
+text: "(p) is overweight.".
+alias: .
+
+
+action: state_motivation_to_get_fit(person p).
+pre: !desired_get_fit(p) ^ stated_trait_overweight(p).
+post: desired_get_fit(p).
+text: "(p) wants to get more fit.".
+alias: .

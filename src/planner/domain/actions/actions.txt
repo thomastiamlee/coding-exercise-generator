@@ -1,0 +1,17 @@
+action: play_sport(person p, sport s).
+pre: introduced(p) ^ hobby_of(p, s) ^ !tired(p).
+post: tired(p).
+text: "(p) plays [s] with his friends and got tired.".
+alias: .
+
+action: play_sport(person p, athlete a, sport s).
+pre: introduced(p) ^ profession_of(p, a) ^ !tired(p).
+post: tired(p).
+text: "(p) plays [s] with his friends and got tired.".
+alias: .
+
+action: workout(person p).
+pre: introduced(p) ^ desired_get_fit(p) ^ !tired(p).
+post: tired(p).
+text: "(p) works out at the gym and got tired.".
+alias: .

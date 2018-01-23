@@ -10,6 +10,12 @@ post: intent_to_buy(p, i) ^ introduced(i).
 text: "(p) wants to buy a new [i] for work.".
 alias: .
 
+action: state_intent_to_buy_many(person p, concrete c).
+pre: introduced(p) ^ !intent_to_buy_many(c) ^ desired_many(p, c).
+post: intent_to_buy_many(p, c).
+text: "(p) wants to buy as many [c] as possible.".
+alias: .
+
 action: state_intent_to_travel(person p, traveling t, country c).
 pre: hobby_of(p, t) ^ !been_in(p, c) ^ !intent_to_travel(p, c).
 post: intent_to_travel(p, c) ^ introduced(c).
@@ -35,7 +41,20 @@ text: "(p) should convert (n) to [dest].".
 alias: .
 
 action: state_intent_to_compute_area(person p, concrete c).
-pre: introduced(p) ^ !intent_to_compute_area(c).
+pre: introduced(p) ^ introduced(c) ^ !intent_to_compute_area(c).
 post: intent_to_compute_area(c).
 text: "(p) wants to compute the area of [c].".
 alias: .
+
+action: state_intent_to_compute_volume(person p, concrete c).
+pre: introduced(p) ^ introduced(c) ^ !intent_to_compute_volume(c).
+post: intent_to_compute_volume(c).
+text: "(p) wants to compute the area of [c].".
+alias: .
+
+action: state_intent_to_compute_diameter(person p, concrete c).
+pre: introduced(p) ^ introduced(c) ^ !intent_to_compute_diameter(c).
+post: intent_to_compute_diameter(c).
+text: "(p) wants to know the length of the radius of the [c].".
+alias: .
+

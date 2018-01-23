@@ -46,6 +46,25 @@ post: stated_size_components(c) ^ assigned(r) ^ property_of(c, r) ^ in_unit(r, u
 text: "The radius of the [c] is {r} [u].".
 alias: r["the radius of the [c]"], r<generic_number>.
 
+action: state_diameter_of_circle(concrete c, circle ci, diameter d, distance_unit u).
+pre: introduced(c) ^ !stated_size_components(c) ^ shape_of(c, ci) ^ possible_shape_of(c, ci) ^ !assigned(d).
+post: stated_size_components(c) ^ assigned(d) ^ property_of(c, d) ^ in_unit(d, u) ^ known_in_unit(d, u).
+text: "The diameter of the [c] is {d} [u].".
+alias: d["the diameter of the [c]"], d<generic_number>.
+
+action: state_radius_of_sphere(concrete c, sphere ci, radius r, distance_unit u).
+pre: introduced(c) ^ !stated_size_components(c) ^ shape_of(c, ci) ^ possible_shape_of(c, ci) ^ !assigned(r).
+post: stated_size_components(c) ^ assigned(r) ^ property_of(c, r) ^ in_unit(r, u) ^ known_in_unit(r, u).
+text: "The radius of the [c] is {r} [u].".
+alias: r["the radius of the [c]"], r<generic_number>.
+
+action: state_diameter_of_sphere(concrete c, sphere ci, diameter d, distance_unit u).
+pre: introduced(c) ^ !stated_size_components(c) ^ shape_of(c, ci) ^ possible_shape_of(c, ci) ^ !assigned(d).
+post: stated_size_components(c) ^ assigned(d) ^ property_of(c, d) ^ in_unit(d, u) ^ known_in_unit(d, u).
+text: "The diameter of the [c] is {d} [u].".
+alias: d["the diameter of the [c]"], d<generic_number>.
+
+
 action: state_length_and_width_of_rectangle(concrete c, rectangle r, length l, width w, distance_unit u).
 pre: introduced(c) ^ !stated_size_components(c) ^ shape_of(c, r) ^ possible_shape_of(c, r) ^ !assigned(l) ^ !assigned(w).
 post: stated_size_components(c) ^ assigned(l) ^ assigned(w) ^ property_of(c, l) ^ property_of(c, w) ^ in_unit(l, u) ^ in_unit(w, u) ^ known_in_unit(l, u) ^ known_in_unit(w, u).

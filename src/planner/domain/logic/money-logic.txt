@@ -1,0 +1,25 @@
+action: check_if_can_buy(person p, item i, cost c, money m).
+main: "Complete the function which should return yes if (p) has enough money to buy the [i], or no otherwise.".
+sub: " ".
+req: intent_to_buy(p, i).
+pre: property_of(p, m) ^ property_of(i, c).
+post: .
+{
+c,[c],[m],<=,1,2
+a,(string/yes),[string/result]
+a,(string/no),[string/result]
+r,[string/result]
+}
+
+action: check_how_many_can_buy(person p, item i, cost c, money m).
+main: "Complete the function that returns how many [i]s can be bought with the money of (p).".
+sub: " ".
+req: intent_to_buy_many(p, i).
+pre: property_of(p, m) ^ property_of(i, c).
+post: .
+{
+o,[c],[m],[rem],%,1
+o,[c],[rem],[red],-,2
+o,[red],[m],[number/result],/
+r,[number/result]
+}

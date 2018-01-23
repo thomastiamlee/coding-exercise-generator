@@ -79,10 +79,10 @@ function plan(domain) {
 		
 		var xxx = 0;
 		while (stateStack.length > 0) {
-			var currentState = stateStack[0];
-			var currentAction = actionStack[0];
-			stateStack.splice(0, 1);
-			actionStack.splice(0, 1);
+			var currentState = stateStack[stateStack.length - 1];
+			var currentAction = actionStack[actionStack.length - 1];
+			stateStack.splice(stateStack.length - 1, 1);
+			actionStack.splice(actionStack.length - 1, 1);
 			
 			//log("     current state: " + currentState.debugString());
 			//log(xxx++);
@@ -92,7 +92,7 @@ function plan(domain) {
 				if (i !=currentAction.length - 1) debugText += ", ";
 			}
 			debugText += "]";
-			
+			//log(debugText);
 			if (currentState.isSatisfiedBy(initial)) {
 				plan = currentAction;
 				break;
@@ -100,14 +100,15 @@ function plan(domain) {
 			if (currentAction.length >= PLANNER_DEPTH_LIMIT) {
 				continue;
 			}
-			if (!currentState.allQueriesRegressable(actions, existents, initial)) {
-				continue;
-			}
+			//if (!currentState.allQueriesRegressable(actions, existents, initial)) {
+				//continue;
+			//}
 			
 			var shuffled = shuffle(actions);
 			for (var i = 0; i < shuffled.length; i++) {
 				var potentialAction = shuffled[i];
 				var matchings = potentialAction.getParameterMatchings(existents);
+				matchings = shuffle(matchings);
 				for (var j = 0; j < matchings.length; j++) {
 					var newState = currentState.regress(potentialAction, matchings[j]);
 					if (newState == null) continue;
@@ -118,7 +119,7 @@ function plan(domain) {
 							break;
 						}
 					}
-					if (!found) {
+					if (!found && newState.allQueriesRegressable(actions, existents, initial)) {
 						//log("         regressed by " + potentialAction.name);
 						//log("            new state: " + newState.debugString()); 
 						visited.push(newState);
