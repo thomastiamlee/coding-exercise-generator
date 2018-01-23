@@ -2,6 +2,8 @@
 [concrete#]>[entity]
 [abstract#]>[entity]
 
+[world1]>[concrete]
+
 [character#]>[concrete]
 [person-]>[character]
 
@@ -28,8 +30,8 @@
 [Sweden1]>[country]
 [Japan1]>[country]
 [town_place#]>[location]
-[grocery-]>[location]
-[restaurant-]>[location]
+[grocery-]>[town_place]
+[restaurant-]>[town_place]
 
 [profession#]>[abstract]
 [chef1]>[profession]
@@ -80,7 +82,6 @@
 
 [temperature_value#]>[numerical_value]
 [body_temperature*]>[temperature_value]
-[room_temperature*]>[temperature_value]
 [atmospheric_temperature*]>[temperature_value]
 
 [area*]>[derived_value]

@@ -43,3 +43,7 @@ used_in_profession(oven, chef)
 used_in_profession(canvas, artist)
 used_in_profession(sketchbook, artist)
 used_in_profession(ball, athlete)
+
+interested_in_size(athlete, racket)
+interested_in_size(artist, canvas)
+interested_in_size(artist, sketchbook)

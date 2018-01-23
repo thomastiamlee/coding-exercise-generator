@@ -1,3 +1,15 @@
+action: state_rainy(world w).
+pre: !stated_weather(w).
+post: rainy(w) ^ stated_weather(w).
+text: "It is a rainy day.".
+alias: .
+
+action: state_sunny(world w).
+pre: !stated_weather(w).
+post: sunny(w) ^ stated_weather(w).
+text: "It is a sunny day.".
+alias: .
+
 action: introduce(person p).
 pre: !introduced(p).
 post: introduced(p).
@@ -21,7 +33,6 @@ pre: !stated_trait_overweight(p).
 post: stated_trait_overweight(p).
 text: "(p) is overweight.".
 alias: .
-
 
 action: state_motivation_to_get_fit(person p).
 pre: !desired_get_fit(p) ^ stated_trait_overweight(p).

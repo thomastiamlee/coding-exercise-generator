@@ -20,35 +20,49 @@ function plan(domain) {
 		return logicActions[Math.floor(Math.random() * logicActions.length)];
 	}
 	function generateExistents(targetAction) {
-		// This function will be changed later on, if time permits.
-		var result = [];
-		var existents = domain.existents;
-		for (var i = 0; i < existents.length; i++) {
-			var name = existents[i].name;
-			if (existents[i].type == "atom" || existents[i].type == "multiple") {
-				var newExistent = new PlannerComponents.existent(name + "_instance");
-				newExistent.parent = existents[i];
-				result.push(newExistent);
+		if (targetAction) {
+			var result = [];
+			var existents = domain.existents;
+			for (var i = 0; i < existents.length; i++) {
+				var name = existents[i].name;
+				if (existents[i].type == "atom" || existents[i].type == "multiple") {
+					var newExistent = new PlannerComponents.existent(name + "_instance");
+					newExistent.parent = existents[i];
+					result.push(newExistent);
+				}
 			}
-		}
-		var counter = 1;
-		for (var j = 0; j < targetAction.parameters.length; j++) {
-			if (targetAction.parameters[j].type.type == "property") {
-				var newExistent = new PlannerComponents.existent(targetAction.parameters[j].type.name + (counter++));
-				newExistent.parent = targetAction.parameters[j].type;
-				result.push(newExistent);
-			}
-			else if (targetAction.parameters[j].type.type == "abstract") {
-				for (var k = 0; k < existents.length; k++) {
-					if (existents[k].type == "property" && existents[k].isExtendedFrom(targetAction.parameters[j].type)) {
-						var newExistent = new PlannerComponents.existent(existents[k].name + (counter++));
-						newExistent.parent = existents[k];
-						result.push(newExistent);
+			var counter = 1;
+			for (var j = 0; j < targetAction.parameters.length; j++) {
+				if (targetAction.parameters[j].type.type == "property") {
+					var newExistent = new PlannerComponents.existent(targetAction.parameters[j].type.name + (counter++));
+					newExistent.parent = targetAction.parameters[j].type;
+					result.push(newExistent);
+				}
+				else if (targetAction.parameters[j].type.type == "abstract") {
+					for (var k = 0; k < existents.length; k++) {
+						if (existents[k].type == "property" && existents[k].isExtendedFrom(targetAction.parameters[j].type)) {
+							var newExistent = new PlannerComponents.existent(existents[k].name + (counter++));
+							newExistent.parent = existents[k];
+							result.push(newExistent);
+						}
 					}
 				}
 			}
+			return result;
 		}
-		return result;
+		else {
+			var result = [];
+			var existents = domain.existents;
+			for (var i = 0; i < existents.length; i++) {
+				var name = existents[i].name;
+				if (existents[i].type == "atom" || existents[i].type == "multiple" || existents[i].type == "property") {
+					var newExistent = new PlannerComponents.existent(name + "_instance");
+					newExistent.parent = existents[i];
+					result.push(newExistent);
+				}
+			}
+			return result;
+		}
 	}
 	function generateInitialState(existents) {
 		var assertions = domain.assertions;
@@ -92,6 +106,7 @@ function plan(domain) {
 				if (i !=currentAction.length - 1) debugText += ", ";
 			}
 			debugText += "]";
+			log("CHECKING: " + currentState.debugString());
 			//log(debugText);
 			if (currentState.isSatisfiedBy(initial)) {
 				plan = currentAction;
@@ -157,6 +172,10 @@ function plan(domain) {
 		var actionStack = [[{action: targetAction, parameters: parameters}]];
 		var stepStack = [1];
 		var visited = [];
+		var potentials = [];
+		for (var i = 0; i < steps; i++) {
+			potentials.push(null);
+		}
 		
 		var state = null;
 		var plan = null;
@@ -168,6 +187,15 @@ function plan(domain) {
 			actionStack.splice(actionStack.length - 1, 1);
 			stepStack.splice(stepStack.length - 1, 1);
 			
+			if (potentials[currentStep - 1] == null) {
+				var result = unionWithRequirements(currentState);
+				if (result != null) {
+					potentials[currentStep - 1] = {plan: null, state: null};
+					potentials[currentStep - 1].plan = currentAction;
+					potentials[currentStep - 1].state = result;
+				}
+			}
+			/*
 			if (currentStep == steps) {
 				var result = unionWithRequirements(currentState);
 				if (result != null) {
@@ -175,7 +203,7 @@ function plan(domain) {
 					state = result;
 				}
 				break;
-			}
+			}*/
 			
 			var shuffled = shuffle(actions);
 			for (var i = 0; i < shuffled.length; i++) {
@@ -201,7 +229,9 @@ function plan(domain) {
 			}
 		}
 		
-		return { state: state, plan: plan };
+		var curr = steps - 1;
+		while (!potentials[curr]) curr--;
+		return { state: potentials[curr].state, plan: potentials[curr].plan };
 	}
 	function setAliasesAndValues(actionPlan, logicPlan) {
 		var allPossibleInputs = [];
@@ -262,7 +292,7 @@ function plan(domain) {
 	log("Choosing target action...");
 	var targetAction = selectTargetLogicAction();
 	log("Chosen: " + targetAction.name);
-	var existents = generateExistents(targetAction);
+	var existents = generateExistents();
 	var initial = generateInitialState(existents);
 	var matchings = targetAction.getParameterMatchings(existents);
 	matchings = shuffle(matchings);
@@ -270,7 +300,7 @@ function plan(domain) {
 	for (var i = 0; i < matchings.length && (actionPlan == null || logicPlan == null); i++) {
 		actionPlan = null; logicPlan = null;
 		var parameters = matchings[i];
-		var logicPlan = backwardStateSpaceSearchLogic(existents, targetAction, parameters, 1);
+		var logicPlan = backwardStateSpaceSearchLogic(existents, targetAction, parameters, 4);
 		if (logicPlan == null) continue;
 		var goal = logicPlan.state;
 		log("GOAL: " + goal.debugString());
@@ -285,7 +315,7 @@ function plan(domain) {
 		return false;
 	}
 	setAliasesAndValues(actionPlan, logicPlan);
-	
+	console.log(actionPlan);
 	return {actionPlan: actionPlan, logicPlan: logicPlan};
 }
 

@@ -2,8 +2,8 @@ action: convert_meters_to_feet(distance_value d, meters m, feet f).
 main: "Complete the function that converts (d) to feet.".
 sub: "1 meter is 3.28084 feet.".
 req: intent_to_convert(d, m, f).
-pre: in_unit(d, m) ^ !in_unit(d, f) ^ !known_in_unit(d, f).
-post: in_unit(d, f) ^ !in_unit(d, m) ^ known_in_unit(d, m).
+pre: in_unit(d, m) ^ !in_unit(d, f) ^ !known_in_unit(d, f) ^ known_in_unit(d, m).
+post: in_unit(d, f) ^ !in_unit(d, m) ^ known_in_unit(d, f).
 {
 o,[d],(number/3.28084),[d],*
 r,[d]
@@ -13,18 +13,19 @@ action: convert_feet_to_meters(distance_value d, feet f, meters m).
 main: "Complete the function that converts (d) to meters.".
 sub: "1 meter is 3.28084 feet.".
 req: intent_to_convert(d, f, m).
-pre: in_unit(d, f) ^ !in_unit(d, m) ^ !known_in_unit(d, m).
+pre: in_unit(d, f) ^ !in_unit(d, m) ^ !known_in_unit(d, m) ^ known_in_unit(d, f).
 post: in_unit(d, m) ^ !in_unit(d, f) ^ known_in_unit(d, m).
 {
 o,[d],(number/3.28084),[d],/
 r,[d]
 }
 
+
 action: convert_kilograms_to_pounds(mass_value m, kilograms k, pounds p).
 main: "Complete the function that converts (m) to pounds.".
 sub: "1 kilogram is 2.20462 pounds.".
 req: intent_to_convert(m, k, p).
-pre: in_unit(m, k) ^ !in_unit(m, p) ^ !known_in_unit(m, p).
+pre: in_unit(m, k) ^ !in_unit(m, p) ^ !known_in_unit(m, p) ^ known_in_unit(m, k).
 post: in_unit(m, p) ^ !in_unit(m, k) ^ known_in_unit(m, p).
 {
 o,[d],(number/2.20462),[d],*
@@ -35,7 +36,7 @@ action: convert_pounds_to_kilograms(mass_value m, pounds p, kilograms k).
 main: "Complete the function that converts (m) to kilograms.".
 sub: "1 kilogram is 2.20462 pounds.".
 req: intent_to_convert(m, p, k).
-pre: in_unit(m, p) ^ !in_unit(m, k) ^ !known_in_unit(m, k).
+pre: in_unit(m, p) ^ !in_unit(m, k) ^ !known_in_unit(m, k) ^ known_in_unit(m, p).
 post: in_unit(m, k) ^ !in_unit(m, p) ^ known_in_unit(m, k).
 {
 o,[d],(number/2.20462),[d],/
@@ -46,7 +47,7 @@ action: convert_celsius_to_fahrenheit(temperature_value t, Celsius c, Fahrenheit
 main: "Complete the function that converts [t] to Fahrenheit.".
 sub: "To convert Celsius to Fahrenheit, multiply it by 9/5 and then add 32.".
 req: intent_to_convert(t, c, f).
-pre: in_unit(t, c) ^ !in_unit(t, f) ^ !known_in_unit(t, f).
+pre: in_unit(t, c) ^ !in_unit(t, f) ^ !known_in_unit(t, f) ^ known_in_unit(t, c).
 post: in_unit(t, f) ^ !in_unit(t, c) ^ known_in_unit(t, f).
 {
 o,[t],(number/9),[temp],*,1
@@ -59,7 +60,7 @@ action: convert_fahrenheit_to_celsius(temperature_value t, Fahrenheit f, Celsius
 main: "Complete the function that converts [t] to Celsius.".
 sub: "To convert Fahrenheit to Celsius, subtract 32 from it and then multiply it by 5/9.".
 req: intent_to_convert(t, f, c).
-pre: in_unit(t, f) ^ !in_unit(t, c) ^ !known_in_unit(t, c).
+pre: in_unit(t, f) ^ !in_unit(t, c) ^ !known_in_unit(t, c) ^ known_in_unit(t, f).
 post: in_unit(t, c) ^ !in_unit(t, f) ^ known_in_unit(t, c).
 {
 o,[t],(number/32),[temp],-,1

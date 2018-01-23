@@ -17,7 +17,19 @@ text: "(p) works out at the gym and got tired.".
 alias: .
 
 action: make_payment(person p, item i, cost c, payment m).
-pre: intent_to_buy(p, i) ^ property_of(i, c) ^ !assigned(m).
+pre: intent_to_buy(p, i) ^ property_of(i, c) ^ assigned(c) ^ !assigned(m).
 post: assigned(m) ^ payment_made(p, i, m).
 text: "(p) paid {m} yen for the [i].".
 alias: m<generic_number>.
+
+action: walk(person p, town_place t).
+pre: introduced(p) ^ !walked_outside(p).
+post: walked_outside(p).
+text: "(p) walked to the [t].".
+alias: .
+
+action: get_sick(person p, world w).
+pre: walked_outside(p) ^ rainy(w) ^ !is_sick(p).
+post: is_sick(p) ^ is_sick(p).
+text: "(p) gets sick because of the rain.".
+alias: .

@@ -1,11 +1,11 @@
 action: state_intent_to_buy(person p, hobby h, item i).
-pre: hobby_of(p, h) ^ used_in_hobby(i, h) ^ !intent_to_buy(p, i).
+pre: hobby_of(p, h) ^ used_in_hobby(i, h) ^ !intent_to_buy(p, i) ^ !introduced(i).
 post: intent_to_buy(p, i) ^ introduced(i).
 text: "(p) wants to buy a new [i] for [h].".
 alias: .
 
 action: state_intent_to_buy(person p, profession prof, item i).
-pre: profession_of(p, prof) ^ used_in_profession(i, prof) ^ !intent_to_buy(p, i).
+pre: profession_of(p, prof) ^ used_in_profession(i, prof) ^ !intent_to_buy(p, i)  ^ !introduced(i).
 post: intent_to_buy(p, i) ^ introduced(i).
 text: "(p) wants to buy a new [i] for work.".
 alias: .
@@ -23,13 +23,13 @@ text: "(p) needs to determine the change he will get.".
 alias: .
 
 action: state_intent_to_travel(person p, traveling t, country c).
-pre: hobby_of(p, t) ^ !been_in(p, c) ^ !intent_to_travel(p, c).
+pre: hobby_of(p, t) ^ !been_in(p, c) ^ !intent_to_travel(p, c) ^ !introduced(c).
 post: intent_to_travel(p, c) ^ introduced(c).
 text: "(p) is planning to travel to [c] for a vacation.".
 alias: .
 
 action: state_intent_to_travel(person p, athlete a, country c).
-pre: profession_of(p, a) ^ !been_in(p, c) ^ !intent_to_travel(p, c).
+pre: profession_of(p, a) ^ !been_in(p, c) ^ !intent_to_travel(p, c) ^ !introduced(c).
 post: intent_to_travel(p, c) ^ introduced(c).
 text: "(p) will be to travelling to [c] for a sports competition.".
 alias: .
@@ -46,26 +46,32 @@ post: intent_to_convert(n, src, dest).
 text: "(p) should convert (n) to [dest].".
 alias: .
 
+action: state_intent_to_convert(person p, country c, atmospheric_temperature t, temperature_unit src, temperature_unit dest).
+pre: property_of(c, t) ^ in_unit(t, src) ^ !known_in_unit(t, dest) ^ property_of(c, t) ^ intent_to_travel(p, c) ^ !intent_to_convert(n, src, dest).
+post: intent_to_convert(t, src, dest).
+text: "(p) wants to know (b) in degrees [dest].".
+alias: .
+
 action: state_intent_to_convert(person p, body_temperature b, temperature_unit src, temperature_unit dest).
-pre: !intent_to_convert(b, src, dest) ^ property_of(p, b) ^ in_unit(b, src) ^ !known_in_unit(b, dest).
+pre: !intent_to_convert(b, src, dest) ^ property_of(p, b) ^ in_unit(b, src) ^ !known_in_unit(b, dest) ^ is_sick(p).
 post: intent_to_convert(b, src, dest).
 text: "(p) wants to know (b) in degrees [dest].".
 alias: .
 
-action: state_intent_to_compute_area(person p, concrete c).
-pre: introduced(p) ^ introduced(c) ^ !intent_to_compute_area(c).
+action: state_intent_to_compute_area(person p, profession pr, concrete c).
+pre: introduced(p) ^ introduced(c) ^ !intent_to_compute_area(c) ^ interested_in_size(pr, c) ^ profession_of(p, pr).
 post: intent_to_compute_area(c).
 text: "(p) wants to compute the area of [c].".
 alias: .
 
 action: state_intent_to_compute_volume(person p, concrete c).
-pre: introduced(p) ^ introduced(c) ^ !intent_to_compute_volume(c).
+pre: introduced(p) ^ introduced(c) ^ !intent_to_compute_volume(c) ^ interested_in_size(p, c).
 post: intent_to_compute_volume(c).
 text: "(p) wants to compute the area of [c].".
 alias: .
 
 action: state_intent_to_compute_diameter(person p, concrete c).
-pre: introduced(p) ^ introduced(c) ^ !intent_to_compute_diameter(c).
+pre: introduced(p) ^ introduced(c) ^ !intent_to_compute_diameter(c) ^ interested_in_size(p, c).
 post: intent_to_compute_diameter(c).
 text: "(p) wants to know the length of the radius of the [c].".
 alias: .

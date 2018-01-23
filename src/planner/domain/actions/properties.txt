@@ -11,15 +11,21 @@ text: "(p) weighs {w} [u].", "The weight of (p) is {w} [u].".
 alias: w["the weight of (p)"], w<generic_number>.
 
 action: state_person_body_temperature(person p, body_temperature b, temperature_unit u).
-pre: introduced(p) ^ !stated_person_body_temperature(p) ^ !assigned(b).
+pre: is_sick(p) ^ !stated_person_body_temperature(p) ^ !assigned(b).
 post: stated_person_body_temperature(p) ^ assigned(b) ^ property_of(p, b) ^ in_unit(b, u) ^ known_in_unit(b, u).
 text: "The body temperature of (p) is {b} degrees [u].".
 alias: b["the body temperature of (p)"], b<generic_number>.
 
+action: state_country_temperature(country c, atmospheric_temperature t, temperature_unit u).
+pre: introduced(c) ^ !stated_country_temperature(c) ^ !assigned(t).
+post: stated_country_temperature(c) ^ assigned(t) ^ property_of(c, t) ^ in_unit(t, u) ^ known_in_unit(t, u).
+text: "The average atmospheric temperature in [c] is {t} degrees [u].".
+alias: t["the temperature in (c)"], t<generic_number>.
+
 action: state_cost(item i, cost c).
 pre: introduced(i) ^ !stated_cost(i) ^ !assigned(c).
 post: stated_cost(i) ^ assigned(c) ^ property_of(i, c).
-text: "The [i] costs {c} yen.", "The price of the [i] is {c} yen.".
+text: "One [i] costs {c} yen.", "The price of one [i] is {c} yen.".
 alias: c["the cost of i"], c<generic_number>.
 
 action: state_money(person p, money m).
@@ -69,7 +75,6 @@ pre: introduced(c) ^ !stated_size_components(c) ^ shape_of(c, ci) ^ possible_sha
 post: stated_size_components(c) ^ assigned(d) ^ property_of(c, d) ^ in_unit(d, u) ^ known_in_unit(d, u).
 text: "The diameter of the [c] is {d} [u].".
 alias: d["the diameter of the [c]"], d<generic_number>.
-
 
 action: state_length_and_width_of_rectangle(concrete c, rectangle r, length l, width w, distance_unit u).
 pre: introduced(c) ^ !stated_size_components(c) ^ shape_of(c, r) ^ possible_shape_of(c, r) ^ !assigned(l) ^ !assigned(w).
