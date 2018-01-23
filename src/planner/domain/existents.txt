@@ -65,6 +65,7 @@
 [monetary_value#]>[numerical_value]
 [cost*]>[monetary_value]
 [money*]>[monetary_value]
+[payment*]>[monetary_value]
 
 [distance_value#]>[numerical_value]
 [height*]>[distance_value]
@@ -77,8 +78,14 @@
 [mass_value#]>[numerical_value]
 [weight*]>[mass_value]
 
+[temperature_value#]>[numerical_value]
+[body_temperature*]>[temperature_value]
+[room_temperature*]>[temperature_value]
+[atmospheric_temperature*]>[temperature_value]
+
 [area*]>[derived_value]
 [volume*]>[derived_value]
+[bmi*]>[derived_value]
 
 [distance_unit#]>[numerical_unit]
 [meters1]>[distance_unit]
@@ -87,6 +94,10 @@
 [mass_unit#]>[numerical_unit]
 [kilograms1]>[mass_unit]
 [pounds1]>[mass_unit]
+
+[temperature_unit#]>[numerical_unit]
+[Celsius1]>[temperature_unit]
+[Fahrenheit1]>[temperature_unit]
 
 [measure_system#]>[abstract]
 [metric_system1]>[measure_system]

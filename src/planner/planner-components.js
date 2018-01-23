@@ -296,7 +296,7 @@ var query = function(truth, predicate, parameters) {
 				}
 			}
 		}
-		//console.log("BUSTED: " + this.debugString());
+		console.log("BUSTED: " + this.debugString());
 		//console.log("NOT REGRESSIBLE: ");
 		//console.log(this.debugString());
 		return false;

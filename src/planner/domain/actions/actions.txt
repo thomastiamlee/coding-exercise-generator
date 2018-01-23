@@ -15,3 +15,9 @@ pre: introduced(p) ^ desired_get_fit(p) ^ !tired(p).
 post: tired(p).
 text: "(p) works out at the gym and got tired.".
 alias: .
+
+action: make_payment(person p, item i, cost c, payment m).
+pre: intent_to_buy(p, i) ^ property_of(i, c) ^ !assigned(m).
+post: assigned(m) ^ payment_made(p, i, m).
+text: "(p) paid {m} yen for the [i].".
+alias: m<generic_number>.

@@ -23,3 +23,14 @@ o,[c],[rem],[red],-,2
 o,[red],[m],[number/result],/
 r,[number/result]
 }
+
+action: compute_change(person p, item i, cost c, payment m).
+main: "Complete the function which should return the change (p) should receive.".
+sub: " ".
+req: intent_to_compute_change(p, i).
+pre: payment_made(p, i, m) ^ property_of(i, c).
+post: .
+{
+o,[c],[m],-,[integer/result]
+r,[integer/result]
+}

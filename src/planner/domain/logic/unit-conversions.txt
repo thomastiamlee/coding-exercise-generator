@@ -41,3 +41,29 @@ post: in_unit(m, k) ^ !in_unit(m, p) ^ known_in_unit(m, k).
 o,[d],(number/2.20462),[d],/
 r,[d]
 }
+
+action: convert_celsius_to_fahrenheit(temperature_value t, Celsius c, Fahrenheit f).
+main: "Complete the function that converts [t] to Fahrenheit.".
+sub: "To convert Celsius to Fahrenheit, multiply it by 9/5 and then add 32.".
+req: intent_to_convert(t, c, f).
+pre: in_unit(t, c) ^ !in_unit(t, f) ^ !known_in_unit(t, f).
+post: in_unit(t, f) ^ !in_unit(t, c) ^ known_in_unit(t, f).
+{
+o,[t],(number/9),[temp],*,1
+o,[temp],(number/5),[temp],/,2
+o,[temp],(number/32),[t],+
+r,[t]
+}
+
+action: convert_fahrenheit_to_celsius(temperature_value t, Fahrenheit f, Celsius c).
+main: "Complete the function that converts [t] to Celsius.".
+sub: "To convert Fahrenheit to Celsius, subtract 32 from it and then multiply it by 5/9.".
+req: intent_to_convert(t, f, c).
+pre: in_unit(t, f) ^ !in_unit(t, c) ^ !known_in_unit(t, c).
+post: in_unit(t, c) ^ !in_unit(t, f) ^ known_in_unit(t, c).
+{
+o,[t],(number/32),[temp],-,1
+o,[temp],(number/5),[temp],*,2
+o,[temp],(number/9),[t],/
+r,[t]
+}

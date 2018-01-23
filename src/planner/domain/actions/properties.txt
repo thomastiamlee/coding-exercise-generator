@@ -10,6 +10,12 @@ post: stated_person_weight(p) ^ assigned(w) ^ property_of(p, w) ^ in_unit(w, u) 
 text: "(p) weighs {w} [u].", "The weight of (p) is {w} [u].".
 alias: w["the weight of (p)"], w<generic_number>.
 
+action: state_person_body_temperature(person p, body_temperature b, temperature_unit u).
+pre: introduced(p) ^ !stated_person_body_temperature(p) ^ !assigned(b).
+post: stated_person_body_temperature(p) ^ assigned(b) ^ property_of(p, b) ^ in_unit(b, u) ^ known_in_unit(b, u).
+text: "The body temperature of (p) is {b} degrees [u].".
+alias: b["the body temperature of (p)"], b<generic_number>.
+
 action: state_cost(item i, cost c).
 pre: introduced(i) ^ !stated_cost(i) ^ !assigned(c).
 post: stated_cost(i) ^ assigned(c) ^ property_of(i, c).

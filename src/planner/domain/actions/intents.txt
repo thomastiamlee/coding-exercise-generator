@@ -16,6 +16,12 @@ post: intent_to_buy_many(p, c).
 text: "(p) wants to buy as many [c] as possible.".
 alias: .
 
+action: state_intent_to_compute_change(person p, item i, payment m).
+pre: introduced(p) ^ payment_made(p, i, m) ^ !intent_to_compute_change(p, i).
+post: intent_to_compute_change(p, i).
+text: "(p) needs to determine the change he will get.".
+alias: .
+
 action: state_intent_to_travel(person p, traveling t, country c).
 pre: hobby_of(p, t) ^ !been_in(p, c) ^ !intent_to_travel(p, c).
 post: intent_to_travel(p, c) ^ introduced(c).
@@ -38,6 +44,12 @@ action: state_intent_to_convert(person p, country c, measure_system ms, weight n
 pre: property_of(p, n) ^ in_unit(n, src) ^ !known_in_unit(n, dest) ^ stated_measure_system(c) ^ measure_system_in(c, ms) ^ unit_of_measure_system(dest, ms) ^ intent_to_travel(p, c) ^ !intent_to_convert(n, src, dest).
 post: intent_to_convert(n, src, dest).
 text: "(p) should convert (n) to [dest].".
+alias: .
+
+action: state_intent_to_convert(person p, body_temperature b, temperature_unit src, temperature_unit dest).
+pre: !intent_to_convert(b, src, dest) ^ property_of(p, b) ^ in_unit(b, src) ^ !known_in_unit(b, dest).
+post: intent_to_convert(b, src, dest).
+text: "(p) wants to know (b) in degrees [dest].".
 alias: .
 
 action: state_intent_to_compute_area(person p, concrete c).
