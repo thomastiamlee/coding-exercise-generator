@@ -22,8 +22,20 @@ post: intent_to_travel(p, c) ^ introduced(c).
 text: "(p) will be to travelling to [c] for a sports competition.".
 alias: .
 
-action: state_intent_to_convert(person p, country c, measure_system ms, numerical_value n, numerical_unit src, numerical_unit dest).
+action: state_intent_to_convert(person p, country c, measure_system ms, height n, distance_unit src, distance_unit dest).
 pre: property_of(p, n) ^ in_unit(n, src) ^ !known_in_unit(n, dest) ^ stated_measure_system(c) ^ measure_system_in(c, ms) ^ unit_of_measure_system(dest, ms) ^ intent_to_travel(p, c) ^ !intent_to_convert(n, src, dest).
 post: intent_to_convert(n, src, dest).
 text: "(p) should convert (n) to [dest].".
+alias: .
+
+action: state_intent_to_convert(person p, country c, measure_system ms, weight n, mass_unit src, mass_unit dest).
+pre: property_of(p, n) ^ in_unit(n, src) ^ !known_in_unit(n, dest) ^ stated_measure_system(c) ^ measure_system_in(c, ms) ^ unit_of_measure_system(dest, ms) ^ intent_to_travel(p, c) ^ !intent_to_convert(n, src, dest).
+post: intent_to_convert(n, src, dest).
+text: "(p) should convert (n) to [dest].".
+alias: .
+
+action: state_intent_to_compute_area(person p, concrete c).
+pre: introduced(p) ^ !intent_to_compute_area(c).
+post: intent_to_compute_area(c).
+text: "(p) wants to compute the area of [c].".
 alias: .

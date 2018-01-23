@@ -27,3 +27,27 @@ pre: introduced(c) ^ !stated_measure_system(c) ^ measure_system_in(c, m).
 post: stated_measure_system(c).
 text: "[c] uses the [m] for measurement.".
 alias: .
+
+action: state_shape(concrete c, shape s).
+pre: introduced(c) ^ !stated_shape(c) ^ possible_shape_of(c, s).
+post: stated_shape(c) ^ shape_of(c, s).
+text: "The [c] is in the shape of a [s].".
+alias: .
+
+action: state_side_of_square(concrete c, square s, side x, distance_unit u).
+pre: introduced(c) ^ !stated_size_components(c) ^ shape_of(c, s) ^ possible_shape_of(c, s) ^ !assigned(x).
+post: stated_size_components(c) ^ assigned(x) ^ property_of(c, x) ^ in_unit(x, u) ^ known_in_unit(x, u).
+text: "One side of the [c] measures {x} [u].".
+alias: x["the side length of the [c]"], x<generic_number>.
+
+action: state_radius_of_circle(concrete c, circle ci, radius r, distance_unit u).
+pre: introduced(c) ^ !stated_size_components(c) ^ shape_of(c, ci) ^ possible_shape_of(c, ci) ^ !assigned(r).
+post: stated_size_components(c) ^ assigned(r) ^ property_of(c, r) ^ in_unit(r, u) ^ known_in_unit(r, u).
+text: "The radius of the [c] is {r} [u].".
+alias: r["the radius of the [c]"], r<generic_number>.
+
+action: state_length_and_width_of_rectangle(concrete c, rectangle r, length l, width w, distance_unit u).
+pre: introduced(c) ^ !stated_size_components(c) ^ shape_of(c, r) ^ possible_shape_of(c, r) ^ !assigned(l) ^ !assigned(w).
+post: stated_size_components(c) ^ assigned(l) ^ assigned(w) ^ property_of(c, l) ^ property_of(c, w) ^ in_unit(l, u) ^ in_unit(w, u) ^ known_in_unit(l, u) ^ known_in_unit(w, u).
+text: "The length of the [c] measures {l} [u] and the width of the [c] measures {w} [u].".
+alias: l["the length of the [c]"], w["the width of the [c]"], l<generic_number>, w<generic_number>.

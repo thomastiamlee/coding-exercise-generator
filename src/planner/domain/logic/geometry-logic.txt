@@ -1,0 +1,33 @@
+action: compute_area_of_square(concrete c, square sh, side s, distance_unit u, area a).
+main: "Complete the function that computes for the area of the [c] in [u]^2.".
+sub: "The area of a square is the length of the side squared.".
+req: intent_to_compute_area(c).
+pre: shape_of(c, sh) ^ possible_shape_of(c, sh) ^ property_of(c, s) ^ in_unit(s, u) ^ !assigned(a) ^ !property_of(c, a).
+post: assigned(a) ^ property_of(c, a) ^ in_unit(a, u) ^ known_in_unit(a, u).
+{
+o,[s],[s],[a],*
+r,[a]
+}
+
+action: compute_area_of_rectangle(concrete c, rectangle r, length l, width w, distance_unit u, area a).
+main: "Complete the function that computes for the area of the [c] in [u]^2.".
+sub: "The area of a rectangle is the length multiplied by the width.".
+req: intent_to_compute_area(c).
+pre: shape_of(c, r) ^ possible_shape_of(c, r) ^ property_of(c, l) ^ property_of(c, w) ^ in_unit(l, u) ^ in_unit(w, u) ^ !assigned(a) ^ !property_of(c, a).
+post: assigned(a) ^ property_of(c, a) ^ in_unit(a, u) ^ known_in_unit(a, u).
+{
+o,[l],[w],[a],*
+r,[a]
+}
+
+action: compute_area_of_circle(concrete c, circle ci, radius r, distance_unit u, area a).
+main: "Complete the function that computes for the area of the [c] in [u]^2.".
+sub: "The area of a circle is PI (3.1416) multiplied by the squared of the radius.".
+req: intent_to_compute_area(c).
+pre: shape_of(c, ci) ^ possible_shape_of(c, ci) ^ property_of(c, r) ^ in_unit(r, u) ^ !assigned(a) ^ !property_of(c, a).
+post: assigned(a) ^ property_of(c, a) ^ in_unit(a, u) ^ known_in_unit(a, u).
+{
+o,[r],[r],[temp],*,1
+o,[temp],(number/3.1416),[a]
+r,[a]
+}

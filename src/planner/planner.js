@@ -77,14 +77,15 @@ function plan(domain) {
 		var visited = [goal];
 		var plan = null;
 		
+		var xxx = 0;
 		while (stateStack.length > 0) {
-			var currentState = stateStack[stateStack.length - 1];
-			var currentAction = actionStack[actionStack.length - 1];
-			stateStack.splice(stateStack.length - 1, 1);
-			actionStack.splice(actionStack.length - 1, 1);
+			var currentState = stateStack[0];
+			var currentAction = actionStack[0];
+			stateStack.splice(0, 1);
+			actionStack.splice(0, 1);
 			
 			//log("     current state: " + currentState.debugString());
-			
+			//log(xxx++);
 			var debugText = "[";
 			for (var i = 0; i < currentAction.length; i++) {
 				debugText += currentAction[i].action.name;
@@ -97,6 +98,9 @@ function plan(domain) {
 				break;
 			}
 			if (currentAction.length >= PLANNER_DEPTH_LIMIT) {
+				continue;
+			}
+			if (!currentState.allQueriesRegressable(actions, existents, initial)) {
 				continue;
 			}
 			

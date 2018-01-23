@@ -280,6 +280,27 @@ var query = function(truth, predicate, parameters) {
 		}
 		return true;
 	}
+	this.isRegressable = function(actions, existents, initial) {
+		var tempState = new state([this]);
+		if (tempState.isSatisfiedBy(initial)) return true;
+		//console.log("CHECKING");
+		for (var i = 0; i < actions.length; i++) {
+			var matchings = actions[i].getParameterMatchings(existents);
+			for (var j = 0; j < matchings.length; j++) {
+				var post = actions[i].applyParametersToPostconditions(matchings[j]);
+				for (var k = 0; k < post.length; k++) {
+					//console.log(post[k].debugString());
+					if (post[k].isSameWith(this)) {
+						return true;
+					}
+				}
+			}
+		}
+		//console.log("BUSTED: " + this.debugString());
+		//console.log("NOT REGRESSIBLE: ");
+		//console.log(this.debugString());
+		return false;
+	}
 	this.debugString = function() {
 		var res = "";
 		if (!this.truth) res += "!";
@@ -344,6 +365,14 @@ var state = function(truths) {
 			if (!found) newTruths.push(preconditions[i]);
 		}
 		return new state(newTruths);
+	}
+	this.allQueriesRegressable = function(actions, existents, initial) {
+		for (var i = 0; i < this.truths.length; i++) {
+			if (this.truths[i].isRegressable(actions, existents, initial) == false) {
+				return false;
+			}
+		}
+		return true;
 	}
 	this.isSatisfiedBy = function(other) {
 		for (var i = 0; i < this.truths.length; i++) {
