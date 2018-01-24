@@ -50,9 +50,9 @@ req: intent_to_convert(t, c, f).
 pre: in_unit(t, c) ^ !in_unit(t, f) ^ !known_in_unit(t, f) ^ known_in_unit(t, c).
 post: in_unit(t, f) ^ !in_unit(t, c) ^ known_in_unit(t, f).
 {
-o,[t],(number/9),[temp],*,1
-o,[temp],(number/5),[temp],/,2
-o,[temp],(number/32),[t],+
+o,[t],(number/9),[number/temp],*,1
+o,[number/temp],(number/5),[number/temp],/,2
+o,[number/temp],(number/32),[t],+
 r,[t]
 }
 
@@ -63,8 +63,8 @@ req: intent_to_convert(t, f, c).
 pre: in_unit(t, f) ^ !in_unit(t, c) ^ !known_in_unit(t, c) ^ known_in_unit(t, f).
 post: in_unit(t, c) ^ !in_unit(t, f) ^ known_in_unit(t, c).
 {
-o,[t],(number/32),[temp],-,1
-o,[temp],(number/5),[temp],*,2
-o,[temp],(number/9),[t],/
+o,[t],(number/32),[number/temp],-,1
+o,[number/temp],(number/5),[number/temp],*,2
+o,[number/temp],(number/9),[t],/
 r,[t]
 }

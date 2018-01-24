@@ -1,3 +1,14 @@
+var experimentQuestions = [
+	["native", 1],
+	["planner", ["convert_pounds_to_kilograms", "convert_kilograms_to_pounds", "convert_feet_to_meters", "convert_meters_to_feet"], 1],
+	["native", 1],
+	["planner", ["compute_area_of_square"], 1],
+	["native", 2],
+	["planner", ["check_if_can_buy"], 1],
+	["native", 2],
+	["planner", ["compute_body_mass_index"], 2]
+];
+
 ui = {};
 system = {};
 
@@ -65,6 +76,12 @@ function init(editor) {
 	ui.doc.testButtonText.text(ui.text.testButton);
 	ui.doc.submitButton.text(ui.text.submitButton);
 	ui.doc.testResultLabel.text(ui.text.testResultLabel);
+	
+	$(document).keyup(function(event) {
+		if (event.keyCode == 17) {
+			generateExercise();
+		}
+	});
 		
 	generateExercise();
 }
@@ -92,15 +109,31 @@ function generateExercise() {
 	}
 	
 	var url;
-	if (system.mode == "native") {
+	/*if (system.mode == "native") {
 		url = "exercise/native";
 	}
 	else if (system.mode == "planner") {
 		url = "exercise/planner";
+	}*/
+	var current = experimentQuestions[system.currentProblem];
+	var url = "experiment/exercise";
+	if (current.length == 2) {
+		var options = {
+			type: "native",
+			complexity: current[1]
+		}
+	}
+	else {
+		var options = {
+			type: "planner",
+			actions: JSON.stringify(current[1]),
+			complexity: current[2]
+		}
 	}
 	$.ajax({
 		url: url,
 		type: "get",
+		data: options,
 		dataType: "json",
 		success: function(data) {
 			system.currentProblem++;

@@ -6,7 +6,7 @@ const ExerciseBuilder = require("./src/planner/exercise-builder");
 const TestCaseGenerator = require("./src/planner/test-case-generator");
 
 var domain = DomainParser.parseDomain();
-var plan = Planner.plan(domain);
+var plan = Planner.plan(domain, ["convert_pounds_to_kilograms"], 1);
 var text = TextGenerator.convertPlanToText(plan);
 var exercise = ExerciseBuilder.generateExercise(plan);
 var testCases = TestCaseGenerator.generateTestCases(exercise, 10);

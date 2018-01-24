@@ -367,6 +367,27 @@ var state = function(truths) {
 		}
 		return new state(newTruths);
 	}
+	this.regressCount = function(action, parameters) {
+		var preconditions = action.applyParametersToPreconditions(parameters);
+		var postconditions = action.applyParametersToPostconditions(parameters);
+		var newTruths = [];
+		var removed = [];
+		for (var i = 0; i < this.truths.length; i++) {
+			var toRemove = false;
+			for (var j = 0; j < postconditions.length; j++) {
+				if (this.truths[i].isSameWith(postconditions[j])) {
+					removed.push(postconditions[j]);
+					toRemove = true;
+					break;
+				}
+				else if (this.truths[i].isOppositeWith(postconditions[j])) {
+					return 0;
+				}
+			}
+			if (!toRemove) newTruths.push(this.truths[i]);
+		}
+		return this.truths.length - newTruths.length;
+	}
 	this.allQueriesRegressable = function(actions, existents, initial) {
 		for (var i = 0; i < this.truths.length; i++) {
 			if (this.truths[i].isRegressable(actions, existents, initial) == false) {

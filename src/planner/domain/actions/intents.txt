@@ -64,15 +64,3 @@ post: intent_to_compute_area(c).
 text: "(p) wants to compute the area of [c].".
 alias: .
 
-action: state_intent_to_compute_volume(person p, concrete c).
-pre: introduced(p) ^ introduced(c) ^ !intent_to_compute_volume(c) ^ interested_in_size(p, c).
-post: intent_to_compute_volume(c).
-text: "(p) wants to compute the area of [c].".
-alias: .
-
-action: state_intent_to_compute_diameter(person p, concrete c).
-pre: introduced(p) ^ introduced(c) ^ !intent_to_compute_diameter(c) ^ interested_in_size(p, c).
-post: intent_to_compute_diameter(c).
-text: "(p) wants to know the length of the radius of the [c].".
-alias: .
-

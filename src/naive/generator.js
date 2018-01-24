@@ -170,7 +170,7 @@ function generateBasicExercise(options) {
 			}
 		}
 		
-		return {head: head, symbols: symbolMappings, inputVariables: inputVariables};
+		return {head: head, symbols: symbolMappings, inputVariables: inputVariables, returnType: "integer"};
 	}
 	
 	var structure = generateStructure(complexity);

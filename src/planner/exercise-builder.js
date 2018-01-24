@@ -201,7 +201,8 @@ function generateExercise(plan) {
 	for (var i = 0; i < tail.length; i++) {
 		tail[i].attachNode(returnNode, 0);
 	}
-	return {head: head, symbols: symbolMappings, inputVariables: inputVariables}
+	if (!returnOperand.type) returnOperand.type = "number";
+	return {head: head, symbols: symbolMappings, inputVariables: inputVariables, returnType: returnOperand.type};
 }
 
 module.exports = {generateExercise};

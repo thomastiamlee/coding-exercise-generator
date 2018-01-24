@@ -1,7 +1,7 @@
 const PlannerComponents = require("./planner-components");
 const PLANNER_DEPTH_LIMIT = 10;
 
-function plan(domain) {
+function plan(domain, target, complexity) {
 	function log(str) {
 		console.log(str);
 	}
@@ -17,7 +17,13 @@ function plan(domain) {
 	}
 	function selectTargetLogicAction() {
 		var logicActions = domain.logicActions;
-		return logicActions[Math.floor(Math.random() * logicActions.length)];
+		var potentials = [];
+		for (var i = 0; i < logicActions.length; i++) {
+			if (target.indexOf(logicActions[i].name) != -1) {
+				potentials.push(logicActions[i]);
+			}
+		}
+		return potentials[Math.floor(Math.random() * potentials.length)];
 	}
 	function generateExistents(targetAction) {
 		if (targetAction) {
@@ -118,29 +124,47 @@ function plan(domain) {
 			//if (!currentState.allQueriesRegressable(actions, existents, initial)) {
 				//continue;
 			//}
-			
+						
 			var shuffled = shuffle(actions);
+			var attempts = [];
 			for (var i = 0; i < shuffled.length; i++) {
 				var potentialAction = shuffled[i];
 				var matchings = potentialAction.getParameterMatchings(existents);
 				matchings = shuffle(matchings);
 				for (var j = 0; j < matchings.length; j++) {
-					var newState = currentState.regress(potentialAction, matchings[j]);
-					if (newState == null) continue;
-					var found = false;
-					for (var k = 0; k < visited.length; k++) {
-						if (visited[k].isSameWith(newState)) {
-							found = true;
-							break;
-						}
+					var rc = currentState.regressCount(potentialAction, matchings[j]);
+					if (rc > 0)
+						attempts.push([potentialAction, matchings[j], rc]);
+				}
+			}
+			
+			for (var i = 0; i < attempts.length; i++) {
+				for (var j = i + 1; j < attempts.length; j++) {
+					if (attempts[j][2] < attempts[i][2]) {
+						var temp = attempts[j];
+						attempts[j] = attempts[i];
+						attempts[i] = temp;
 					}
-					if (!found && newState.allQueriesRegressable(actions, existents, initial)) {
-						//log("         regressed by " + potentialAction.name);
-						//log("            new state: " + newState.debugString()); 
-						visited.push(newState);
-						stateStack.push(newState);
-						actionStack.push([].concat(currentAction).concat([{action: potentialAction, parameters: matchings[j]}]));
+				}
+			}
+			
+			for (var i = 0; i < attempts.length; i++) {
+				//console.log(attempts[i][2]);
+				var newState = currentState.regress(attempts[i][0], attempts[i][1]);
+				if (newState == null) continue;
+				var found = false;
+				for (var k = 0; k < visited.length; k++) {
+					if (visited[k].isSameWith(newState)) {
+						found = true;
+						break;
 					}
+				}
+				if (!found && newState.allQueriesRegressable(actions, existents, initial)) {
+					//log("         regressed by " + potentialAction.name);
+					//log("            new state: " + newState.debugString()); 
+					visited.push(newState);
+					stateStack.push(newState);
+					actionStack.push([].concat(currentAction).concat([{action: attempts[i][0], parameters: attempts[i][1]}]));
 				}
 			}
 		}
@@ -300,7 +324,7 @@ function plan(domain) {
 	for (var i = 0; i < matchings.length && (actionPlan == null || logicPlan == null); i++) {
 		actionPlan = null; logicPlan = null;
 		var parameters = matchings[i];
-		var logicPlan = backwardStateSpaceSearchLogic(existents, targetAction, parameters, 4);
+		var logicPlan = backwardStateSpaceSearchLogic(existents, targetAction, parameters, complexity);
 		if (logicPlan == null) continue;
 		var goal = logicPlan.state;
 		log("GOAL: " + goal.debugString());

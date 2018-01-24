@@ -18,6 +18,6 @@ req: intent_to_compute_change(p, i).
 pre: payment_made(p, i, m) ^ property_of(i, c).
 post: .
 {
-o,[c],[m],[number/result],-
+o,[m],[c],[number/result],-
 r,[number/result]
 }

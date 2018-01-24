@@ -111,8 +111,8 @@ function start() {
 					}
 					return res;
 				}
-				function buildFunctionHeader(symbols, inputVariables) {
-					var res = "int" + " ";
+				function buildFunctionHeader(symbols, inputVariables, returnType) {
+					var res = convertTypeToJava(returnType) + " ";
 					res += functionName + "(";
 					for (var i = 0; i < inputVariables.length; i++) {
 						var name = getSymbolFromOperand(inputVariables[i], symbols);
@@ -131,8 +131,56 @@ function start() {
 				var text = PlannerTextGenerator.convertPlanToText(plan);
 				var exercise = ExerciseBuilder.generateExercise(plan);
 				var testCases = TestCaseGenerator.generateTestCases(exercise, 10);
-				var functionHeader = buildFunctionHeader(exercise.symbols, exercise.inputVariables);
+				var functionHeader = buildFunctionHeader(exercise.symbols, exercise.inputVariables, exercise.returnType);
 				var inputSymbols = getInputSymbols(exercise.symbols, exercise.inputVariables);
+				
+				reply({exercise: exercise, testCases: testCases, text: text, functionHeader: functionHeader, inputSymbols: inputSymbols});
+			}
+		});
+		
+		server.route({
+			method: "GET",
+			path: "/experiment/exercise",
+			handler: function(request, reply) {
+				function getInputSymbols(symbols, inputVariables) {
+					var res = [];
+					for (var i = 0; i < inputVariables.length; i++) {
+						var name = getSymbolFromOperand(inputVariables[i], symbols);
+						res.push(name);
+					}
+					return res;
+				}
+				function buildFunctionHeader(symbols, inputVariables, returnType) {
+					var res = convertTypeToJava(returnType) + " ";
+					res += functionName + "(";
+					for (var i = 0; i < inputVariables.length; i++) {
+						var name = getSymbolFromOperand(inputVariables[i], symbols);
+						var type = inputVariables[i].type;
+						var typeString = convertTypeToJava(type);
+						res += typeString + " " + name;
+						if (i != inputVariables.length - 1) {
+							res += ", ";
+						}
+					}
+					res += ") {";
+					return res;
+				}
+				if (request.query.type == "planner") {
+					var domain = DomainParser.parseDomain();
+					var plan = Planner.plan(domain, JSON.parse(request.query.actions), request.query.complexity);
+					var text = PlannerTextGenerator.convertPlanToText(plan);
+					var exercise = ExerciseBuilder.generateExercise(plan);
+					var testCases = TestCaseGenerator.generateTestCases(exercise, 10);
+					var functionHeader = buildFunctionHeader(exercise.symbols, exercise.inputVariables, exercise.returnType);
+					var inputSymbols = getInputSymbols(exercise.symbols, exercise.inputVariables);
+				}
+				else {
+					var exercise = Generator.generateBasicExercise({complexity: request.query.complexity});
+					var testCases = TestCaseGenerator.generateTestCases(exercise, 10);
+					var text = TextGenerator.convertExerciseToNativeText(exercise.head, exercise.symbols);
+					var functionHeader = buildFunctionHeader(exercise.symbols, exercise.inputVariables, exercise.returnType);
+					var inputSymbols = getInputSymbols(exercise.symbols, exercise.inputVariables);
+				}
 				
 				reply({exercise: exercise, testCases: testCases, text: text, functionHeader: functionHeader, inputSymbols: inputSymbols});
 			}

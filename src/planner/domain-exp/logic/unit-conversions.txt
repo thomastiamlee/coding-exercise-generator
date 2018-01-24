@@ -28,8 +28,8 @@ req: intent_to_convert(m, k, p).
 pre: in_unit(m, k) ^ !in_unit(m, p) ^ !known_in_unit(m, p) ^ known_in_unit(m, k).
 post: in_unit(m, p) ^ !in_unit(m, k) ^ known_in_unit(m, p).
 {
-o,[d],(number/2.20462),[d],*
-r,[d]
+o,[m],(number/2.20462),[m],*
+r,[m]
 }
 
 action: convert_pounds_to_kilograms(mass_value m, pounds p, kilograms k).
@@ -39,8 +39,8 @@ req: intent_to_convert(m, p, k).
 pre: in_unit(m, p) ^ !in_unit(m, k) ^ !known_in_unit(m, k) ^ known_in_unit(m, p).
 post: in_unit(m, k) ^ !in_unit(m, p) ^ known_in_unit(m, k).
 {
-o,[d],(number/2.20462),[d],/
-r,[d]
+o,[m],(number/2.20462),[m],/
+r,[m]
 }
 
 action: convert_celsius_to_fahrenheit(temperature_value t, Celsius c, Fahrenheit f).
@@ -63,8 +63,8 @@ req: intent_to_convert(t, f, c).
 pre: in_unit(t, f) ^ !in_unit(t, c) ^ !known_in_unit(t, c) ^ known_in_unit(t, f).
 post: in_unit(t, c) ^ !in_unit(t, f) ^ known_in_unit(t, c).
 {
-o,[t],(number/32),[temp],-,1
-o,[temp],(number/5),[temp],*,2
-o,[temp],(number/9),[t],/
+o,[t],(number/32),[number/temp],-,1
+o,[number/temp],(number/5),[number/temp],*,2
+o,[number/temp],(number/9),[t],/
 r,[t]
 }
