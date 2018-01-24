@@ -29,6 +29,7 @@ function init(editor) {
 	ui.overlay.fakeOverlay = $("#fake-overlay");
 	ui.overlay.loadingPanel = $("#loading-panel");
 	ui.overlay.notificationPanel = $("#notification-panel");
+	ui.overlay.loadingIcon = $("#loading-icon");
 	ui.overlay.loadingText = $("#loading-text");
 	ui.overlay.notificationIconCorrect = $("#notification-icon-correct");
 	ui.overlay.notificationIconWrong = $("#notification-icon-wrong");
@@ -67,6 +68,7 @@ function init(editor) {
 	ui.text.testButton = "コードの実行";
 	ui.text.submitButton = "答案提出";
 	ui.text.testResultLabel = "結果:";
+	ui.text.finishedText = "FINISHED";
 	/**/
 	
 	system.mode = "planner";
@@ -136,12 +138,17 @@ function generateExercise() {
 		data: options,
 		dataType: "json",
 		success: function(data) {
-			system.currentProblem++;
-			system.problem.text = data.text;
-			system.problem.functionHeader = data.functionHeader;
-			system.problem.testCases = data.testCases;
-			system.problem.inputSymbols = data.inputSymbols;
-			initializeProblem();
+			if (system.currentProblem == experimentQuestions.length) {
+				endSession();
+			}
+			else {
+				system.currentProblem++;
+				system.problem.text = data.text;
+				system.problem.functionHeader = data.functionHeader;
+				system.problem.testCases = data.testCases;
+				system.problem.inputSymbols = data.inputSymbols;
+				initializeProblem();
+			}
 		},
 		error: function() {
 			console.log("Error fetching exercise");
@@ -251,4 +258,13 @@ function closeOverlay() {
 	ui.overlay.fakeOverlay.css("visibility", "hidden");
 	ui.overlay.loadingPanel.css("visibility", "hidden");
 	ui.overlay.notificationPanel.css("visibility", "hidden");
+}
+
+function endSession() {
+	openOverlay();
+	ui.overlay.loadingPanel.css("visibility", "visible");
+	ui.overlay.notificationPanel.css("visibility", "hidden");
+	ui.overlay.loadingText.text(ui.text.finishedText);
+	ui.overlay.loadingIcon.hide();
+	
 }
