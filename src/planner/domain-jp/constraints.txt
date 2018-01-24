@@ -1,0 +1,2 @@
+person_name.string.set[ともひろさん,しょごさん,かしわぎさん,おくやまさん,しみずさん,のぞむさん,やぶきさん].
+generic_number.number.range[1,200].

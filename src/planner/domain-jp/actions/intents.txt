@@ -1,78 +1,66 @@
 action: state_intent_to_buy(person p, hobby h, item i).
 pre: hobby_of(p, h) ^ used_in_hobby(i, h) ^ !intent_to_buy(p, i) ^ !introduced(i).
 post: intent_to_buy(p, i) ^ introduced(i).
-text: "(p) wants to buy a new [i] for [h].".
+text: "(p)は新しい[i]を購入したいと思っています。
+".
 alias: .
 
 action: state_intent_to_buy(person p, profession prof, item i).
 pre: profession_of(p, prof) ^ used_in_profession(i, prof) ^ !intent_to_buy(p, i)  ^ !introduced(i).
 post: intent_to_buy(p, i) ^ introduced(i).
-text: "(p) wants to buy a new [i] for work.".
+text: "(p)は新しい[i]を購入したいと思っています".
 alias: .
 
 action: state_intent_to_buy_many(person p, concrete c).
 pre: introduced(p) ^ !intent_to_buy_many(c) ^ desired_many(p, c).
 post: intent_to_buy_many(p, c).
-text: "(p) wants to buy as many [c] as possible.".
+text: "(p)はできるだけ多くの[c]を購入したいと思っています。".
 alias: .
 
 action: state_intent_to_compute_change(person p, item i, payment m).
 pre: introduced(p) ^ payment_made(p, i, m) ^ !intent_to_compute_change(p, i).
 post: intent_to_compute_change(p, i).
-text: "(p) needs to determine the change he will get.".
+text: "(p)がいくらお釣りをもらうかを考える必要があります。".
 alias: .
 
 action: state_intent_to_travel(person p, traveling t, country c).
 pre: hobby_of(p, t) ^ !been_in(p, c) ^ !intent_to_travel(p, c) ^ !introduced(c).
 post: intent_to_travel(p, c) ^ introduced(c).
-text: "(p) is planning to travel to [c] for a vacation.".
+text: "(p)は休暇のために[c]に旅行する予定です。".
 alias: .
 
 action: state_intent_to_travel(person p, athlete a, country c).
 pre: profession_of(p, a) ^ !been_in(p, c) ^ !intent_to_travel(p, c) ^ !introduced(c).
 post: intent_to_travel(p, c) ^ introduced(c).
-text: "(p) will be to travelling to [c] for a sports competition.".
+text: "(p)はスポーツ競技のために[c]に行きます。".
 alias: .
 
 action: state_intent_to_convert(person p, country c, measure_system ms, height n, distance_unit src, distance_unit dest).
 pre: property_of(p, n) ^ in_unit(n, src) ^ !known_in_unit(n, dest) ^ stated_measure_system(c) ^ measure_system_in(c, ms) ^ unit_of_measure_system(dest, ms) ^ intent_to_travel(p, c) ^ !intent_to_convert(n, src, dest).
 post: intent_to_convert(n, src, dest).
-text: "(p) should convert (n) to [dest].".
+text: "(p)は(n)を[dest]に変換する必要があります。".
 alias: .
 
 action: state_intent_to_convert(person p, country c, measure_system ms, weight n, mass_unit src, mass_unit dest).
 pre: property_of(p, n) ^ in_unit(n, src) ^ !known_in_unit(n, dest) ^ stated_measure_system(c) ^ measure_system_in(c, ms) ^ unit_of_measure_system(dest, ms) ^ intent_to_travel(p, c) ^ !intent_to_convert(n, src, dest).
 post: intent_to_convert(n, src, dest).
-text: "(p) should convert (n) to [dest].".
+text: "(p)は(n)を[dest]に変換する必要があります。".
 alias: .
 
 action: state_intent_to_convert(person p, country c, atmospheric_temperature t, temperature_unit src, temperature_unit dest).
 pre: property_of(c, t) ^ in_unit(t, src) ^ !known_in_unit(t, dest) ^ property_of(c, t) ^ intent_to_travel(p, c) ^ !intent_to_convert(n, src, dest).
 post: intent_to_convert(t, src, dest).
-text: "(p) wants to know [t] in degrees [dest].".
+text: "(p)は摂氏( [dest] )で[t]は何度かを知りたいと思います。".
 alias: .
 
 action: state_intent_to_convert(person p, body_temperature b, temperature_unit src, temperature_unit dest).
 pre: !intent_to_convert(b, src, dest) ^ property_of(p, b) ^ in_unit(b, src) ^ !known_in_unit(b, dest) ^ is_sick(p).
 post: intent_to_convert(b, src, dest).
-text: "(p) wants to know (b) in degrees [dest].".
+text: "(p)は摂氏( [dest] )で(b)は何度かを知りたいと思います。".
 alias: .
 
 action: state_intent_to_compute_area(person p, profession pr, concrete c).
 pre: introduced(p) ^ introduced(c) ^ !intent_to_compute_area(c) ^ interested_in_size(pr, c) ^ profession_of(p, pr).
 post: intent_to_compute_area(c).
-text: "(p) wants to compute the area of [c].".
+text: "(p)は[c]の面積を計算したいと思います。".
 alias: .
-
-action: state_intent_to_compute_volume(person p, concrete c).
-pre: introduced(p) ^ introduced(c) ^ !intent_to_compute_volume(c) ^ interested_in_size(p, c).
-post: intent_to_compute_volume(c).
-text: "(p) wants to compute the area of [c].".
-alias: .
-
-action: state_intent_to_compute_diameter(person p, concrete c).
-pre: introduced(p) ^ introduced(c) ^ !intent_to_compute_diameter(c) ^ interested_in_size(p, c).
-post: intent_to_compute_diameter(c).
-text: "(p) wants to know the length of the radius of the [c].".
-alias: .
-

@@ -25,15 +25,15 @@ existent_list
 	}
 
 existent_item
-	= "[" a:([a-zA-Z_]+) b:existent_type "]>[" c:([a-zA-Z_]+) "]"
+	= "[" a:([a-zA-Z_]+) b:existent_type "]>[" c:([a-zA-Z_]+) "]" d:[^.]* "."
 	{
 		debug("parsed: existent_item");
-		return { name: a.join(""), parent: c.join(""), existentType: b };
+		return { name: a.join(""), parent: c.join(""), existentType: b, display: d.join("") };
 	}
-	/ "[" a:([a-zA-Z_]+) b:existent_type "]"
+	/ "[" a:([a-zA-Z_]+) b:existent_type "]" d:[^.]* "."
 	{
 		debug("parsed: existent_item");
-		return { name: a.join(""), existentType: b };
+		return { name: a.join(""), existentType: b, display: d.join("") };
 	}
 
 existent_type

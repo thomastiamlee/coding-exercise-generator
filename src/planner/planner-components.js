@@ -2,6 +2,7 @@ var existent = function(name) {
 	this.name = name;
 	this.parent = null;
 	this.type = null;
+	this.display = null;
 	this.isExtendedFrom = function(other) {
 		var current = this;
 		while (current != null) {
@@ -200,6 +201,7 @@ var domain = function(existents, assertions, actions, logicActions, constraints)
 	for (var i = 0; i < existents.length; i++) {
 		var newExistent = new existent(existents[i].name);
 		newExistent.type = existents[i].existentType;
+		newExistent.display = existents[i].display;
 		this.existents.push(newExistent);
 	}
 	for (var i = 0; i < existents.length; i++) {

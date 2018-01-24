@@ -1,0 +1,11 @@
+action: compute_body_mass_index(person p, height h, weight w, kilograms k, meters mt, bmi b).
+main: "(p)のボディマス指数（BMI）を計算する関数を完成させましょう。".
+sub: "BMIを計算するには、体重(kg)を身長(m)で割ります。".
+req: desired_get_fit(p).
+pre: property_of(p, h) ^ property_of(p, w) ^ in_unit(h, mt) ^ in_unit(w, k) ^ !assigned(b).
+post: assigned(b) ^ property_of(p, b).
+{
+o,[h],[h],[number/temp],*,1
+o,[w],[number/temp],[b],/
+r,[b]
+}

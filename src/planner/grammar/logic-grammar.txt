@@ -99,7 +99,7 @@ logic_codes
 	}
 	
 action_text_item
-	= "\"" a:([a-zA-Z0-9 ()\[\]{}\-.,^/*]+) "\""
+	= "\"" a:([^\"]*) "\""
 	{
 		debug("parsed: action_text_item");
 		return a.join("");

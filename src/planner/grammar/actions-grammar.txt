@@ -104,7 +104,7 @@ action_text_list
 	}
 
 action_text_item
-	= "\"" a:([a-zA-Z ()\[\]{}\-.,^/]+) "\""
+	= "\"" a:([^\"])* "\""
 	{
 		debug("parsed: action_text_item");
 		return a.join("");
@@ -135,7 +135,7 @@ alias_item
 	}
 	
 alias_reference
-	= "\"" a:([a-zA-Z ()\[\]\-.]+) "\""
+	= "\"" a:([^\"]*) "\""
 	{
 		debug("parsed: alias_reference");
 		return { type: "text", val: a.join("") };

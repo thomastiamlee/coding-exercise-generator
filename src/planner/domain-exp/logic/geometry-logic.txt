@@ -1,0 +1,10 @@
+action: compute_area_of_square(concrete c, square sh, side s, distance_unit u, area a).
+main: "[c]の面積（[u]の２乗）を計算する関数を完成させましょう。".
+sub: "四角形の面積は、四角形の長さの２乗です。".
+req: intent_to_compute_area(c).
+pre: shape_of(c, sh) ^ possible_shape_of(c, sh) ^ property_of(c, s) ^ in_unit(s, u) ^ !assigned(a) ^ !property_of(c, a).
+post: assigned(a) ^ property_of(c, a) ^ in_unit(a, u) ^ known_in_unit(a, u).
+{
+o,[s],[s],[a],*
+r,[a]
+}

@@ -11,6 +11,10 @@ const TestCaseGenerator = require("../src/naive/test-case-generator.js");
 const TextGenerator = require("../src/naive/text-generator");
 
 const Compile = require("./compile");
+const DomainParser = require("../src/planner/domain-parser");
+const Planner = require("../src/planner/planner");
+const PlannerTextGenerator = require("../src/planner/text-generator");
+const ExerciseBuilder = require("../src/planner/exercise-builder");
 
 const functionName = "func";
 const plannerKnowledgeBasePath = "src/kb/revised-space";
@@ -99,9 +103,12 @@ function start() {
 			method: "GET",
 			path: "/exercise/planner",
 			handler: function(request, reply) {
+				var domain = DomainParser.parseDomain();
+				var plan = Planner.plan(domain);
+				var text = PlannerTextGenerator.convertPlanToText(plan);
+				//var exercise = ExerciseBuilder.generateExercise(plan);
 				
-				
-				// reply({exercise: exercise, testCases: testCases, text: text, functionHeader: functionHeader, inputSymbols: inputSymbols});
+				reply({exercise: null, testCases: null, text: text, functionHeader: null, inputSymbols: null});
 			}
 		});
 		

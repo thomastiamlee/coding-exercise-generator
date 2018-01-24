@@ -12,7 +12,13 @@ function convertPlanToText(plan) {
 			var previous = "";
 			while (previous != str) {
 				var previous = str;
-				str = str.replace("[" + actionParameters[j].symbol + "]", removeUnderscore(parameters[j].parent.name));
+								
+				if (parameters[j].parent.display == "") {
+					str = str.replace("[" + actionParameters[j].symbol + "]", removeUnderscore(parameters[j].parent.name));
+				}
+				else {
+					str = str.replace("[" + actionParameters[j].symbol + "]", parameters[j].parent.display);
+				}				
 			}
 		}
 		for (var j = 0; j < parameters.length; j++) {

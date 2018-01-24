@@ -1,0 +1,11 @@
+action: state_hungry(person p).
+pre: introduced(p) ^ tired(p) ^ !hungry(p).
+post: hungry(p).
+text: "(p)は疲れてお腹が空きました。".
+alias: .
+
+action: state_desire_for_food_many(person p, food f).
+pre: introduced(p) ^ hungry(p) ^ !desired_many(p, f).
+post: desired_many(p, f) ^ introduced(f).
+text: "(p)はとても食べたいと思っています。".
+alias: .

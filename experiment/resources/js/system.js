@@ -58,7 +58,7 @@ function init(editor) {
 	ui.text.testResultLabel = "結果:";
 	/**/
 	
-	system.mode = "native";
+	system.mode = "planner";
 	system.currentProblem = 0;
 	system.problem = {};
 	

@@ -1,0 +1,71 @@
+action: state_person_height(person p, height h, distance_unit u).
+pre: introduced(p) ^ !stated_person_height(p) ^ !assigned(h).
+post: stated_person_height(p) ^ assigned(h) ^ property_of(p, h) ^ in_unit(h, u) ^ known_in_unit(h, u).
+text: "(p)は、{h}[u]の身長です。", "(p)の身長は、{h}[u]です。".
+alias: h["(p)の身長"], h<generic_number>.
+
+action: state_person_weight(person p, weight w, mass_unit u).
+pre: introduced(p) ^ !stated_person_weight(p) ^ !assigned(w).
+post: stated_person_weight(p) ^ assigned(w) ^ property_of(p, w) ^ in_unit(w, u) ^ known_in_unit(w, u).
+text: "(p)の体重は、{w}[u]です。".
+alias: w["(p)の体重"], w<generic_number>.
+
+action: state_person_body_temperature(person p, body_temperature b, temperature_unit u).
+pre: is_sick(p) ^ !stated_person_body_temperature(p) ^ !assigned(b).
+post: stated_person_body_temperature(p) ^ assigned(b) ^ property_of(p, b) ^ in_unit(b, u) ^ known_in_unit(b, u).
+text: "(p)の体温は、摂氏{b}度( [u] )です。".
+alias: b["(p)の体温"], b<generic_number>.
+
+action: state_country_temperature(country c, atmospheric_temperature t, temperature_unit u).
+pre: introduced(c) ^ !stated_country_temperature(c) ^ !assigned(t).
+post: stated_country_temperature(c) ^ assigned(t) ^ property_of(c, t) ^ in_unit(t, u) ^ known_in_unit(t, u).
+text: "[c]の平均気温は、{t}度( [u] )です。".
+alias: t["(c)の平均気温"], t<generic_number>.
+
+action: state_cost(item i, cost c).
+pre: introduced(i) ^ !stated_cost(i) ^ !assigned(c).
+post: stated_cost(i) ^ assigned(c) ^ property_of(i, c).
+text: "[i]は、１つで{c}円かかります。", "[i]の１つの価格は、{c}円です。".
+alias: c["[i]の１つの価格"], c<generic_number>.
+
+action: state_money(person p, money m).
+pre: introduced(p) ^ !stated_money(p) ^ !assigned(m).
+post: stated_money(p) ^ assigned(m) ^ property_of(p, m).
+text: "(p)が持っているお金は合計{m}円です。".
+alias: m["(p)のお金"], m<generic_number>.
+
+action: state_measure_system_of_country(country c, measure_system m).
+pre: introduced(c) ^ !stated_measure_system(c) ^ measure_system_in(c, m).
+post: stated_measure_system(c).
+text: "[c]は[m]を使用しています。".
+alias: .
+
+action: state_shape(concrete c, shape s).
+pre: introduced(c) ^ !stated_shape(c) ^ possible_shape_of(c, s).
+post: stated_shape(c) ^ shape_of(c, s).
+text: "[c]は[s]の形をしています。".
+alias: .
+
+action: state_side_of_square(concrete c, square s, side x, distance_unit u).
+pre: introduced(c) ^ !stated_size_components(c) ^ shape_of(c, s) ^ possible_shape_of(c, s) ^ !assigned(x).
+post: stated_size_components(c) ^ assigned(x) ^ property_of(c, x) ^ in_unit(x, u) ^ known_in_unit(x, u).
+text: "[c]の側面は{x}[u]です。".
+alias: x["[c]の側面"], x<generic_number>.
+
+action: state_radius_of_circle(concrete c, circle ci, radius r, distance_unit u).
+pre: introduced(c) ^ !stated_size_components(c) ^ shape_of(c, ci) ^ possible_shape_of(c, ci) ^ !assigned(r).
+post: stated_size_components(c) ^ assigned(r) ^ property_of(c, r) ^ in_unit(r, u) ^ known_in_unit(r, u).
+text: "[c]の半径は{r}[u]です。".
+alias: r["[c]の半径"], r<generic_number>.
+
+action: state_diameter_of_circle(concrete c, circle ci, diameter d, distance_unit u).
+pre: introduced(c) ^ !stated_size_components(c) ^ shape_of(c, ci) ^ possible_shape_of(c, ci) ^ !assigned(d).
+post: stated_size_components(c) ^ assigned(d) ^ property_of(c, d) ^ in_unit(d, u) ^ known_in_unit(d, u).
+text: "[c]の直径は{d}[u]です。".
+alias: d["[c]の直径"], d<generic_number>.
+
+action: state_length_and_width_of_rectangle(concrete c, rectangle r, length l, width w, distance_unit u).
+pre: introduced(c) ^ !stated_size_components(c) ^ shape_of(c, r) ^ possible_shape_of(c, r) ^ !assigned(l) ^ !assigned(w).
+post: stated_size_components(c) ^ assigned(l) ^ assigned(w) ^ property_of(c, l) ^ property_of(c, w) ^ in_unit(l, u) ^ in_unit(w, u) ^ known_in_unit(l, u) ^ known_in_unit(w, u).
+text: "[c]の長さは{l}[u]であり、[c]の幅は{w}[u]である。".
+alias: l["[c]の長さ"], w["[c]の幅"], l<generic_number>, w<generic_number>.

@@ -61,12 +61,12 @@ constraint_specification
 	}
 	
 value_list
-	= a:([a-zA-Z0-9. +-])+ "," b:value_list
+	= a:([^,\[\]]+) "," b:value_list
 	{
 		debug("parsed: value_list");
 		return [a.join("")].concat(b);
 	}
-	/ a:([a-zA-Z0-9. +-])+
+	/ a:([^,\[\]]+)
 	{
 		debug("parsed: value_list");
 		return [a.join("")];

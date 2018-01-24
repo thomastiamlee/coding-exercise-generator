@@ -1,0 +1,35 @@
+action: play_sport(person p, sport s).
+pre: introduced(p) ^ hobby_of(p, s) ^ !tired(p).
+post: tired(p).
+text: "(p)は[s]をします。".
+alias: .
+
+action: play_sport(person p, athlete a, sport s).
+pre: introduced(p) ^ profession_of(p, a) ^ !tired(p).
+post: tired(p).
+text: "(p)は[s]をします。".
+alias: .
+
+action: workout(person p).
+pre: introduced(p) ^ desired_get_fit(p) ^ !tired(p).
+post: tired(p).
+text: "(p)はジムで運動して疲れました。".
+alias: .
+
+action: make_payment(person p, item i, cost c, payment m).
+pre: intent_to_buy(p, i) ^ property_of(i, c) ^ assigned(c) ^ !assigned(m).
+post: assigned(m) ^ payment_made(p, i, m).
+text: "(p)はその[i]に{m}円を支払いました。".
+alias: m<generic_number>.
+
+action: walk(person p, town_place t).
+pre: introduced(p) ^ !walked_outside(p).
+post: walked_outside(p).
+text: "(p)は[t]に向いました。".
+alias: .
+
+action: get_sick(person p, world w).
+pre: walked_outside(p) ^ rainy(w) ^ !is_sick(p).
+post: is_sick(p) ^ is_sick(p).
+text: "(p)は雨に降られたため病気になりました。".
+alias: .

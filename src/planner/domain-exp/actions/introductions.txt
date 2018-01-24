@@ -1,13 +1,13 @@
 action: state_rainy(world w).
 pre: !stated_weather(w).
 post: rainy(w) ^ stated_weather(w).
-text: "It is a rainy day.".
+text: "雨の日です。".
 alias: .
 
 action: state_sunny(world w).
 pre: !stated_weather(w).
 post: sunny(w) ^ stated_weather(w).
-text: "It is a sunny day.".
+text: "晴れの日です。".
 alias: .
 
 action: introduce(person p).
@@ -19,23 +19,23 @@ alias: p[person_name].
 action: state_profession(person p, profession prof).
 pre: introduced(p) ^ !stated_profession(p).
 post: stated_profession(p) ^ profession_of(p, prof).
-text: "(p) is a [prof].".
+text: "(p)は[prof]です。".
 alias: .
 
 action: state_hobby(person p, hobby h).
 pre: introduced(p) ^ !stated_hobby(p).
 post: stated_hobby(p) ^ hobby_of(p, h).
-text: "(p) likes [h] very much.", "The hobby of (p) is [h].".
+text: "(p)は[h]を好きです。", "(p)の趣味は[h]です。".
 alias: .
 
 action: state_trait_overweight(person p).
 pre: !stated_trait_overweight(p).
 post: stated_trait_overweight(p).
-text: "(p) is overweight.".
+text: "(p)は太りすぎです。".
 alias: .
 
 action: state_motivation_to_get_fit(person p).
 pre: !desired_get_fit(p) ^ stated_trait_overweight(p).
 post: desired_get_fit(p).
-text: "(p) wants to get more fit.".
+text: "(p)は、もっと健康になりたいと思っています。".
 alias: .

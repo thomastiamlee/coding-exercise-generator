@@ -12,6 +12,7 @@ const DomainParser = require("./planner/domain-parser");
 const Planner = require("./planner/planner");
 const PlannerTextGenerator = require("./planner/text-generator");
 const ExerciseBuilder = require("./planner/exercise-builder");
+const TestCaseGenerator = require("./planner/test-case-generator");
 
 
 function start() {
@@ -75,6 +76,8 @@ function start() {
 				var exercise = ExerciseBuilder.generateExercise(plan);
 				
 				var flowchart = Reader.convertToFlowchartDefinition(exercise);
+				var testCases = TestCaseGenerator.generateTestCases(exercise, 10);
+				console.log(testCases);
 				return reply.view("generation-test.html", {text: text, flowchart: flowchart});
 			}
 		});
@@ -86,6 +89,7 @@ function start() {
 				var exercise = Generator.generateBasicExercise({complexity: 9});
 				var flowchart = Reader.convertToFlowchartDefinition(exercise);
 				var text = NaiveTextGenerator.convertExerciseToNativeText(exercise.head, exercise.symbols);
+				
 				return reply.view("generation-test.html", {text: text, flowchart: flowchart});
 			}
 		});

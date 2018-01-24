@@ -5,7 +5,7 @@ req: desired_get_fit(p).
 pre: property_of(p, h) ^ property_of(p, w) ^ in_unit(h, m) ^ in_unit(w, k) ^ !assigned(b).
 post: assigned(b) ^ property_of(p, b).
 {
-o,[h],[h],[temp],*.1
-o,[w],[temp],[b],/
+o,[h],[h],[number/temp],*,1
+o,[w],[number/temp],[b],/
 r,[b]
 }

@@ -25,6 +25,7 @@ function generateExercise(plan) {
 			return new Component.operand(type, val);
 		}
 		else if (str.charAt(0) == "[") {
+			var target = null;
 			for (var i = 0; i < actionParameters.length; i++) {
 				if (actionParameters[i].symbol == content) {
 					target = realParameters[i];
@@ -200,7 +201,7 @@ function generateExercise(plan) {
 	for (var i = 0; i < tail.length; i++) {
 		tail[i].attachNode(returnNode, 0);
 	}
-	return {head: head, symbols: symbolMappings, inputs: inputVariables}
+	return {head: head, symbols: symbolMappings, inputVariables: inputVariables}
 }
 
 module.exports = {generateExercise};

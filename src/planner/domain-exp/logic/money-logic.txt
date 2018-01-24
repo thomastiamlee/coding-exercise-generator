@@ -1,0 +1,12 @@
+action: check_if_can_buy(person p, item i, cost c, money m).
+main: "(p)が[i]を購入するのに十分な金額を持っている場合は yes を返し、それ以外の場合は no を返す関数を完成させましょう。".
+sub: "".
+req: intent_to_buy(p, i).
+pre: property_of(p, m) ^ property_of(i, c).
+post: .
+{
+c,[c],[m],<=,1,2
+a,(string/yes),[string/result]
+a,(string/no),[string/result]
+r,[string/result]
+}
