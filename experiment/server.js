@@ -103,12 +103,38 @@ function start() {
 			method: "GET",
 			path: "/exercise/planner",
 			handler: function(request, reply) {
+				function getInputSymbols(symbols, inputVariables) {
+					var res = [];
+					for (var i = 0; i < inputVariables.length; i++) {
+						var name = getSymbolFromOperand(inputVariables[i], symbols);
+						res.push(name);
+					}
+					return res;
+				}
+				function buildFunctionHeader(symbols, inputVariables) {
+					var res = "int" + " ";
+					res += functionName + "(";
+					for (var i = 0; i < inputVariables.length; i++) {
+						var name = getSymbolFromOperand(inputVariables[i], symbols);
+						var type = inputVariables[i].type;
+						var typeString = convertTypeToJava(type);
+						res += typeString + " " + name;
+						if (i != inputVariables.length - 1) {
+							res += ", ";
+						}
+					}
+					res += ") {";
+					return res;
+				}
 				var domain = DomainParser.parseDomain();
 				var plan = Planner.plan(domain);
 				var text = PlannerTextGenerator.convertPlanToText(plan);
-				//var exercise = ExerciseBuilder.generateExercise(plan);
+				var exercise = ExerciseBuilder.generateExercise(plan);
+				var testCases = TestCaseGenerator.generateTestCases(exercise, 10);
+				var functionHeader = buildFunctionHeader(exercise.symbols, exercise.inputVariables);
+				var inputSymbols = getInputSymbols(exercise.symbols, exercise.inputVariables);
 				
-				reply({exercise: null, testCases: null, text: text, functionHeader: null, inputSymbols: null});
+				reply({exercise: exercise, testCases: testCases, text: text, functionHeader: functionHeader, inputSymbols: inputSymbols});
 			}
 		});
 		
