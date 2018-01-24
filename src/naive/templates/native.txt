@@ -1,21 +1,21 @@
 addition
--add [0] and [1]. store the result in [o]. (0)
--get the total of [0] and [1]. store the result in [o]. (0)
+-add [0] and [1].# store the result in [o].# (0)
+-get the total of [0] and [1].# store the result in [o].# (0)
 
 subtraction
--subtract [1] from [0]. store the result in [o]. (0)
--perform [0] minus [1]. store the result in [o]. (0)
+-subtract [1] from [0].# store the result in [o].# (0)
+-perform [0] minus [1].# store the result in [o].# (0)
 
 multiplication
--multiply [0] and [1]. store the result in [o]. (0)
--get the product of [0] and [1]. store the result in [o]. (0)
+-multiply [0] and [1].# store the result in [o].# (0)
+-get the product of [0] and [1].# store the result in [o].# (0)
 
 division
--divide [0] by [1] and ignore the remainder. store the result in [o]. (0)
+-divide [0] by [1] and ignore the remainder.# store the result in [o].# (0)
 
 modulo
--get the remainder when [0] is divided by [1]. store the result in [o]. (0)
--perform [0] modulo [1]. store the result in [o]. (0)
+-get the remainder when [0] is divided by [1].# store the result in [o].# (0)
+-perform [0] modulo [1].# store the result in [o].# (0)
 
 equal
 -if [0] is equal to [1], (0) otherwise, (1)
@@ -41,3 +41,12 @@ lessequal
 
 return
 -return [0].
+
+result
+-the result
+
+function
+-complete the function.
+
+groupbranch
+-perform the instructions in [0].

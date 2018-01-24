@@ -80,7 +80,7 @@ function generateExercise() {
 		ui.editor.setValue("");
 		ui.doc.taskHeading.text(ui.text.task + " " + system.currentProblem);
 		ui.doc.functionHeader.text(system.problem.functionHeader);
-		ui.doc.exerciseText.text(system.problem.text);
+		ui.doc.exerciseText.html(system.problem.text.replace(/\[LB\]/g, "<br />"));
 		ui.doc.testPanelInputList.html("");
 		ui.doc.testResultText.text("");
 		for (var i = 0; i < system.problem.inputSymbols.length; i++) {

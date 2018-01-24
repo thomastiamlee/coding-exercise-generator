@@ -83,10 +83,10 @@ function start() {
 					res += ") {";
 					return res;
 				}
-				var complexity = 1;
+				var complexity = 2;
 				if (request.query.complexity) { complexity = request.query.complexity; }
 				var exercise = Generator.generateBasicExercise({complexity: complexity});
-				var testCases = TestCaseGenerator.generateTestCases(exercise, 1000);
+				var testCases = TestCaseGenerator.generateTestCases(exercise, 100);
 				var text = TextGenerator.convertExerciseToNativeText(exercise.head, exercise.symbols);
 				var functionHeader = buildFunctionHeader(exercise.symbols, exercise.inputVariables);
 				var inputSymbols = getInputSymbols(exercise.symbols, exercise.inputVariables);

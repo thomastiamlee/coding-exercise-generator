@@ -125,7 +125,7 @@ function generateBasicExercise(options) {
 				var targetIndex = freeIndices[Math.floor(Math.random() * freeIndices.length)];
 				selected.attachInputOperand(variable, targetIndex);
 				attachedCount++;
-				if (Math.random() >= 0.5) {
+				if (Math.random() >= 0.005) {
 					break;
 				}
 			}
@@ -139,7 +139,7 @@ function generateBasicExercise(options) {
 		for (var i = 0; i < allNodes.length; i++) {
 			var current = allNodes[i];
 			var freeIndices = current.getFreeInputOperandIndices();
-			if (freeIndices.length == current.inputOperandsSize) {
+			if (freeIndices.length == current.inputOperandsSize && current.type != Component.NODE_TYPE_RETURN) {
 				var targetIndex = freeIndices[Math.floor(Math.random() * freeIndices.length)];
 				current.attachInputOperand(variable, targetIndex);
 				if (inputVariables.indexOf(variable) == -1) {

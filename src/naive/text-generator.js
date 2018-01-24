@@ -2,7 +2,7 @@ const fs = require("fs");
 const Peg = require("pegjs");
 const Component = require("../component");
 const templateGrammarPath = "./src/naive/grammar/template-grammar.txt";
-const nativeTemplatesPath = "./src/naive/templates/native.txt";
+const nativeTemplatesPath = "./src/naive/templates/native-jp.txt";
 
 function loadNativeTemplates() {
 	var data = fs.readFileSync(nativeTemplatesPath, "utf-8");
@@ -19,45 +19,79 @@ function convertExerciseToNativeText(node, symbolMappings, templates, load) {
 	if (!load) {
 		load = [];
 	}
-	var finalText = "";
+	var finalText = getRandomTemplateText(templates, "function") + " ";
 	var labelCounter = "A".charCodeAt(0);
-	function convertChunk(node, symbolMappings, templates, load) {
+	function convertChunk(node, symbolMappings, templates, load, isImmediate) {
+		if (!isImmediate) isImmediate = null;
 		var res = "";
 		if (node.type == Component.NODE_TYPE_OPERATION) {
 			var text = getRandomTemplateText(templates, getOperatorString(node.operator));
-			text = text.replace("[0]", getSymbolFromOperand(node.inputOperands[0], symbolMappings));
-			text = text.replace("[1]", getSymbolFromOperand(node.inputOperands[1], symbolMappings));
-			text = text.replace("[o]", getSymbolFromOperand(node.variableOutput, symbolMappings));
-			text = text.replace("(0)", convertChunk(node.successors[0], symbolMappings, templates, load));
+			if (node.inputOperands[0] == isImmediate) {
+				text = text.replace("[0]", getRandomTemplateText(templates, "result"));
+			}
+			else {
+				text = text.replace("[0]", getSymbolFromOperand(node.inputOperands[0], symbolMappings));
+			}	
+			if (node.inputOperands[1] == isImmediate) {
+				text = text.replace("[1]", getRandomTemplateText(templates, "result"));
+			}
+			else {
+				text = text.replace("[1]", getSymbolFromOperand(node.inputOperands[1], symbolMappings));
+			}
+									
+			if (node.successors[0].isOperandUsedOnlyInThisNode(node.variableOutput)) {
+				text = text.split("#")[0] + text.split("#")[2];
+				text = text.replace("(0)", convertChunk(node.successors[0], symbolMappings, templates, load, node.variableOutput));
+			}
+			else {
+				text = text.replace(/#/g, "");
+				text = text.replace("[o]", getSymbolFromOperand(node.variableOutput, symbolMappings));
+				text = text.replace("(0)", convertChunk(node.successors[0], symbolMappings, templates, load));
+			}
 		}
 		else if (node.type == Component.NODE_TYPE_CONDITION) {
 			var text = getRandomTemplateText(templates, getOperatorString(node.operator));
-			text = text.replace("[0]", getSymbolFromOperand(node.inputOperands[0], symbolMappings));
-			text = text.replace("[1]", getSymbolFromOperand(node.inputOperands[1], symbolMappings));
+			if (node.inputOperands[0] == isImmediate) {
+				text = text.replace("[0]", getRandomTemplateText(templates, "result"));
+			}
+			else {
+				text = text.replace("[0]", getSymbolFromOperand(node.inputOperands[0], symbolMappings));
+			}	
+			if (node.inputOperands[1] == isImmediate) {
+				text = text.replace("[1]", getRandomTemplateText(templates, "result"));
+			}
+			else {
+				text = text.replace("[1]", getSymbolFromOperand(node.inputOperands[1], symbolMappings));
+			}
 			if (node.successors[0].hasConditionNode() == false) {
 				text = text.replace("(0)", convertChunk(node.successors[0], symbolMappings, templates, load));
 			}
 			else {
 				load.push({label: String.fromCharCode(load.length + 65), head: node.successors[0]});
-				text = text.replace("(0)", "do the instructions in " + String.fromCharCode(labelCounter++) + ".");
+				text = text.replace("(0)", getRandomTemplateText(templates, "groupbranch").replace("[0]", String.fromCharCode(labelCounter++)));
 			}
 			if (node.successors[1].hasConditionNode() == false) {
 				text = text.replace("(1)", convertChunk(node.successors[1], symbolMappings, templates, load));
 			}
 			else {
 				load.push({label: String.fromCharCode(load.length + 65), head: node.successors[1]});
-				text = text.replace("(1)", "do the instructions in " + String.fromCharCode(labelCounter++) + ".");
+				text = text.replace("(1)", getRandomTemplateText(templates, "groupbranch").replace("[0]", String.fromCharCode(labelCounter++)));
 			}
 		}
 		else if (node.type == Component.NODE_TYPE_RETURN) {
 			var text = getRandomTemplateText(templates, "return");
-			text = text.replace("[0]", getSymbolFromOperand(node.inputOperands[0], symbolMappings));
+			if (node.inputOperands[0] == isImmediate) {
+				text = text.replace("[0]", getRandomTemplateText(templates, "result"));
+			}
+			else {
+				text = text.replace("[0]", getSymbolFromOperand(node.inputOperands[0], symbolMappings));
+			}	
 		}
 		return text;
 	}
 	finalText += convertChunk(node, symbolMappings, templates, load);
 	while (load.length > 0) {
-		finalText += "#" + load[0].label + ": " + convertChunk(load[0].head, symbolMappings, templates, load);
+		finalText += "[LB]" + load[0].label + ": " + convertChunk(load[0].head, symbolMappings, templates, load);
 		load.splice(0, 1);
 	}
 	return finalText;

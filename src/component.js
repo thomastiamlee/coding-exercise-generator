@@ -292,6 +292,33 @@ function node(type) {
 		}
 		return hasCondition;
 	}
+	
+	this.operandUsed = function(operand) {
+		var used = false;
+		for (var i = 0; i < this.inputOperands.length; i++) {
+			if (operand == this.inputOperands[i]) {
+				used = true;
+				break;
+			}
+		}
+		return used;
+	}
+	
+	this.operandUsedInAllSuccessors = function(operand) {
+		if (this.operandUsed(operand)) return true;
+		for (var i = 0; i < this.successors.length; i++) {
+			if (this.successors[i].operandUsedInAllSuccessors(operand)) return true;
+		}
+		return false;
+	}
+	
+	this.isOperandUsedOnlyInThisNode = function(operand) {
+		if (this.operandUsed(operand) == false) return false;
+		for (var i = 0; i < this.successors.length; i++) {
+			if (this.successors[i].operandUsedInAllSuccessors(operand)) return false;
+		}
+		return true;
+	}
 }
 
 function operand(type, value) {
