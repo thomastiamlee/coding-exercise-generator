@@ -83,7 +83,7 @@ function start() {
 			method: "GET",
 			path: "/generatetest2",
 			handler: function(request, reply) {
-				var exercise = Generator.generateBasicExercise({complexity: 3});
+				var exercise = Generator.generateBasicExercise({complexity: 9});
 				var flowchart = Reader.convertToFlowchartDefinition(exercise);
 				var text = NaiveTextGenerator.convertExerciseToNativeText(exercise.head, exercise.symbols);
 				return reply.view("generation-test.html", {text: text, flowchart: flowchart});

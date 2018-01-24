@@ -12,30 +12,55 @@ function loadNativeTemplates() {
 	return result;
 }
 
-function convertExerciseToNativeText(node, symbolMappings, templates) {
+function convertExerciseToNativeText(node, symbolMappings, templates, load) {
 	if (!templates) {
 		templates = loadNativeTemplates();
 	}
-	var res = "";
-	if (node.type == Component.NODE_TYPE_OPERATION) {
-		var text = getRandomTemplateText(templates, getOperatorString(node.operator));
-		text = text.replace("[0]", getSymbolFromOperand(node.inputOperands[0], symbolMappings));
-		text = text.replace("[1]", getSymbolFromOperand(node.inputOperands[1], symbolMappings));
-		text = text.replace("[o]", getSymbolFromOperand(node.variableOutput, symbolMappings));
-		text = text.replace("(0)", convertExerciseToNativeText(node.successors[0], symbolMappings, templates));
+	if (!load) {
+		load = [];
 	}
-	else if (node.type == Component.NODE_TYPE_CONDITION) {
-		var text = getRandomTemplateText(templates, getOperatorString(node.operator));
-		text = text.replace("[0]", getSymbolFromOperand(node.inputOperands[0], symbolMappings));
-		text = text.replace("[1]", getSymbolFromOperand(node.inputOperands[1], symbolMappings));
-		text = text.replace("(0)", convertExerciseToNativeText(node.successors[0], symbolMappings, templates));
-		text = text.replace("(1)", convertExerciseToNativeText(node.successors[1], symbolMappings, templates));
+	var finalText = "";
+	var labelCounter = "A".charCodeAt(0);
+	function convertChunk(node, symbolMappings, templates, load) {
+		var res = "";
+		if (node.type == Component.NODE_TYPE_OPERATION) {
+			var text = getRandomTemplateText(templates, getOperatorString(node.operator));
+			text = text.replace("[0]", getSymbolFromOperand(node.inputOperands[0], symbolMappings));
+			text = text.replace("[1]", getSymbolFromOperand(node.inputOperands[1], symbolMappings));
+			text = text.replace("[o]", getSymbolFromOperand(node.variableOutput, symbolMappings));
+			text = text.replace("(0)", convertChunk(node.successors[0], symbolMappings, templates, load));
+		}
+		else if (node.type == Component.NODE_TYPE_CONDITION) {
+			var text = getRandomTemplateText(templates, getOperatorString(node.operator));
+			text = text.replace("[0]", getSymbolFromOperand(node.inputOperands[0], symbolMappings));
+			text = text.replace("[1]", getSymbolFromOperand(node.inputOperands[1], symbolMappings));
+			if (node.successors[0].hasConditionNode() == false) {
+				text = text.replace("(0)", convertChunk(node.successors[0], symbolMappings, templates, load));
+			}
+			else {
+				load.push({label: String.fromCharCode(load.length + 65), head: node.successors[0]});
+				text = text.replace("(0)", "do the instructions in " + String.fromCharCode(labelCounter++) + ".");
+			}
+			if (node.successors[1].hasConditionNode() == false) {
+				text = text.replace("(1)", convertChunk(node.successors[1], symbolMappings, templates, load));
+			}
+			else {
+				load.push({label: String.fromCharCode(load.length + 65), head: node.successors[1]});
+				text = text.replace("(1)", "do the instructions in " + String.fromCharCode(labelCounter++) + ".");
+			}
+		}
+		else if (node.type == Component.NODE_TYPE_RETURN) {
+			var text = getRandomTemplateText(templates, "return");
+			text = text.replace("[0]", getSymbolFromOperand(node.inputOperands[0], symbolMappings));
+		}
+		return text;
 	}
-	else if (node.type == Component.NODE_TYPE_RETURN) {
-		var text = getRandomTemplateText(templates, "return");
-		text = text.replace("[0]", getSymbolFromOperand(node.inputOperands[0], symbolMappings));
+	finalText += convertChunk(node, symbolMappings, templates, load);
+	while (load.length > 0) {
+		finalText += "#" + load[0].label + ": " + convertChunk(load[0].head, symbolMappings, templates, load);
+		load.splice(0, 1);
 	}
-	return text;
+	return finalText;
 }
 
 function getRandomTemplateText(templates, key) {

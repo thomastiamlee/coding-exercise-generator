@@ -32,33 +32,6 @@ o,[temp],(number/3.1416),[a],*
 r,[a]
 }
 
-action: compute_volume_of_cube(concrete c, cube cu, side s, distance_unit u, volume v).
-main: "Complete the function the computes for the volume of the [c] in [u]^3.".
-sub: "The volume of a cube is the length of the side cubed.".
-req: intent_to_compute_volume(c).
-pre: shape_of(c, cu) ^ possible_shape_of(c, cu) ^ property_of(c, s) ^ in_unit(s, u) ^ !assigned(v) ^ !property_of(c, v).
-post: assigned(v) ^ property_of(c, v) ^ in_unit(v, u) ^ known_in_unit(v, u).
-{
-o,[s],[s],[temp],*,1
-o,[temp],[s],[v],*
-r,[v]
-}
-
-action: compute_volume_of_sphere(concrete c, sphere sp, radius r, distance_unit u, volume v).
-main: "Complete the function the computes for the volume of the [c] in [u]^3.".
-sub: "The volume of a sphere is PI (3.1416) multiplied by 4/3 times the radius cubed.".
-req: intent_to_compute_volume(c).
-pre: shape_of(c, sp) ^ possible_shape_of(c, sp) ^ property_of(c, r) ^ in_unit(r, u) ^ !assigned(v) ^ !property_of(c, v).
-post: assigned(v) ^ property_of(c, v) ^ in_unit(v, u) ^ known_in_unit(v, u).
-{
-o,[r],[r],[temp],*,1
-o,[temp],[r],[temp],*,2
-o,[temp],[4],[temp],*,3
-o,[temp],[3],[temp],/,4
-o,[temp],(number/3.1416),[v],*
-r,[v]
-}
-
 action: get_radius_from_diameter(concrete c, circle ci, diameter d, radius r, distance_unit u).
 main: "Complete the function that returns the radius in [u].".
 sub: " ".

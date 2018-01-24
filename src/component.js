@@ -281,6 +281,17 @@ function node(type) {
 		}
 		return res;
 	}
+	
+	this.hasConditionNode = function() {
+		if (this.type == NODE_TYPE_CONDITION || this.type == NODE_TYPE_BLOCK_CONDITION) {
+			return true;
+		}
+		var hasCondition = false;
+		for (var i = 0; i < this.successors.length; i++) {
+			hasCondition = this.successors[0].hasConditionNode();
+		}
+		return hasCondition;
+	}
 }
 
 function operand(type, value) {

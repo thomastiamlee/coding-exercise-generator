@@ -9,8 +9,10 @@ function init(editor) {
 	ui.doc.functionHeader = $("#function-header");
 	ui.doc.testPanelInputList = $("#test-panel-input-list");
 	ui.doc.testSpinner = $("#test-spinner");
+	ui.doc.testResultLabel = $("#test-result-label");
 	ui.doc.testResultText = $("#test-result-text");
 	ui.doc.testButton = $("#test-button");
+	ui.doc.testButtonText = $("#test-button span");
 	ui.doc.submitButton = $("#submit-button");
 	ui.overlay.overlay = $("#overlay");
 	ui.overlay.fakeOverlay = $("#fake-overlay");
@@ -35,15 +37,35 @@ function init(editor) {
 		submitCode();
 	});
 	
+	/* ENGLISH VERSION
 	ui.text.generationText = "Now thinking of an exercise for you...";
 	ui.text.checkingText = "Now checking your solution...";
 	ui.text.correctText = "Your code passed the test cases! Nice job.";
 	ui.text.wrongText = "Your code failed some test cases. Try again.";
+	ui.text.task = "Exercise";
+	ui.text.testButton = "Test";
+	ui.text.submitButton = "Submit";
+	ui.text.testResultLabel = "Result"";
+	/**/
+	/* JAPANESE VERSION */  
+	ui.text.generationText = "問題を作成しています．...";
+	ui.text.checkingText = "コードをチェックしています...";
+	ui.text.correctText = "正解です！　すばらしい．";
+	ui.text.wrongText = "残念．間違えです．もう一度やってみてください．";
+	ui.text.task = "問題";
+	ui.text.testButton = "コードの実行";
+	ui.text.submitButton = "答案提出";
+	ui.text.testResultLabel = "結果:";
+	/**/
 	
-	system.mode = "planner";
+	system.mode = "native";
 	system.currentProblem = 0;
 	system.problem = {};
 	
+	ui.doc.testButtonText.text(ui.text.testButton);
+	ui.doc.submitButton.text(ui.text.submitButton);
+	ui.doc.testResultLabel.text(ui.text.testResultLabel);
+		
 	generateExercise();
 }
 
@@ -56,7 +78,7 @@ function generateExercise() {
 	function initializeProblem() {
 		closeOverlay();
 		ui.editor.setValue("");
-		ui.doc.taskHeading.text("Exercise " + system.currentProblem);
+		ui.doc.taskHeading.text(ui.text.task + " " + system.currentProblem);
 		ui.doc.functionHeader.text(system.problem.functionHeader);
 		ui.doc.exerciseText.text(system.problem.text);
 		ui.doc.testPanelInputList.html("");

@@ -6,14 +6,9 @@ const Vision = require("vision");
 const Nunjucks = require("nunjucks-hapi");
 const fs = require("fs");
 
-const Generator = require("../src/generator");
-const TestCaseGenerator = require("../src/test-case-generator.js");
-const TextGenerator = require("../src/text-generator");
-
-const Parser = require("../src/parser");
-const PlannerUtility = require("../src/planner-utility");
-const PlannerSimple = require("../src/planner-simple");
-const ExerciseBuilder = require("../src/exercise-builder");
+const Generator = require("../src/naive/generator");
+const TestCaseGenerator = require("../src/naive/test-case-generator.js");
+const TextGenerator = require("../src/naive/text-generator");
 
 const Compile = require("./compile");
 
@@ -88,7 +83,9 @@ function start() {
 					res += ") {";
 					return res;
 				}
-				var exercise = Generator.generateBasicExercise({complexity: 1});
+				var complexity = 1;
+				if (request.query.complexity) { complexity = request.query.complexity; }
+				var exercise = Generator.generateBasicExercise({complexity: complexity});
 				var testCases = TestCaseGenerator.generateTestCases(exercise, 1000);
 				var text = TextGenerator.convertExerciseToNativeText(exercise.head, exercise.symbols);
 				var functionHeader = buildFunctionHeader(exercise.symbols, exercise.inputVariables);
@@ -102,42 +99,9 @@ function start() {
 			method: "GET",
 			path: "/exercise/planner",
 			handler: function(request, reply) {
-				function getInputSymbols(symbols, inputVariables) {
-					var res = [];
-					for (var i = 0; i < inputVariables.length; i++) {
-						var name = getSymbolFromOperand(inputVariables[i], symbols);
-						res.push(name);
-					}
-					return res;
-				}
-				function buildFunctionHeader(exercise) {
-					var res = convertTypeToJava(exercise.returnType) + " ";
-					var symbols = exercise.symbols;
-					var inputVariables = exercise.inputVariables;
-					res += functionName + "(";
-					for (var i = 0; i < inputVariables.length; i++) {
-						var name = getSymbolFromOperand(inputVariables[i], symbols);
-						var type = inputVariables[i].type;
-						var typeString = convertTypeToJava(type);
-						res += typeString + " " + name;
-						if (i != inputVariables.length - 1) {
-							res += ", ";
-						}
-					}
-					res += ") {";
-					return res;
-				}
-				var kb = Parser.parseKnowledgeBase(plannerKnowledgeBasePath);
-				var table = new PlannerUtility.memory();
-				table.createLocalEntity([kb.getGlobalEntity("person")]);
-				var plan = PlannerSimple.planExercise(kb, table);
-				var exercise = ExerciseBuilder.buildExerciseFromActions(plan, table);
-				var testCases = TestCaseGenerator.generateTestCases(exercise, 1000);
-				var text = TextGenerator.convertPlanToText(plan, plannerKnowledgeBasePath);
-				var functionHeader = buildFunctionHeader(exercise);
-				var inputSymbols = getInputSymbols(exercise.symbols, exercise.inputVariables);
 				
-				reply({exercise: exercise, testCases: testCases, text: text, functionHeader: functionHeader, inputSymbols: inputSymbols});
+				
+				// reply({exercise: exercise, testCases: testCases, text: text, functionHeader: functionHeader, inputSymbols: inputSymbols});
 			}
 		});
 		
