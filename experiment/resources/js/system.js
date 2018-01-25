@@ -25,6 +25,7 @@ function init(editor) {
 	ui.doc.testButton = $("#test-button");
 	ui.doc.testButtonText = $("#test-button span");
 	ui.doc.submitButton = $("#submit-button");
+	ui.doc.giveUpButton = $("#give-up-button");
 	ui.overlay.overlay = $("#overlay");
 	ui.overlay.fakeOverlay = $("#fake-overlay");
 	ui.overlay.loadingPanel = $("#loading-panel");
@@ -48,6 +49,9 @@ function init(editor) {
 	ui.doc.submitButton.on("click", function() {
 		submitCode();
 	});
+	ui.doc.giveUpButton.on("click", function() {
+		generateExercise();
+	});
 	
 	/* ENGLISH VERSION
 	ui.text.generationText = "Now thinking of an exercise for you...";
@@ -57,6 +61,7 @@ function init(editor) {
 	ui.text.task = "Exercise";
 	ui.text.testButton = "Test";
 	ui.text.submitButton = "Submit";
+	ui.text.giveUpButton = "Give up";
 	ui.text.testResultLabel = "Result"";
 	/**/
 	/* JAPANESE VERSION */  
@@ -67,20 +72,24 @@ function init(editor) {
 	ui.text.task = "問題";
 	ui.text.testButton = "コードの実行";
 	ui.text.submitButton = "答案提出";
+	ui.text.giveUpButton = "次の問題へ";
 	ui.text.testResultLabel = "結果:";
-	ui.text.finishedText = "FINISHED";
+	ui.text.finishedText = "終わった";
 	/**/
 	
+	system.timer = null;
+	system.timeLimit = 300000;
 	system.mode = "planner";
 	system.currentProblem = 0;
 	system.problem = {};
 	
 	ui.doc.testButtonText.text(ui.text.testButton);
 	ui.doc.submitButton.text(ui.text.submitButton);
+	ui.doc.giveUpButton.text(ui.text.giveUpButton);
 	ui.doc.testResultLabel.text(ui.text.testResultLabel);
 	
-	$(document).keyup(function(event) {
-		if (event.keyCode == 17) {
+	$(document).keyup(function(e) {
+		if (e.ctrlKey && (e.which === 106)) {
 			generateExercise();
 		}
 	});
@@ -90,6 +99,7 @@ function init(editor) {
 
 function generateExercise() {
 	openOverlay();
+	if (system.timer) clearTimeout(system.timer);
 	ui.overlay.loadingPanel.css("visibility", "visible");
 	ui.overlay.notificationPanel.css("visibility", "hidden");
 	ui.overlay.loadingText.text(ui.text.generationText);
@@ -99,15 +109,24 @@ function generateExercise() {
 		ui.editor.setValue("");
 		ui.doc.taskHeading.text(ui.text.task + " " + system.currentProblem);
 		ui.doc.functionHeader.text(system.problem.functionHeader);
-		ui.doc.exerciseText.html(system.problem.text.replace(/\[LB\]/g, "<br />"));
+		ui.doc.exerciseText.html(system.problem.text.replace(/\[LB\]/g, "<br />").replace("yes", "\"yes\"").replace("no", "\"no\""));
 		ui.doc.testPanelInputList.html("");
 		ui.doc.testResultText.text("");
+		ui.doc.giveUpButton.css("visibility", "hidden");
+		system.timer = setTimeout(function() {
+			ui.doc.giveUpButton.css("visibility", "visible");
+		}, system.timeLimit);
 		for (var i = 0; i < system.problem.inputSymbols.length; i++) {
 			ui.doc.testPanelInputList.append("<div class=\"test-panel-group\"><label class=\"test-panel-label\">" + system.problem.inputSymbols[i] + "</label><input class=\"test-panel-input\" type=\"text\" /></div>");
 		}
 		$(".test-panel-input").on("input", function() {
 			ui.doc.testResultText.text("");
 		});
+	}
+	
+	if (system.currentProblem == experimentQuestions.length) {
+		endSession();
+		return;
 	}
 	
 	var url;
@@ -122,14 +141,16 @@ function generateExercise() {
 	if (current.length == 2) {
 		var options = {
 			type: "native",
-			complexity: current[1]
+			complexity: current[1],
+			problemNumber: system.currentProblem + 1
 		}
 	}
 	else {
 		var options = {
 			type: "planner",
 			actions: JSON.stringify(current[1]),
-			complexity: current[2]
+			complexity: current[2],
+			problemNumber: system.currentProblem + 1
 		}
 	}
 	$.ajax({
@@ -138,17 +159,12 @@ function generateExercise() {
 		data: options,
 		dataType: "json",
 		success: function(data) {
-			if (system.currentProblem == experimentQuestions.length) {
-				endSession();
-			}
-			else {
-				system.currentProblem++;
-				system.problem.text = data.text;
-				system.problem.functionHeader = data.functionHeader;
-				system.problem.testCases = data.testCases;
-				system.problem.inputSymbols = data.inputSymbols;
-				initializeProblem();
-			}
+			system.currentProblem++;
+			system.problem.text = data.text;
+			system.problem.functionHeader = data.functionHeader;
+			system.problem.testCases = data.testCases;
+			system.problem.inputSymbols = data.inputSymbols;
+			initializeProblem();
 		},
 		error: function() {
 			console.log("Error fetching exercise");
@@ -266,5 +282,4 @@ function endSession() {
 	ui.overlay.notificationPanel.css("visibility", "hidden");
 	ui.overlay.loadingText.text(ui.text.finishedText);
 	ui.overlay.loadingIcon.hide();
-	
 }

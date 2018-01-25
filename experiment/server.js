@@ -182,6 +182,12 @@ function start() {
 					var inputSymbols = getInputSymbols(exercise.symbols, exercise.inputVariables);
 				}
 				
+				var problemNumber = request.query.problemNumber;
+				if (problemNumber == 1) {
+					fs.writeFileSync("problem-log.txt", "");
+				}
+				fs.appendFileSync("problem-log.txt", problemNumber + "\n" + text + "\n");
+				
 				reply({exercise: exercise, testCases: testCases, text: text, functionHeader: functionHeader, inputSymbols: inputSymbols});
 			}
 		});
@@ -200,6 +206,7 @@ function start() {
 					else {
 						var verdict = Compile.checkOutput(data, testCases);
 						if (verdict.verdict == "passed") {
+							fs.appendFileSync("problem-log.txt", "-\n");
 							reply({ status: "passed" });
 						}
 						else {

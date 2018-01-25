@@ -136,6 +136,25 @@ div#main-container {
 	background: #ef6d69;
 }
 
+#give-up-button {
+	display: inline-block;
+	height: 24px;
+	width: 96px;
+	text-align: center;
+	background: #cac4d1;
+	color: #000000;
+	padding: 3px;
+	margin-top: 32px;
+	font-family: Arial;
+	font-weight: bold;
+	border-radius: 2px;
+	cursor: pointer;
+}
+
+#give-up-button:hover {
+	background: #e4deea;
+}
+
 .test-panel-group {
 	display: inline-block;
 	padding-right: 10px;
