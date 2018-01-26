@@ -2,7 +2,7 @@ const File = require("fs");
 const Peg = require("pegjs");
 const PlannerComponents = require("./planner-components");
 
-const domainPath = "./src/planner/domain";
+const domainPath = "./src/planner/domain-exp";
 const grammarPath = "./src/planner/grammar";
 
 function parseExistents() {

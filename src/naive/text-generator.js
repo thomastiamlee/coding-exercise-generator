@@ -2,7 +2,7 @@ const fs = require("fs");
 const Peg = require("pegjs");
 const Component = require("../component");
 const templateGrammarPath = "./src/naive/grammar/template-grammar.txt";
-const nativeTemplatesPath = "./src/naive/templates/native.txt";
+const nativeTemplatesPath = "./src/naive/templates/native-jp.txt";
 
 function loadNativeTemplates() {
 	var data = fs.readFileSync(nativeTemplatesPath, "utf-8");
