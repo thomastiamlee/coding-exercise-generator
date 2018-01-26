@@ -70,8 +70,8 @@ function start() {
 			path: "/generatetest",
 			handler: function(request, reply) {
 				var domain = DomainParser.parseDomain();
-				var plan = Planner.plan(domain);
-				var text = PlannerTextGenerator.convertPlanToText(plan);
+				var plan = Planner.plan(domain, ["convert_celsius_to_fahrenheit"], 1);
+				var text = PlannerTextGenerator.convertPlanToText(plan, );
 				console.log(text);
 				var exercise = ExerciseBuilder.generateExercise(plan);
 				
@@ -86,7 +86,7 @@ function start() {
 			method: "GET",
 			path: "/generatetest2",
 			handler: function(request, reply) {
-				var exercise = Generator.generateBasicExercise({complexity: 9});
+				var exercise = Generator.generateBasicExercise({complexity: 2});
 				var flowchart = Reader.convertToFlowchartDefinition(exercise);
 				var text = NaiveTextGenerator.convertExerciseToNativeText(exercise.head, exercise.symbols);
 				
